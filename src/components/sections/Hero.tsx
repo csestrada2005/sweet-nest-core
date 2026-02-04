@@ -34,15 +34,18 @@ const Hero = () => {
             />
           </div>
 
-          {/* Floating badges - smaller and repositioned */}
-          <div className="absolute -bottom-2 -left-2 bg-card/95 backdrop-blur-sm rounded-2xl shadow-lg px-3 py-2 animate-float">
-            <p className="font-display text-sm text-foreground">
-              Ultra <span className="italic text-papachoa-blush-dark">suave</span> ✨
+          {/* Floating accent - emotional, subtle */}
+          <div className="absolute -bottom-3 -left-3 bg-card/90 backdrop-blur-sm rounded-2xl shadow-sm border border-border/40 px-4 py-2.5 animate-float">
+            <p className="font-display text-xs text-muted-foreground italic leading-snug">
+              Pensado para los momentos<br />que importan
             </p>
           </div>
           
-          <div className="absolute top-4 -right-2 bg-papachoa-sage/90 backdrop-blur-sm rounded-xl shadow-md px-3 py-1.5 animate-float" style={{ animationDelay: "1s" }}>
-            <p className="text-xs font-semibold text-accent-foreground">🇲🇽 Hecho en México</p>
+          {/* Made in Mexico - editorial style */}
+          <div className="absolute top-6 -right-3 bg-card/85 backdrop-blur-sm rounded-xl shadow-sm border border-border/30 px-3 py-2 animate-float" style={{ animationDelay: "1s" }}>
+            <p className="text-[10px] font-medium tracking-wide text-muted-foreground uppercase">
+              Diseñado y hecho en México
+            </p>
           </div>
         </div>
 
