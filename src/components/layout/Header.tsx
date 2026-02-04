@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, Search, User, ShoppingBag } from "lucide-react";
+import { Menu, Search, ShoppingBag } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import logo from "@/assets/logo-papachoa.webp";
 
@@ -15,27 +15,27 @@ const Header = () => {
 
   return (
     <header className="w-full fixed top-0 left-0 right-0 z-50">
-      {/* Marquee banner */}
-      <div className="bg-papachoa-blush-mid overflow-hidden py-2">
+      {/* Marquee banner - more compact */}
+      <div className="bg-papachoa-blush-mid overflow-hidden py-1.5">
         <div className="animate-marquee whitespace-nowrap flex">
           {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex items-center gap-8 px-4">
-              <span className="text-sm font-medium text-papachoa-warm-brown">✨ Enviamos a toda la República</span>
-              <span className="text-papachoa-warm-brown/50">•</span>
-              <span className="text-sm font-medium text-papachoa-warm-brown">🧸 Ultra suaves</span>
-              <span className="text-papachoa-warm-brown/50">•</span>
-              <span className="text-sm font-medium text-papachoa-warm-brown">🇲🇽 Hecho en México</span>
-              <span className="text-papachoa-warm-brown/50">•</span>
-              <span className="text-sm font-medium text-papachoa-warm-brown">💝 El regalo perfecto</span>
-              <span className="text-papachoa-warm-brown/50">•</span>
+            <div key={i} className="flex items-center gap-6 px-3">
+              <span className="text-xs font-medium text-papachoa-warm-brown">✨ Enviamos a toda la República</span>
+              <span className="text-papachoa-warm-brown/40">•</span>
+              <span className="text-xs font-medium text-papachoa-warm-brown">🧸 Ultra suaves</span>
+              <span className="text-papachoa-warm-brown/40">•</span>
+              <span className="text-xs font-medium text-papachoa-warm-brown">🇲🇽 Hecho en México</span>
+              <span className="text-papachoa-warm-brown/40">•</span>
+              <span className="text-xs font-medium text-papachoa-warm-brown">💝 Regalo perfecto</span>
+              <span className="text-papachoa-warm-brown/40">•</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Main header */}
+      {/* Main header - more compact */}
       <div className="bg-background/95 backdrop-blur-md border-b border-border/30">
-        <div className="container flex items-center justify-between py-4">
+        <div className="container flex items-center justify-between py-2.5">
           {/* Mobile menu */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger className="lg:hidden p-2 -ml-2 hover:bg-muted rounded-full transition-colors">
@@ -62,12 +62,12 @@ const Header = () => {
             </SheetContent>
           </Sheet>
 
-          {/* Logo */}
+          {/* Logo - smaller */}
           <a href="/" className="flex-1 lg:flex-none flex justify-center lg:justify-start">
             <img 
               src={logo} 
               alt="Papachoa México" 
-              className="h-10 md:h-12 w-auto"
+              className="h-9 md:h-10 w-auto"
             />
           </a>
 
@@ -77,7 +77,7 @@ const Header = () => {
               <a
                 key={link.label}
                 href={link.href}
-                className="text-sm font-body font-semibold text-foreground/80 hover:text-foreground hover:bg-papachoa-blush/40 px-5 py-2.5 rounded-full transition-all"
+                className="text-sm font-body font-semibold text-foreground/80 hover:text-foreground hover:bg-papachoa-blush/40 px-5 py-2 rounded-full transition-all"
               >
                 {link.label}
               </a>
@@ -85,16 +85,12 @@ const Header = () => {
           </nav>
 
           {/* Icons */}
-          <div className="flex items-center gap-1">
-            <button className="p-2.5 text-foreground/70 hover:text-foreground hover:bg-muted rounded-full transition-all">
+          <div className="flex items-center gap-0.5">
+            <button className="p-2 text-foreground/70 hover:text-foreground hover:bg-muted rounded-full transition-all">
               <Search className="h-5 w-5" />
               <span className="sr-only">Buscar</span>
             </button>
-            <button className="p-2.5 text-foreground/70 hover:text-foreground hover:bg-muted rounded-full transition-all hidden md:flex">
-              <User className="h-5 w-5" />
-              <span className="sr-only">Cuenta</span>
-            </button>
-            <button className="p-2.5 text-foreground/70 hover:text-foreground hover:bg-papachoa-sage rounded-full transition-all relative">
+            <button className="p-2 text-foreground/70 hover:text-foreground hover:bg-papachoa-sage rounded-full transition-all relative">
               <ShoppingBag className="h-5 w-5" />
               <span className="sr-only">Carrito</span>
             </button>
