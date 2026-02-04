@@ -35,8 +35,8 @@ const Hero = () => {
           </div>
 
           {/* Floating accent - emotional, subtle */}
-          <div className="absolute -bottom-3 -left-3 bg-card/90 backdrop-blur-sm rounded-2xl shadow-sm border border-border/40 px-4 py-2.5 animate-float">
-            <p className="font-display text-xs text-muted-foreground italic leading-snug">
+          <div className="absolute -bottom-4 -left-4 bg-card/90 backdrop-blur-sm rounded-2xl shadow-md border border-border/40 px-5 py-3 animate-float">
+            <p className="font-display text-sm md:text-base text-muted-foreground italic leading-snug">
               Pensado para los momentos<br />que importan
             </p>
           </div>
