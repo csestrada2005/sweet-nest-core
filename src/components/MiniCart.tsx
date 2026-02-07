@@ -22,11 +22,11 @@ const MiniCart = ({ isOpen, onClose }: MiniCartProps) => {
   return (
     <div className="fixed inset-0 z-[100]" onClick={onClose}>
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-foreground/25 backdrop-blur-sm" />
 
       {/* Panel */}
       <div
-        className="absolute right-0 top-0 h-full w-full max-w-md bg-card shadow-2xl flex flex-col"
+        className="absolute right-0 top-0 h-full w-full max-w-md bg-card shadow-md border-l border-border/30 flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
