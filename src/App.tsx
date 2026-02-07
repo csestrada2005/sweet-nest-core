@@ -7,6 +7,7 @@ import { CartProvider } from "@/context/CartContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import Catalogo from "./pages/Catalogo";
+import Nosotros from "./pages/Nosotros";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,12 +20,13 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/catalogo" element={<Catalogo />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/catalogo" element={<Catalogo />} />
+          <Route path="/nosotros" element={<Nosotros />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
         </BrowserRouter>
       </CartProvider>
     </TooltipProvider>
