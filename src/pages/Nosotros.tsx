@@ -1,8 +1,12 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { Link } from "react-router-dom";
 import { Heart, Home, Sparkles } from "lucide-react";
+import { usePrefetchRoutes } from "@/hooks/usePrefetch";
 
 const Nosotros = () => {
+  // Prefetch key routes after initial render
+  usePrefetchRoutes();
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
@@ -116,13 +120,13 @@ const Nosotros = () => {
               <p className="text-lg text-muted-foreground font-light leading-relaxed mb-10">
                 Cada compra es un voto por un hogar más bonito, por la maternidad consciente, por el descanso que todos merecemos.
               </p>
-              <a
-                href="/catalogo"
-                className="inline-flex items-center gap-2 bg-papachoa-warm-brown text-card font-semibold px-8 py-4 rounded-full hover:scale-105 active:scale-95 transition-transform shadow-lg text-base"
-              >
-                Ver colección
-                <span className="text-lg">→</span>
-              </a>
+               <Link
+                 to="/catalogo"
+                 className="inline-flex items-center gap-2 bg-papachoa-warm-brown text-card font-semibold px-8 py-4 rounded-full hover:scale-105 active:scale-95 transition-transform shadow-lg text-base"
+               >
+                 Ver colección
+                 <span className="text-lg">→</span>
+               </Link>
             </div>
           </div>
         </section>
