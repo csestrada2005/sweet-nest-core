@@ -16,6 +16,7 @@ const footerLinks = {
     { label: "Términos y condiciones", href: "/terminos" },
     { label: "Política de devolución", href: "/devoluciones" },
     { label: "Privacidad", href: "/privacidad" },
+    { label: "Preguntas frecuentes", href: "/faq" },
   ],
 };
 
