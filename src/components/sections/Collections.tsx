@@ -83,9 +83,12 @@ const Collections = () => {
                   </p>
                 </div>
 
-                {/* Arrow indicator */}
-                <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 w-8 h-8 bg-card/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
-                  <span className="text-foreground text-sm">→</span>
+                {/* Arrow indicator - with proper spacing */}
+                <div className="mt-auto flex items-center justify-between gap-2 md:gap-3">
+                  <div />
+                  <div className="w-8 h-8 bg-card/60 rounded-full flex items-center justify-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+                    <span className="text-foreground text-sm">→</span>
+                  </div>
                 </div>
               </div>
             </Link>
