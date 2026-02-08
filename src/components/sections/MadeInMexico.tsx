@@ -3,9 +3,9 @@ import { Heart, Sparkles, MapPin } from "lucide-react";
 const MadeInMexico = () => {
   return (
     <section className="py-24 md:py-32 relative overflow-hidden">
-      {/* Decorative */}
-      <div className="absolute top-20 right-20 w-24 h-24 bg-papachoa-sage blob-shape opacity-40" />
-      <div className="absolute bottom-20 left-20 w-32 h-32 bg-papachoa-blush blob-shape-2 opacity-30" />
+      {/* Decorative blobs - positioned away from text with safe zones */}
+      <div className="absolute -top-10 -right-10 w-24 h-24 bg-papachoa-sage blob-shape opacity-40 pointer-events-none -z-10 md:top-0 md:right-0" />
+      <div className="absolute -bottom-20 -left-20 w-32 h-32 bg-papachoa-blush blob-shape-2 opacity-30 pointer-events-none -z-10 md:bottom-10 md:left-0" />
 
       <div className="container">
         <div className="max-w-3xl mx-auto">
