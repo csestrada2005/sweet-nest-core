@@ -3,9 +3,9 @@ import lifestyleImage from "@/assets/lifestyle-1.png";
 const Emotion = () => {
   return (
     <section className="py-24 md:py-32 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-20 right-20 w-32 h-32 bg-papachoa-peach blob-shape opacity-40" />
-      <div className="absolute bottom-40 left-10 w-24 h-24 bg-papachoa-sage rounded-full opacity-30" />
+      {/* Decorative elements - positioned to avoid text overlap */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-papachoa-peach blob-shape opacity-40 pointer-events-none -z-10 md:top-10 md:right-10" />
+      <div className="absolute -bottom-20 -left-20 w-24 h-24 bg-papachoa-sage rounded-full opacity-30 pointer-events-none -z-10 md:bottom-20 md:left-10" />
 
       <div className="container">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
