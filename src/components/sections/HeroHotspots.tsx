@@ -6,6 +6,7 @@ const hotspots = [
   {
     id: "girl-top",
     label: "Camisa niña",
+    price: "790 MXN",
     link: "/catalogo",
     // Position as percentage of image dimensions
     position: { top: 38, left: 35 },
@@ -13,18 +14,21 @@ const hotspots = [
   {
     id: "girl-pants",
     label: "Pantalón niña",
+    price: "890 MXN",
     link: "/catalogo",
     position: { top: 62, left: 32 },
   },
   {
     id: "dad-top",
     label: "Camisa papá",
+    price: "890 MXN",
     link: "/catalogo",
     position: { top: 32, left: 58 },
   },
   {
     id: "dad-pants",
     label: "Pantalón papá",
+    price: "990 MXN",
     link: "/catalogo",
     position: { top: 68, left: 62 },
   },
@@ -76,33 +80,47 @@ const HotspotDot = ({ hotspot, isActive, onToggle }: HotspotDotProps) => {
         <div
           ref={popoverRef}
           className="
-            absolute left-1/2 -translate-x-1/2 bottom-full mb-2
-            bg-card/95 backdrop-blur-sm rounded-xl
-            border border-border/40 shadow-md
-            px-4 py-3 min-w-[140px]
+            absolute left-1/2 -translate-x-1/2 bottom-full mb-3
+            bg-card/98 backdrop-blur-sm rounded-xl
+            border border-border/50 shadow-lg
+            overflow-hidden
             animate-in fade-in-0 zoom-in-95 duration-150
+            z-50
           "
           role="tooltip"
         >
           {/* Arrow */}
-          <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-3 h-3 bg-card/95 border-r border-b border-border/40 rotate-45" />
+          <div className="absolute left-1/2 -translate-x-1/2 -bottom-1.5 w-3 h-3 bg-card/98 border-r border-b border-border/50 rotate-45" />
           
-          <p className="text-sm font-medium text-foreground mb-2 text-center">
-            {hotspot.label}
-          </p>
+          {/* Product image placeholder */}
+          <div className="w-40 h-40 bg-muted/50 flex items-center justify-center border-b border-border/30">
+            <span className="text-xs text-muted-foreground">Imagen del producto</span>
+          </div>
           
-          <Link
-            to={hotspot.link}
-            className="
-              block w-full text-center text-xs font-semibold
-              text-papachoa-warm-brown hover:text-papachoa-warm-brown/80
-              underline underline-offset-2 decoration-papachoa-warm-brown/30
-              transition-colors
-            "
-            onClick={(e) => e.stopPropagation()}
-          >
-            Ver producto
-          </Link>
+          {/* Content */}
+          <div className="px-4 py-3">
+            <p className="text-sm font-bold text-foreground mb-1">
+              {hotspot.label}
+            </p>
+            
+            <p className="text-xs text-muted-foreground mb-3">
+              ${hotspot.price}
+            </p>
+            
+            <Link
+              to={hotspot.link}
+              className="
+                block w-full text-center text-xs font-semibold
+                text-papachoa-warm-brown hover:text-papachoa-warm-brown/80
+                bg-papachoa-warm-brown/5 hover:bg-papachoa-warm-brown/10
+                rounded-lg py-2
+                transition-colors
+              "
+              onClick={(e) => e.stopPropagation()}
+            >
+              Ver producto
+            </Link>
+          </div>
         </div>
       )}
     </div>
