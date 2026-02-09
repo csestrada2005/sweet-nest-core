@@ -85,7 +85,7 @@ const ProductReviews = () => {
             />
           ))}
         </div>
-        <span className="text-sm text-muted-foreground">4.9 de 5 (24 reseñas)</span>
+        <span className="text-sm text-muted-foreground">4.9 de 5 · Opiniones destacadas</span>
       </div>
 
       {/* Review cards */}
