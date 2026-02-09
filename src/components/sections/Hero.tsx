@@ -49,16 +49,16 @@ const Hero = () => {
 
           {/* Decorative floating cards – no interactivity */}
           <div
-            className="absolute -top-3 right-0 md:-right-16 z-20 pointer-events-none bg-white/90 backdrop-blur-sm rounded-xl shadow-md px-3 py-1.5 md:px-4 md:py-2"
+            className="absolute top-2 right-0 md:-right-14 z-20 pointer-events-none bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm px-3.5 py-2 max-w-[180px]"
           >
-            <span className="text-[10px] md:text-xs font-semibold tracking-wide text-foreground/80 uppercase">
+            <span className="text-[10px] md:text-xs font-medium tracking-wide text-foreground/70 uppercase leading-snug block">
               🇲🇽 Diseñado y hecho en México
             </span>
           </div>
           <div
-            className="absolute -bottom-2 -left-4 md:-left-20 z-20 pointer-events-none bg-white/90 backdrop-blur-sm rounded-xl shadow-md px-3 py-2 md:px-4 md:py-2.5 max-w-[160px] md:max-w-[180px]"
+            className="absolute -bottom-2 -left-4 md:-left-16 z-20 pointer-events-none bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm px-3.5 py-2 max-w-[180px]"
           >
-            <span className="text-[11px] md:text-xs font-light italic text-foreground/70 leading-snug block">
+            <span className="text-[10px] md:text-xs font-medium italic text-foreground/70 leading-snug block">
               "Pensado para los momentos que importan"
             </span>
           </div>
