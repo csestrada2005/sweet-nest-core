@@ -1,7 +1,4 @@
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/hero-family.png";
-import HeroInteractiveImage from "./HeroInteractiveImage";
-import { ShopTheLookList } from "./HeroHotspots";
 
 const Hero = () => {
   return (
@@ -32,38 +29,8 @@ const Hero = () => {
             - ONLY this container can have hotspots
             - Uses HeroInteractiveImage component
             ======================================== */}
-        <div className="relative mx-auto w-full max-w-[280px] md:max-w-[320px] mb-6">
-          {/* Background blob (decorative, no interaction) */}
-          <div className="absolute inset-0 bg-papachoa-blush/40 blob-shape scale-105 pointer-events-none" />
-          
-          {/* INTERACTIVE IMAGE: Dad + daughter sitting together
-              This is the ONLY image that contains hotspots.
-              HeroInteractiveImage is the exclusive hotspot container. */}
-          <HeroInteractiveImage
-            src={heroImage}
-            alt="Familia usando pijamas Papachoa"
-          />
-
-          {/* Floating accent - emotional, subtle (decorative) */}
-          <div className="absolute -bottom-4 -left-4 bg-card/90 backdrop-blur-sm rounded-2xl shadow-md border border-border/40 px-5 py-3 pointer-events-none">
-            <p className="font-display text-sm md:text-base text-muted-foreground italic leading-snug">
-              Pensado para los momentos<br />que importan
-            </p>
-          </div>
-          
-          {/* Made in Mexico badge (decorative) */}
-          <div className="absolute top-6 -right-3 bg-card/85 backdrop-blur-sm rounded-xl shadow-sm border border-border/30 px-3 py-2 pointer-events-none">
-            <p className="text-[10px] font-medium tracking-wide text-muted-foreground uppercase">
-              Diseñado y hecho en México
-            </p>
-          </div>
-        </div>
-
-        {/* Mobile "Shop the Look" fallback */}
-        <ShopTheLookList />
-
-        {/* Text content - tighter */}
-        <div className="text-center mt-4 sm:mt-0">
+        {/* Text content */}
+        <div className="text-center">
           <div className="inline-block bg-papachoa-sage/60 px-3 py-1 rounded-full mb-4">
             <span className="text-xs font-semibold text-accent-foreground">🧸 Nueva colección</span>
           </div>
