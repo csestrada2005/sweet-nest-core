@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
@@ -9,6 +10,7 @@ interface BundleSuggestionProps {
 
 const BundleSuggestion = ({ currentProduct }: BundleSuggestionProps) => {
   const { addItem } = useCart();
+  const navigate = useNavigate();
 
   // Pick 2 products from same collection or random, excluding current
   const suggestions = products
@@ -37,7 +39,8 @@ const BundleSuggestion = ({ currentProduct }: BundleSuggestionProps) => {
         {suggestions.map((item) => (
           <div
             key={item.id}
-            className="flex-shrink-0 w-48 bg-card rounded-2xl border border-border/30 overflow-hidden shadow-sm"
+            onClick={() => navigate(`/producto/${item.slug}`)}
+            className="flex-shrink-0 w-48 bg-card rounded-2xl border border-border/30 overflow-hidden shadow-sm cursor-pointer hover:shadow-md transition-shadow"
           >
             <div className="aspect-square bg-papachoa-cream">
               <img
@@ -53,7 +56,8 @@ const BundleSuggestion = ({ currentProduct }: BundleSuggestionProps) => {
               </h4>
               <p className="text-xs text-muted-foreground mb-2">{formatPrice(item.price)}</p>
               <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   addItem(item);
                   toast(`${item.name} agregado al carrito 🧸`, { duration: 3000 });
                 }}
