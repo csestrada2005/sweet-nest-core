@@ -66,12 +66,17 @@ const Producto = () => {
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
             <ProductGallery images={product.images} name={product.name} />
-            <ProductInfo product={product} collectionLabel={collectionLabel} />
+            <div className="flex flex-col gap-5 lg:gap-8">
+              <ProductInfo product={product} collectionLabel={collectionLabel} />
+              <div className="hidden lg:block">
+                <TextureSection />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Texture section */}
-        <div className="container mt-12 md:mt-16">
+        {/* Texture section – mobile only */}
+        <div className="container mt-12 md:mt-16 lg:hidden">
           <TextureSection />
         </div>
 
