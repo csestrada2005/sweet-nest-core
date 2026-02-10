@@ -29,7 +29,7 @@ const Hero = () => {
             LAYER B: Interactive Image Container
             ======================================== */}
         {/* Hero image – purely visual, no interactivity */}
-        <div className="relative mx-auto w-full max-w-[280px] md:max-w-[320px] mb-6">
+        <div className="relative mx-auto w-full max-w-[280px] md:max-w-[320px] mb-3">
           <div className="absolute inset-0 bg-papachoa-blush/40 blob-shape scale-105 pointer-events-none" />
           <img
             src={heroImage}
@@ -47,29 +47,10 @@ const Hero = () => {
             </defs>
           </svg>
 
-          {/* Decorative floating cards – no interactivity */}
-          <div
-            className="absolute top-2 right-0 md:-right-14 z-20 pointer-events-none bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm px-3.5 py-2 max-w-[180px]"
-          >
-            <span className="text-[10px] md:text-xs font-medium tracking-wide text-foreground/70 uppercase leading-snug block">
-              🇲🇽 Diseñado y hecho en México
-            </span>
-          </div>
-          <div
-            className="absolute -bottom-2 -left-4 md:-left-16 z-20 pointer-events-none bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm px-3.5 py-2 max-w-[180px]"
-          >
-            <span className="text-[10px] md:text-xs font-medium italic text-foreground/70 leading-snug block">
-              "Pensado para los momentos que importan"
-            </span>
-          </div>
         </div>
 
         {/* Text content */}
         <div className="text-center">
-          <div className="inline-block bg-papachoa-sage/60 px-3 py-1 rounded-full mb-4">
-            <span className="text-xs font-semibold text-accent-foreground">🧸 Nueva colección</span>
-          </div>
-          
           <h1 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground leading-[1.15] mb-3">
             Pensado por
             <br />
