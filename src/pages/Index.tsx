@@ -7,7 +7,8 @@ import Emotion from "@/components/sections/Emotion";
 import Collections from "@/components/sections/Collections";
 import { usePrefetchRoutes } from "@/hooks/usePrefetch";
 
-// Below-fold sections – lazy loaded to speed up FCP/LCP
+// Below-fold sections – lazy loaded
+const StoriesThread = lazy(() => import("@/components/sections/StoriesThread"));
 const Softness = lazy(() => import("@/components/sections/Softness"));
 const Testimonials = lazy(() => import("@/components/sections/Testimonials"));
 const MadeInMexico = lazy(() => import("@/components/sections/MadeInMexico"));
@@ -24,6 +25,7 @@ const Index = () => {
         <Emotion />
         <Collections />
         <Suspense fallback={null}>
+          <StoriesThread />
           <Softness />
           <Testimonials />
           <MadeInMexico />

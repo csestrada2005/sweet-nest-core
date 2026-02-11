@@ -1,137 +1,93 @@
 import { Link } from "react-router-dom";
-import { Baby, Heart, Users, Moon, Gift } from "lucide-react";
 import type { Collection } from "@/data/products";
 
 const collections: {
   title: string;
   description: string;
-  icon: typeof Baby;
-  emoji: string;
   bgColor: string;
-  borderColor: string;
-  iconColor: string;
   slug: Collection;
 }[] = [
   {
     title: "Recién nacido",
     description: "Suavidad desde el primer día",
-    icon: Baby,
-    emoji: "👶",
-    bgColor: "bg-papachoa-blush",
-    borderColor: "border-papachoa-blush-mid",
-    iconColor: "text-papachoa-blush-dark",
+    bgColor: "bg-papachoa-terracotta-light/30",
     slug: "recien-nacido",
   },
   {
     title: "Bebé & Cobijo",
     description: "Apapacho para los más pequeños",
-    icon: Heart,
-    emoji: "🧸",
-    bgColor: "bg-papachoa-sky",
-    borderColor: "border-papachoa-sky-mid",
-    iconColor: "text-secondary-foreground",
+    bgColor: "bg-papachoa-indigo-light/15",
     slug: "bebe-cobijo",
   },
   {
     title: "Pijamas Familiares",
     description: "Momentos juntos, vestidos igual",
-    icon: Users,
-    emoji: "👨‍👩‍👧",
-    bgColor: "bg-papachoa-sage",
-    borderColor: "border-papachoa-sage-mid",
-    iconColor: "text-accent-foreground",
+    bgColor: "bg-papachoa-jade-light/30",
     slug: "pijamas-familiares",
   },
   {
     title: "Sacos & Nidos",
     description: "Sueños seguros y calientitos",
-    icon: Moon,
-    emoji: "🌙",
-    bgColor: "bg-papachoa-peach",
-    borderColor: "border-papachoa-blush-mid",
-    iconColor: "text-foreground/80",
+    bgColor: "bg-papachoa-marigold-light/30",
     slug: "sacos-nidos",
   },
   {
     title: "Listo para Regalar",
     description: "El regalo perfecto para dar amor",
-    icon: Gift,
-    emoji: "🎁",
-    bgColor: "bg-papachoa-blush-mid",
-    borderColor: "border-papachoa-blush-dark",
-    iconColor: "text-papachoa-warm-brown",
+    bgColor: "bg-papachoa-rose-light/40",
     slug: "regalo",
   },
 ];
 
 const Collections = () => {
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden"
-      style={{ background: "linear-gradient(180deg, hsl(40 55% 94%) 0%, hsl(15 50% 90%) 100%)" }}>
-      {/* Playful decorative background */}
+    <section className="py-24 md:py-32 bg-papachoa-cream relative overflow-hidden texture-linen">
+      {/* Background organic shapes */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-16 -right-16 w-64 h-64 bg-papachoa-blush/25 blob-shape" />
-        <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-papachoa-sky/25 blob-shape-2" />
-        <span className="absolute top-12 left-16 text-2xl opacity-25 animate-float hidden md:block">⭐</span>
-        <span className="absolute bottom-20 right-16 text-2xl opacity-20 animate-wiggle hidden md:block">✨</span>
+        <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full opacity-10"
+          style={{ background: "radial-gradient(circle, hsl(14 52% 46% / 0.2), transparent 70%)" }} />
+        <div className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full opacity-10"
+          style={{ background: "radial-gradient(circle, hsl(162 22% 42% / 0.15), transparent 70%)" }} />
       </div>
 
-      <div className="container relative">
-        <div className="text-center mb-14">
-          <span className="inline-flex items-center gap-2 bg-papachoa-sage px-5 py-2 rounded-full text-sm font-bold text-accent-foreground mb-6 shadow-sm">
-            🛍️ Explora
-          </span>
+      <div className="container relative z-10">
+        <div className="text-center mb-16">
+          <p className="font-body text-xs tracking-[0.25em] uppercase text-primary mb-5">
+            Explora
+          </p>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground mb-4">
-            Nuestras{" "}
-            <span className="italic text-papachoa-blush-dark relative inline-block">
-              Colecciones
-              <svg className="absolute -bottom-1 left-0 w-full h-3" viewBox="0 0 100 12" preserveAspectRatio="none">
-                <path d="M0 6 Q12 0 25 6 Q37 12 50 6 Q62 0 75 6 Q87 12 100 6" fill="none" stroke="hsl(145 30% 65%)" strokeWidth="2.5" />
-              </svg>
-            </span>
+            Nuestras <em>Colecciones</em>
           </h2>
-          <p className="text-muted-foreground max-w-md mx-auto text-lg">
-            Encuentra el apapacho perfecto para cada etapa ✨
+          <p className="text-muted-foreground max-w-md mx-auto text-lg font-light">
+            Encuentra el apapacho perfecto para cada etapa
           </p>
         </div>
 
-        {/* Playful bento grid */}
+        {/* Bento grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-5 max-w-4xl mx-auto">
           {collections.map((collection, index) => (
             <Link
               key={collection.title}
               to={`/catalogo?categoria=${collection.slug}`}
               aria-label={`Ver colección ${collection.title}`}
-              className={`group relative overflow-hidden rounded-3xl md:rounded-[2rem] transition-all duration-200 hover:scale-[1.03] hover:-rotate-1 active:scale-[0.97] border-2 ${collection.borderColor}/30 shadow-md hover:shadow-xl ${
+              className={`group relative overflow-hidden rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:translate-y-0 border border-border/40 ${
                 index === 0 ? "md:col-span-2 md:row-span-2" : ""
               }`}
             >
-              <div className={`${collection.bgColor} h-full p-5 md:p-6 ${index === 0 ? "min-h-[170px] md:min-h-[280px]" : "min-h-[130px] md:min-h-[150px]"} flex flex-col gap-3 relative`}>
-                {/* Background emoji pattern (subtle) */}
-                <div className="absolute inset-0 opacity-[0.07] pointer-events-none flex items-center justify-center overflow-hidden">
-                  <span className={`${index === 0 ? "text-[120px] md:text-[180px]" : "text-[80px]"}`}>{collection.emoji}</span>
+              <div className={`${collection.bgColor} h-full p-6 md:p-7 ${index === 0 ? "min-h-[170px] md:min-h-[280px]" : "min-h-[130px] md:min-h-[150px]"} flex flex-col justify-between`}>
+                <div>
+                  <h3 className={`font-display ${index === 0 ? "text-2xl md:text-3xl" : "text-lg md:text-xl"} text-foreground mb-1.5 leading-tight`}>
+                    {collection.title}
+                  </h3>
+                  <p className={`text-foreground/60 font-light text-sm leading-snug ${index === 0 ? "" : "line-clamp-2"}`}>
+                    {collection.description}
+                  </p>
                 </div>
 
-                <div className="relative z-10 flex flex-col h-full gap-3">
-                  {/* Emoji icon */}
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-card/60 rounded-2xl flex items-center justify-center shadow-sm backdrop-blur-sm">
-                    <span className="text-2xl md:text-3xl">{collection.emoji}</span>
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <h3 className={`font-display ${index === 0 ? "text-xl md:text-2xl" : "text-sm md:text-lg"} text-foreground mb-0.5 md:mb-1 leading-tight`}>
-                      {collection.title}
-                    </h3>
-                    <p className={`text-foreground/60 font-light text-xs md:text-sm leading-snug ${index === 0 ? "" : "line-clamp-2"}`}>
-                      {collection.description}
-                    </p>
-                  </div>
-
-                  {/* Arrow */}
-                  <div className="mt-auto flex justify-end">
-                    <div className="w-9 h-9 bg-card/70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 shadow-sm">
-                      <span className="text-foreground text-sm font-bold">→</span>
-                    </div>
+                {/* Arrow */}
+                <div className="mt-4 flex justify-end">
+                  <div className="w-8 h-8 border border-foreground/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+                    <span className="text-foreground/60 text-sm">&rarr;</span>
                   </div>
                 </div>
               </div>
@@ -140,11 +96,11 @@ const Collections = () => {
         </div>
       </div>
 
-      {/* Scalloped wave divider */}
+      {/* Curved divider */}
       <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full" preserveAspectRatio="none">
+        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
           <path 
-            d="M0,30 C80,10 160,50 240,30 C320,10 400,50 480,30 C560,10 640,50 720,30 C800,10 880,50 960,30 C1040,10 1120,50 1200,30 C1280,10 1360,50 1440,30 V50 H0 Z" 
+            d="M0 60L48 55C96 50 192 42 288 40C384 38 480 42 576 44C672 46 768 46 864 44C960 42 1056 38 1152 40C1248 42 1344 50 1392 55L1440 60V60H0Z" 
             className="fill-background"
           />
         </svg>
