@@ -39,25 +39,25 @@ const Header = () => {
   return (
     <>
     <header className="w-full fixed top-0 left-0 right-0 z-50">
-      {/* Marquee banner - more compact */}
-      <div className="bg-papachoa-blush-mid overflow-hidden py-1.5">
+      {/* Top banner */}
+      <div className="bg-papachoa-warm-brown overflow-hidden py-1.5">
         <div className="animate-marquee whitespace-nowrap flex">
           {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex items-center gap-6 px-3">
-              <span className="text-xs font-medium text-papachoa-warm-brown">✨ Enviamos a toda la República</span>
-              <span className="text-papachoa-warm-brown/40">•</span>
-              <span className="text-xs font-medium text-papachoa-warm-brown">🧸 Ultra suaves</span>
-              <span className="text-papachoa-warm-brown/40">•</span>
-              <span className="text-xs font-medium text-papachoa-warm-brown">🇲🇽 Hecho en México</span>
-              <span className="text-papachoa-warm-brown/40">•</span>
-              <span className="text-xs font-medium text-papachoa-warm-brown">💝 Regalo perfecto</span>
-              <span className="text-papachoa-warm-brown/40">•</span>
+            <div key={i} className="flex items-center gap-8 px-4">
+              <span className="text-xs font-medium text-papachoa-cream/80 tracking-wide">Enviamos a toda la República</span>
+              <span className="text-papachoa-cream/30">&middot;</span>
+              <span className="text-xs font-medium text-papachoa-cream/80 tracking-wide">Textiles ultra suaves</span>
+              <span className="text-papachoa-cream/30">&middot;</span>
+              <span className="text-xs font-medium text-papachoa-cream/80 tracking-wide">Hecho en México</span>
+              <span className="text-papachoa-cream/30">&middot;</span>
+              <span className="text-xs font-medium text-papachoa-cream/80 tracking-wide">El regalo perfecto</span>
+              <span className="text-papachoa-cream/30">&middot;</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Main header - more compact */}
+      {/* Main header */}
       <div className="bg-background/95 backdrop-blur-md border-b border-border/30">
         <div className="container grid grid-cols-[1fr_auto_1fr] items-center py-2.5 min-h-[56px] md:min-h-[60px]">
           {/* Left column */}
@@ -65,7 +65,7 @@ const Header = () => {
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <GlassBlobButton tint="blush" className="lg:hidden" aria-label="Menú">
-                  <Menu className="h-[22px] w-[22px] text-foreground" strokeWidth={2.25} />
+                  <Menu className="h-[20px] w-[20px] text-foreground" strokeWidth={2} />
                 </GlassBlobButton>
               </SheetTrigger>
               <SheetContent side="left" className="w-[280px] bg-background border-r-0">
@@ -77,7 +77,7 @@ const Header = () => {
                       <Link
                         key={link.label}
                         to={link.href}
-                        className="text-xl font-display text-foreground hover:bg-papachoa-blush/50 px-4 py-3 rounded-2xl transition-colors"
+                        className="text-xl font-display text-foreground hover:text-primary px-4 py-3 rounded-lg transition-colors"
                         onClick={() => setIsOpen(false)}
                       >
                         {link.label}
@@ -88,13 +88,13 @@ const Header = () => {
               </SheetContent>
             </Sheet>
 
-            {/* Desktop nav */}
-            <nav className="hidden lg:flex items-center gap-2">
+            {/* Desktop nav — textile underline animation */}
+            <nav className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.label}
                   to={link.href}
-                  className="text-sm font-body font-semibold text-foreground/80 hover:text-foreground hover:bg-papachoa-blush/40 active:scale-95 px-5 py-2 rounded-full transition-all duration-150"
+                  className="nav-textile-link text-sm font-body font-medium text-foreground/70 hover:text-foreground px-4 py-2 transition-colors"
                 >
                   {link.label}
                 </Link>
@@ -102,7 +102,7 @@ const Header = () => {
             </nav>
           </div>
 
-          {/* Center column – Logo */}
+          {/* Center — Logo */}
           <Link to="/" onClick={handleLogoClick} className="justify-self-center flex items-center">
             <img 
               src={logo} 
@@ -113,22 +113,22 @@ const Header = () => {
             />
           </Link>
 
-          {/* Right column – Icons */}
+          {/* Right — Icons */}
           <div className="flex items-center justify-end gap-1.5">
             <GlassBlobButton tint="sky" onClick={() => setIsSearchOpen(true)} aria-label="Buscar">
-              <Search className="h-[22px] w-[22px] md:h-5 md:w-5 text-foreground" strokeWidth={2.25} />
+              <Search className="h-[20px] w-[20px] md:h-[18px] md:w-[18px] text-foreground" strokeWidth={2} />
             </GlassBlobButton>
             <GlassBlobButton
               tint="sage"
               onClick={() => setIsCartOpen(true)}
               aria-label="Carrito"
               badge={itemCount > 0 ? (
-                <span className="bg-papachoa-warm-brown text-card text-[10px] font-bold min-w-[18px] min-h-[18px] rounded-full flex items-center justify-center px-1">
+                <span className="bg-primary text-primary-foreground text-[10px] font-bold min-w-[18px] min-h-[18px] rounded-full flex items-center justify-center px-1">
                   {itemCount > 9 ? "9+" : itemCount}
                 </span>
               ) : undefined}
             >
-              <ShoppingBag className="h-[22px] w-[22px] md:h-5 md:w-5 text-foreground" strokeWidth={2.25} />
+              <ShoppingBag className="h-[20px] w-[20px] md:h-[18px] md:w-[18px] text-foreground" strokeWidth={2} />
             </GlassBlobButton>
           </div>
         </div>

@@ -1,72 +1,88 @@
 const features = [
-  { emoji: "💛", label: "Comercio justo", color: "bg-papachoa-blush" },
-  { emoji: "✋", label: "Hecho a mano", color: "bg-papachoa-sky" },
-  { emoji: "🇲🇽", label: "100% Mexicano", color: "bg-papachoa-sage" },
+  { label: "Comercio justo", color: "bg-papachoa-terracotta-light/25" },
+  { label: "Hecho a mano", color: "bg-papachoa-indigo-light/15" },
+  { label: "100% Mexicano", color: "bg-papachoa-jade-light/25" },
 ];
 
 const MadeInMexico = () => {
   return (
-    <section className="py-20 md:py-28 relative overflow-hidden">
-      {/* Playful background */}
+    <section className="py-24 md:py-32 relative overflow-hidden texture-linen">
+      {/* Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-8 -right-8 w-32 h-32 bg-papachoa-sage/30 blob-shape animate-float" />
-        <div className="absolute -bottom-12 -left-12 w-40 h-40 bg-papachoa-blush/25 blob-shape-2" />
-        <span className="absolute top-16 left-20 text-2xl opacity-25 animate-wiggle hidden md:block">🇲🇽</span>
-        <span className="absolute bottom-20 right-16 text-2xl opacity-20 animate-float hidden md:block">💫</span>
+        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-8"
+          style={{ background: "radial-gradient(circle, hsl(162 22% 42% / 0.15), transparent 70%)" }} />
+        <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full opacity-8"
+          style={{ background: "radial-gradient(circle, hsl(14 52% 46% / 0.1), transparent 70%)" }} />
+
+        {/* Subtle map outline silhouette */}
+        <svg className="absolute bottom-8 right-8 w-48 h-64 opacity-[0.03] hidden md:block" viewBox="0 0 100 140">
+          <path d="M50 5 C65 8 78 15 82 30 C86 45 80 55 85 70 C90 85 75 95 70 105 C65 115 55 120 50 130 C45 120 35 115 30 105 C25 95 10 85 15 70 C20 55 14 45 18 30 C22 15 35 8 50 5Z" 
+            fill="none" stroke="hsl(20 32% 20%)" strokeWidth="1.5" strokeDasharray="3 4" />
+        </svg>
       </div>
 
-      <div className="container relative">
+      <div className="container relative z-10">
         <div className="max-w-3xl mx-auto">
           {/* Badge */}
           <div className="flex justify-center mb-10">
-            <div className="bg-papachoa-sage px-6 py-3 rounded-full flex items-center gap-3 shadow-md border-2 border-papachoa-sage-mid/30">
-              <span className="text-2xl">🇲🇽</span>
-              <span className="font-bold text-accent-foreground">Hecho en México con amor</span>
-              <span className="text-2xl">💛</span>
+            <div className="border border-primary/30 px-6 py-2.5 rounded-lg flex items-center gap-3">
+              <span className="font-body text-xs tracking-[0.2em] uppercase text-primary font-medium">Hecho en México con amor</span>
             </div>
           </div>
 
-          {/* Main text */}
+          {/* Headline */}
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-foreground text-center leading-tight mb-8">
             Cada prenda tiene
             <br />
-            <span className="italic text-papachoa-blush-dark relative inline-block">
-              nombre y apellido
-              <svg className="absolute -bottom-1 left-0 w-full h-3" viewBox="0 0 200 12" preserveAspectRatio="none">
-                <path d="M0 6 Q25 0 50 6 Q75 12 100 6 Q125 0 150 6 Q175 12 200 6" fill="none" stroke="hsl(145 30% 65%)" strokeWidth="2.5" />
-              </svg>
-            </span>
+            <em className="text-primary">nombre y apellido</em>
           </h2>
 
-          <p className="text-center text-lg md:text-xl text-muted-foreground font-light max-w-xl mx-auto mb-14 leading-relaxed">
+          <p className="text-center text-lg md:text-xl text-muted-foreground font-light max-w-xl mx-auto mb-6 leading-relaxed">
             Trabajamos con talleres locales bajo principios de comercio justo. 
-            Cada pijama lleva el cuidado de artesanas que ponen el corazón en cada puntada. ✨
+            Cada pijama lleva el cuidado de artesanas que ponen el corazón en cada puntada.
           </p>
 
-          {/* Playful feature cards */}
-          <div className="grid grid-cols-3 gap-4 md:gap-6">
-            {features.map((item, i) => (
-              <div 
-                key={item.label} 
-                className="text-center group"
-                style={{ transform: i === 1 ? "rotate(-2deg)" : i === 2 ? "rotate(1deg)" : "rotate(-1deg)" }}
-              >
-                <div className={`${item.color} w-20 h-20 md:w-24 md:h-24 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-md border-2 border-card/60 group-hover:scale-110 group-hover:rotate-3 transition-all duration-200`}>
-                  <span className="text-3xl md:text-4xl">{item.emoji}</span>
+          <div className="embroidery-line w-20 mx-auto mb-14" />
+
+          {/* Features */}
+          <div className="grid grid-cols-3 gap-4 md:gap-8">
+            {features.map((item) => (
+              <div key={item.label} className="text-center">
+                <div className={`${item.color} w-16 h-16 md:w-20 md:h-20 rounded-xl flex items-center justify-center mx-auto mb-4 border border-border/30`}>
+                  {/* Embroidery stitch icon */}
+                  <svg className="w-7 h-7 md:w-8 md:h-8 text-foreground/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="2 3">
+                    {item.label === "Comercio justo" && (
+                      <path d="M12 21C12 21 4 15 4 9.5C4 7 6 4 8.5 4C10 4 11.5 5 12 6.5C12.5 5 14 4 15.5 4C18 4 20 7 20 9.5C20 15 12 21 12 21Z" />
+                    )}
+                    {item.label === "Hecho a mano" && (
+                      <>
+                        <path d="M12 2L12 22" />
+                        <path d="M5 8L12 2L19 8" />
+                        <path d="M5 16L12 22L19 16" />
+                      </>
+                    )}
+                    {item.label === "100% Mexicano" && (
+                      <>
+                        <circle cx="12" cy="12" r="9" />
+                        <path d="M12 3L12 21" />
+                        <path d="M3 12L21 12" />
+                      </>
+                    )}
+                  </svg>
                 </div>
-                <p className="text-sm md:text-base font-bold text-foreground">{item.label}</p>
+                <p className="text-sm md:text-base font-medium text-foreground">{item.label}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Scalloped divider */}
+      {/* Curved divider */}
       <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full" preserveAspectRatio="none">
+        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
           <path 
-            d="M0,30 C80,10 160,50 240,30 C320,10 400,50 480,30 C560,10 640,50 720,30 C800,10 880,50 960,30 C1040,10 1120,50 1200,30 C1280,10 1360,50 1440,30 V50 H0 Z" 
-            fill="hsl(15 50% 88% / 0.4)"
+            d="M0 60L48 55C96 50 192 40 288 38C384 36 480 40 576 43C672 46 768 48 864 46C960 44 1056 38 1152 36C1248 34 1344 36 1392 38L1440 40V60H0Z" 
+            className="fill-papachoa-cream"
           />
         </svg>
       </div>
