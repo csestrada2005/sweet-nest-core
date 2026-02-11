@@ -58,36 +58,51 @@ const Header = () => {
 
       {/* Main header - more compact */}
       <div className="bg-background/95 backdrop-blur-md border-b border-border/30">
-        <div className="container flex items-center justify-between py-2.5">
-          {/* Mobile menu */}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger className="lg:hidden relative p-3 -ml-2 group transition-all duration-300">
-              <span className="absolute inset-0 bg-papachoa-blush/40 group-hover:bg-papachoa-blush/55 group-active:scale-[0.96] icon-blob-1 transition-all duration-300 group-hover:shadow-[0_0_14px_hsl(var(--papachoa-blush)/0.45)] group-hover:scale-[1.05]" />
-              <Menu className="h-[22px] w-[22px] text-foreground/75 relative z-10" />
-              <span className="sr-only">Menú</span>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-[280px] bg-background border-r-0">
-              <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
-              <div className="mt-8">
-                <img src={logo} alt="Papachoa" className="h-10 mb-10" />
-                <nav className="flex flex-col gap-1">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.label}
-                      to={link.href}
-                      className="text-xl font-display text-foreground hover:bg-papachoa-blush/50 px-4 py-3 rounded-2xl transition-colors"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </nav>
-              </div>
-            </SheetContent>
-          </Sheet>
+        <div className="container grid grid-cols-[1fr_auto_1fr] items-center py-2.5 min-h-[56px] md:min-h-[60px]">
+          {/* Left column */}
+          <div className="flex items-center justify-start">
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger className="lg:hidden relative min-w-[44px] min-h-[44px] flex items-center justify-center group transition-all duration-300">
+                <span className="absolute inset-0 bg-papachoa-blush/40 group-hover:bg-papachoa-blush/55 group-active:scale-[0.96] icon-blob-1 transition-all duration-300 group-hover:shadow-[0_0_14px_hsl(var(--papachoa-blush)/0.45)] group-hover:scale-[1.05]" />
+                <Menu className="h-[22px] w-[22px] text-foreground/75 relative z-10" />
+                <span className="sr-only">Menú</span>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[280px] bg-background border-r-0">
+                <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
+                <div className="mt-8">
+                  <img src={logo} alt="Papachoa" className="h-10 mb-10" />
+                  <nav className="flex flex-col gap-1">
+                    {navLinks.map((link) => (
+                      <Link
+                        key={link.label}
+                        to={link.href}
+                        className="text-xl font-display text-foreground hover:bg-papachoa-blush/50 px-4 py-3 rounded-2xl transition-colors"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+              </SheetContent>
+            </Sheet>
 
-          {/* Logo - priority loading */}
-          <Link to="/" onClick={handleLogoClick} className="flex-1 lg:flex-none flex justify-center lg:justify-start">
+            {/* Desktop nav */}
+            <nav className="hidden lg:flex items-center gap-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  className="text-sm font-body font-semibold text-foreground/80 hover:text-foreground hover:bg-papachoa-blush/40 active:scale-95 px-5 py-2 rounded-full transition-all duration-150"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          {/* Center column – Logo */}
+          <Link to="/" onClick={handleLogoClick} className="justify-self-center flex items-center">
             <img 
               src={logo} 
               alt="Papachoa México" 
@@ -97,24 +112,11 @@ const Header = () => {
             />
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-2 flex-1 justify-center">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                to={link.href}
-                className="text-sm font-body font-semibold text-foreground/80 hover:text-foreground hover:bg-papachoa-blush/40 active:scale-95 px-5 py-2 rounded-full transition-all duration-150"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Icons */}
-          <div className="flex items-center gap-1.5">
+          {/* Right column – Icons */}
+          <div className="flex items-center justify-end gap-1.5">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="relative p-3 group transition-all duration-300"
+              className="relative min-w-[44px] min-h-[44px] flex items-center justify-center group transition-all duration-300"
             >
               <span className="absolute inset-0 bg-papachoa-sky/40 group-hover:bg-papachoa-sky/55 group-active:scale-[0.96] icon-blob-2 transition-all duration-300 group-hover:shadow-[0_0_14px_hsl(var(--papachoa-sky)/0.45)] group-hover:scale-[1.05]" />
               <Search className="h-[22px] w-[22px] md:h-5 md:w-5 text-foreground/75 relative z-10" />
@@ -122,7 +124,7 @@ const Header = () => {
             </button>
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-3 group transition-all duration-300"
+              className="relative min-w-[44px] min-h-[44px] flex items-center justify-center group transition-all duration-300"
             >
               <span className="absolute inset-0 bg-papachoa-sage/40 group-hover:bg-papachoa-sage/55 group-active:scale-[0.96] icon-blob-3 transition-all duration-300 group-hover:shadow-[0_0_14px_hsl(var(--papachoa-sage)/0.45)] group-hover:scale-[1.05]" />
               <ShoppingBag className="h-[22px] w-[22px] md:h-5 md:w-5 text-foreground/75 relative z-10" />
