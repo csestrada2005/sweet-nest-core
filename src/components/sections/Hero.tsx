@@ -9,9 +9,9 @@ import hero5 from "@/assets/hero-5.jpg";
 
 const heroSlides = [
   { src: heroImage, alt: "Familia usando pijamas Papachoa", pos: "52% 60%" },
-  { src: hero3, alt: "Pijamas Papachoa estilo 3", pos: "30% 30%" },
-  { src: hero4, alt: "Pijamas Papachoa estilo 4", pos: "30% 30%" },
-  { src: hero5, alt: "Pijamas Papachoa estilo 5", pos: "30% 30%" },
+  { src: hero3, alt: "Pijamas Papachoa estilo 3", pos: "50% 80%" },
+  { src: hero4, alt: "Pijamas Papachoa estilo 4", pos: "50% 80%" },
+  { src: hero5, alt: "Pijamas Papachoa estilo 5", pos: "50% 80%" },
 ];
 
 /* Floating thread particles */
