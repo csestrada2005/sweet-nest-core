@@ -105,14 +105,14 @@ export function useScrollDisarrange(options: DisarrangeOptions = {}) {
     }
   }, [maxRotate, maxTranslate, maxScale, range, smoothing]);
 
-  const startLoop = useCallback(() => {
-    if (!runningRef.current) {
-      runningRef.current = true;
-      rafRef.current = requestAnimationFrame(tick);
-    }
-  }, [tick]);
-
   useEffect(() => {
+    const startLoop = () => {
+      if (!runningRef.current) {
+        runningRef.current = true;
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    };
+
     const onScroll = () => startLoop();
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -122,7 +122,7 @@ export function useScrollDisarrange(options: DisarrangeOptions = {}) {
       window.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [startLoop]);
+  }, [tick]);
 
   return containerRef;
 }
