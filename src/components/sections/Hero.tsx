@@ -117,16 +117,10 @@ const Hero = () => {
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
+                  transformOrigin: "bottom center",
                 }}
               >
                 mamás,
-                <span
-                  className="absolute bottom-0 left-0 w-full h-[2px] origin-left scale-x-0 transition-transform duration-500 ease-out"
-                  style={{
-                    backgroundImage:
-                      "repeating-linear-gradient(90deg, hsl(38 60% 72%) 0px, hsl(38 60% 72%) 4px, transparent 4px, transparent 7px)",
-                  }}
-                />
               </em>{" "}
               para mamás
             </h1>

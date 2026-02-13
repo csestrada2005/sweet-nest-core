@@ -683,13 +683,14 @@
   animation: thread-float linear infinite;
 }
 
-/* Hero "mamás" word hover */
-.hero-mamas-word:hover {
-  color: hsl(38 60% 82%);
-  transition: color 0.4s ease;
+/* Hero "mamás" word hover – playful fall effect (desktop only) */
+.hero-mamas-word {
+  transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
 }
-.hero-mamas-word:hover span {
-  transform: scaleX(1) !important;
+@media (min-width: 1024px) {
+  .hero-mamas-word:hover {
+    transform: rotate(-8deg) translateX(-6px) translateY(4px);
+  }
 }
 
 /* Collection card editorial tilt */
