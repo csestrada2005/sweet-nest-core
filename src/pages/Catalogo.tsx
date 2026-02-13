@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback, useId } from "react";
 import { useSearchParams } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -44,6 +44,22 @@ const Catalogo = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /* ── Active card state (lifted from ProductCard for mobile persistence) ── */
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!activeCardId) return;
+    const handler = (e: PointerEvent) => {
+      const grid = gridRef.current;
+      if (grid && !grid.contains(e.target as Node)) {
+        setActiveCardId(null);
+      }
+    };
+    document.addEventListener("pointerdown", handler, true);
+    return () => document.removeEventListener("pointerdown", handler, true);
+  }, [activeCardId]);
+
   const filteredProducts = useMemo(() => {
     const realProducts = products.filter((p) => p.image !== "/placeholder.svg");
     if (selectedCollection === "todos") return realProducts;
@@ -88,9 +104,15 @@ const Catalogo = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+          <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
             {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                isActive={activeCardId === product.id}
+                onActivate={() => setActiveCardId(product.id)}
+                onDeactivate={() => setActiveCardId((prev) => prev === product.id ? null : prev)}
+              />
             ))}
           </div>
 

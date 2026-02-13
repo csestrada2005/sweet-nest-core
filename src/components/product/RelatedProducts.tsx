@@ -1,3 +1,4 @@
+import { useState } from "react";
 import ProductCard from "@/components/catalog/ProductCard";
 import { products, type Product } from "@/data/products";
 
@@ -6,6 +7,7 @@ interface RelatedProductsProps {
 }
 
 const RelatedProducts = ({ currentProduct }: RelatedProductsProps) => {
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
   const realProducts = products.filter((p) => p.image !== "/placeholder.svg");
   
   const related = realProducts
@@ -31,7 +33,13 @@ const RelatedProducts = ({ currentProduct }: RelatedProductsProps) => {
       <div className="embroidery-line w-16 mb-6" />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
         {allRelated.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            key={product.id}
+            product={product}
+            isActive={activeCardId === product.id}
+            onActivate={() => setActiveCardId(product.id)}
+            onDeactivate={() => setActiveCardId((prev) => prev === product.id ? null : prev)}
+          />
         ))}
       </div>
     </div>
