@@ -1,3 +1,13 @@
+import pijamaRosa1 from "@/assets/pijama-rosa-1-abrazo.jpg";
+import pijamaRosa2 from "@/assets/pijama-rosa-2-ternura.jpg";
+import pijamaRosa3 from "@/assets/pijama-rosa-3-jugando.jpg";
+import pijamaRosa4 from "@/assets/pijama-rosa-4-nina-frente.jpg";
+import pijamaRosa5 from "@/assets/pijama-rosa-5-nina-mama.jpg";
+import pijamaRosa6 from "@/assets/pijama-rosa-6-detalle.jpg";
+import pijamaRosa7 from "@/assets/pijama-rosa-7-familia.jpg";
+import pijamaRosa8 from "@/assets/pijama-rosa-8-hermanos.jpg";
+import pijamaRosa9 from "@/assets/pijama-rosa-9-acostados.jpg";
+
 export type Collection =
   | "todos"
   | "recien-nacido"
@@ -169,8 +179,8 @@ export const products: Product[] = [
     name: "Pijama Mamá + Bebé",
     price: 1290,
     collection: "pijamas-familiares",
-    image: "/placeholder.svg",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
+    image: pijamaRosa1,
+    images: [pijamaRosa1, pijamaRosa2, pijamaRosa3, pijamaRosa4, pijamaRosa5, pijamaRosa6, pijamaRosa7, pijamaRosa8, pijamaRosa9],
     shortDescription: "Combina con tu bebé en suavidad y estilo. Momentos que se quedan.",
     longDescription: "El set Mamá + Bebé es uno de nuestros más queridos. Pijamas iguales para mamá y su pequeño, confeccionadas en la misma tela ultra suave. Perfectas para sesiones de fotos, noches de película o simplemente para sentirse conectadas. Porque vestirse igual nunca se sintió tan bonito.",
     tags: ["pijama", "mamá", "bebé", "matching"],
