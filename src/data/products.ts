@@ -8,6 +8,11 @@ import pijamaRosa6 from "@/assets/pijama-rosa-6-detalle.jpg";
 import pijamaRosa7 from "@/assets/pijama-rosa-7-familia.jpg";
 import pijamaRosa8 from "@/assets/pijama-rosa-8-hermanos.jpg";
 import pijamaRosa9 from "@/assets/pijama-rosa-9-acostados.jpg";
+import pijamaBlanca1 from "@/assets/pijama-blanca-1-dibujando.jpg";
+import pijamaBlanca2 from "@/assets/pijama-blanca-2-nina-dibuja.jpg";
+import pijamaBlanca3 from "@/assets/pijama-blanca-3-familia.jpg";
+import pijamaBlanca4 from "@/assets/pijama-blanca-4-abrazo.jpg";
+import pijamaBlanca5 from "@/assets/pijama-blanca-5-detalle.jpg";
 
 export type Collection =
   | "todos"
@@ -196,23 +201,24 @@ export const products: Product[] = [
     colorway: "Rosa y crema",
   },
   {
-    id: "set-familia-completa",
-    slug: "set-familia-completa",
-    name: "Set Familia Completa",
-    price: 2450,
+    id: "pijama-doodle-mama-bebe",
+    slug: "pijama-doodle-mama-bebe",
+    name: "Pijama Doodle Mamá + Bebé",
+    price: 1390,
     collection: "pijamas-familiares",
-    image: "/placeholder.svg",
-    images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-    shortDescription: "Toda la familia vestida igual. El apapacho es mejor cuando se comparte.",
-    longDescription: "Nuestro set más completo: pijamas iguales para mamá, papá y hasta dos niños o bebés. Cada talla está proporcionada para verse increíble y sentirse cómoda. Un regalo ideal para baby showers, Navidad o cualquier momento que merezca celebrarse en familia.",
-    tags: ["familia", "set", "matching", "regalo"],
-    sizes: ["Adulto: CH/M/G/XG", "Niño: 2T/4T/6T/8", "Bebé: 0-3M/6-12M/12-18M"],
-    material: "Franela de algodón cepillado ultra suave. Doble costura en uniones para mayor durabilidad.",
-    care: ["Lavar con agua tibia", "Ciclo suave", "No usar cloro", "Secar a temperatura media"],
+    image: pijamaBlanca1,
+    images: [pijamaBlanca1, pijamaBlanca3, pijamaBlanca2, pijamaBlanca5, pijamaBlanca4],
+    shortDescription: "Dibujando momentos juntas. Pijama con print de doodles para mamá y su pequeña artista.",
+    longDescription: "El set Doodle Mamá + Bebé celebra la creatividad y el juego compartido. Con un estampado de dibujos hechos a mano sobre tela blanca ultra suave, estas pijamas son perfectas para esas tardes de crayones y risas. Cada trazo del print está inspirado en los dibujos reales de niñas, haciendo de cada pijama una pieza única llena de personalidad.",
+    tags: ["pijama", "mamá", "bebé", "matching", "doodle"],
+    sizes: ["CH", "M", "G", "XG"],
+    sizesSecondary: ["0-3M", "3-6M", "6-12M", "12-18M"],
+    material: "Jersey de algodón peinado con elastano para comodidad total. Suave y con excelente caída.",
+    care: ["Lavar con agua fría", "No mezclar con colores oscuros", "Secar al aire para mantener suavidad"],
     shippingSummary: "Envío a toda la República Mexicana. Entrega estimada: 3 a 7 días hábiles.",
     returnSummary: "30 días para cambios y devoluciones. Prenda sin usar, con etiqueta intacta.",
     featured: true,
-    colorway: "Cuadros clásicos",
+    colorway: "Blanco doodle",
   },
   {
     id: "pijama-papa-oso",
