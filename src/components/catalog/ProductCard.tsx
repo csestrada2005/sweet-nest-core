@@ -5,6 +5,9 @@ import type { Product } from "@/data/products";
 
 interface ProductCardProps {
   product: Product;
+  isActive: boolean;
+  onActivate: () => void;
+  onDeactivate: () => void;
 }
 
 const priceFormatter = new Intl.NumberFormat("es-MX", {
@@ -39,7 +42,7 @@ function preloadNeighbors(images: string[], currentIndex: number) {
   preloadImage(images[prev]);
 }
 
-const ProductCard = memo(({ product }: ProductCardProps) => {
+const ProductCard = memo(({ product, isActive, onActivate, onDeactivate }: ProductCardProps) => {
   const navigate = useNavigate();
   const formattedPrice = useMemo(() => priceFormatter.format(product.price), [product.price]);
   const realImages = useMemo(
@@ -49,7 +52,6 @@ const ProductCard = memo(({ product }: ProductCardProps) => {
   const hasMultiple = realImages.length > 1;
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isActive, setIsActive] = useState(false);
   const [direction, setDirection] = useState<'forward' | 'backward'>('forward');
   const [isAnimating, setIsAnimating] = useState(false);
   /* Track which image is visually displayed (deferred until loaded) */
@@ -142,29 +144,25 @@ const ProductCard = memo(({ product }: ProductCardProps) => {
   /* ── Mobile tap-to-activate logic ── */
   const activate = useCallback(() => {
     if (!isActive) {
-      setIsActive(true);
+      onActivate();
       justActivated.current = true;
-      /* Reset after a tick so the same tap doesn't navigate */
       requestAnimationFrame(() => {
         justActivated.current = false;
       });
     }
-  }, [isActive]);
+  }, [isActive, onActivate]);
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
-      /* If swiped, block navigation */
       if (didSwipe.current) {
         e.preventDefault();
         didSwipe.current = false;
         return;
       }
-      /* Mobile: first tap activates, doesn't navigate */
       if (justActivated.current) {
         e.preventDefault();
         return;
       }
-      /* If not active yet on touch, activate instead of navigating */
       if (!isActive && 'ontouchstart' in window) {
         e.preventDefault();
         activate();
@@ -173,19 +171,6 @@ const ProductCard = memo(({ product }: ProductCardProps) => {
     },
     [isActive, activate],
   );
-
-  /* Deactivate when tapping outside — use a global listener */
-  useEffect(() => {
-    if (!isActive) return;
-    const handler = (e: PointerEvent) => {
-      const card = cardRef.current;
-      if (card && !card.contains(e.target as Node)) {
-        setIsActive(false);
-      }
-    };
-    document.addEventListener("pointerdown", handler, true);
-    return () => document.removeEventListener("pointerdown", handler, true);
-  }, [isActive]);
 
   const cardRef = useRef<HTMLAnchorElement>(null);
 
@@ -202,10 +187,10 @@ const ProductCard = memo(({ product }: ProductCardProps) => {
       to={`/producto/${product.slug}`}
       className="group block"
       onClick={handleClick}
-      onMouseEnter={() => setIsActive(true)}
-      onMouseLeave={() => setIsActive(false)}
-      onFocus={() => setIsActive(true)}
-      onBlur={() => setIsActive(false)}
+      onMouseEnter={onActivate}
+      onMouseLeave={onDeactivate}
+      onFocus={onActivate}
+      onBlur={onDeactivate}
     >
       {/* Image container */}
       <div
