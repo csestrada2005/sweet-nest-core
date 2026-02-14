@@ -7,7 +7,7 @@ interface CollectionFilterProps {
   onSelect: (collection: Collection) => void;
 }
 
-/* Pastel tones matching the category cards exactly */
+/* Pastel tones matching the category cards */
 const chipColors: Record<Collection, { bg: string; bgActive: string; border: string; borderActive: string }> = {
   todos: {
     bg: "hsl(35 40% 92%)",
@@ -15,35 +15,29 @@ const chipColors: Record<Collection, { bg: string; bgActive: string; border: str
     border: "hsl(35 30% 84%)",
     borderActive: "hsl(35 38% 76%)",
   },
-  "recien-nacido": {
+  "mama-bebe": {
     bg: "hsl(14 38% 90%)",
     bgActive: "hsl(14 44% 82%)",
     border: "hsl(14 28% 82%)",
     borderActive: "hsl(14 34% 74%)",
   },
-  "bebe-cobijo": {
+  "mama-hija": {
     bg: "hsl(228 22% 90%)",
     bgActive: "hsl(228 30% 80%)",
     border: "hsl(228 18% 82%)",
     borderActive: "hsl(228 26% 74%)",
   },
-  "pijamas-familiares": {
+  "papa-hija": {
     bg: "hsl(162 16% 88%)",
     bgActive: "hsl(162 22% 78%)",
     border: "hsl(162 12% 80%)",
     borderActive: "hsl(162 18% 72%)",
   },
-  "sacos-nidos": {
+  matching: {
     bg: "hsl(38 40% 90%)",
     bgActive: "hsl(38 48% 80%)",
     border: "hsl(38 30% 82%)",
     borderActive: "hsl(38 38% 74%)",
-  },
-  regalo: {
-    bg: "hsl(348 22% 90%)",
-    bgActive: "hsl(348 28% 82%)",
-    border: "hsl(348 16% 82%)",
-    borderActive: "hsl(348 22% 76%)",
   },
 };
 

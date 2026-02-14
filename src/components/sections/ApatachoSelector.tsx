@@ -20,7 +20,7 @@ const options: ApatachoOption[] = [
     emoji: "🌙",
     label: "Calma",
     description: "Necesito que mi bebé duerma tranquilo toda la noche",
-    collections: ["sacos-nidos", "recien-nacido"],
+    collections: ["mama-bebe"],
     color: "hsl(228 28% 58%)",
   },
   {
@@ -28,7 +28,7 @@ const options: ApatachoOption[] = [
     emoji: "🤱",
     label: "Ternura",
     description: "Quiero apapachar a mi recién nacido con lo más suave",
-    collections: ["recien-nacido", "bebe-cobijo"],
+    collections: ["mama-bebe", "mama-hija"],
     color: "hsl(14 52% 46%)",
   },
   {
@@ -36,7 +36,7 @@ const options: ApatachoOption[] = [
     emoji: "👨‍👩‍👧",
     label: "Conexión",
     description: "Busco momentos especiales en familia, vestidos igual",
-    collections: ["pijamas-familiares"],
+    collections: ["mama-hija", "papa-hija"],
     color: "hsl(162 22% 42%)",
   },
   {
@@ -44,7 +44,7 @@ const options: ApatachoOption[] = [
     emoji: "🎁",
     label: "Regalar amor",
     description: "Quiero dar un regalo que emocione de verdad",
-    collections: ["regalo"],
+    collections: ["mama-bebe", "papa-hija"],
     color: "hsl(38 60% 52%)",
   },
 ];
