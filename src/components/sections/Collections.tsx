@@ -12,49 +12,52 @@ const collections: {
   bgGradient: string;
   slug: Collection;
   icon: string;
-  productCount: number;
+  showAll?: boolean;
+  featuredProductId?: string;
 }[] = [
   {
-    title: "Recién nacido",
-    description: "Suavidad desde el primer día",
-    bgGradient: "linear-gradient(145deg, hsl(14 38% 82%) 0%, hsl(14 32% 78%) 100%)",
-    slug: "recien-nacido",
-    icon: "🌙",
-    productCount: products.filter(p => p.collection === "recien-nacido").length,
-  },
-  {
-    title: "Bebé & Cobijo",
-    description: "Apapacho para los más pequeños",
-    bgGradient: "linear-gradient(145deg, hsl(228 22% 80%) 0%, hsl(228 28% 76%) 100%)",
-    slug: "bebe-cobijo",
-    icon: "☁️",
-    productCount: products.filter(p => p.collection === "bebe-cobijo").length,
-  },
-  {
-    title: "Pijamas Familiares",
-    description: "Momentos juntos, vestidos igual",
-    bgGradient: "linear-gradient(145deg, hsl(162 16% 78%) 0%, hsl(162 18% 74%) 100%)",
-    slug: "pijamas-familiares",
+    title: "Toda la colección",
+    description: "Pijamas diseñadas para compartir",
+    bgGradient: "linear-gradient(145deg, hsl(35 40% 84%) 0%, hsl(35 36% 80%) 100%)",
+    slug: "todos",
     icon: "🤍",
-    productCount: products.filter(p => p.collection === "pijamas-familiares").length,
+    showAll: true,
   },
   {
-    title: "Sacos & Nidos",
-    description: "Sueños seguros y calientitos",
+    title: "Mamá & Bebé",
+    description: "Suavidad desde el primer abrazo",
+    bgGradient: "linear-gradient(145deg, hsl(14 38% 82%) 0%, hsl(14 32% 78%) 100%)",
+    slug: "mama-bebe",
+    icon: "🌸",
+    featuredProductId: "pijama-mama-bebe",
+  },
+  {
+    title: "Mamá & Hija",
+    description: "Momentos iguales, recuerdos eternos",
+    bgGradient: "linear-gradient(145deg, hsl(228 22% 80%) 0%, hsl(228 28% 76%) 100%)",
+    slug: "mama-hija",
+    icon: "✨",
+    featuredProductId: "pijama-doodle-mama-bebe",
+  },
+  {
+    title: "Papá & Hija",
+    description: "Complicidad en cada detalle",
+    bgGradient: "linear-gradient(145deg, hsl(162 16% 78%) 0%, hsl(162 18% 74%) 100%)",
+    slug: "papa-hija",
+    icon: "🦕",
+    featuredProductId: "pijama-dinosaurio-papa-nina",
+  },
+  {
+    title: "Matching",
+    description: "Diseñados para verse juntos",
     bgGradient: "linear-gradient(145deg, hsl(38 40% 80%) 0%, hsl(35 38% 76%) 100%)",
-    slug: "sacos-nidos",
-    icon: "🪹",
-    productCount: products.filter(p => p.collection === "sacos-nidos").length,
-  },
-  {
-    title: "Listo para Regalar",
-    description: "El regalo perfecto para dar amor",
-    bgGradient: "linear-gradient(145deg, hsl(348 22% 82%) 0%, hsl(348 20% 78%) 100%)",
-    slug: "regalo",
-    icon: "🎁",
-    productCount: products.filter(p => p.collection === "regalo").length,
+    slug: "matching",
+    icon: "👨‍👩‍👧",
+    showAll: true,
   },
 ];
+
+const realProducts = products.filter((p) => p.image !== "/placeholder.svg");
 
 const Collections = () => {
   const parallaxRef = useParallax(0.1);
@@ -65,7 +68,6 @@ const Collections = () => {
   const dragStartX = useRef(0);
   const scrollStartX = useRef(0);
 
-  // Track active slide
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -87,7 +89,6 @@ const Collections = () => {
     el.scrollBy({ left: dir === "next" ? cardWidth + gap : -(cardWidth + gap), behavior: "smooth" });
   };
 
-  // Drag-to-scroll
   const onPointerDown = (e: React.PointerEvent) => {
     setIsDragging(true);
     dragStartX.current = e.clientX;
@@ -101,9 +102,14 @@ const Collections = () => {
   };
   const onPointerUp = () => setIsDragging(false);
 
-  // Featured product per collection
-  const getFeatured = (slug: Collection) =>
-    products.find(p => p.collection === slug && p.featured) || products.find(p => p.collection === slug);
+  const getCardProducts = (col: typeof collections[number]) => {
+    if (col.showAll) return realProducts;
+    if (col.featuredProductId) {
+      const p = products.find((pr) => pr.id === col.featuredProductId);
+      return p ? [p] : [];
+    }
+    return realProducts.filter((p) => p.collection === col.slug);
+  };
 
   return (
     <section className="py-24 md:py-32 section-marigold relative overflow-hidden texture-linen texture-woven">
@@ -124,12 +130,11 @@ const Collections = () => {
             Nuestras <em>Colecciones</em>
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto text-lg font-light">
-            Encuentra el apapacho perfecto para cada etapa
+            Encuentra el apapacho perfecto para cada vínculo
           </p>
           <div ref={stitchRef} className="divider-cross-stitch w-16 mx-auto mt-8" />
         </div>
 
-        {/* Navigation arrows + Counter */}
         <div className="flex items-center justify-between mb-6 max-w-5xl mx-auto px-2">
           <div className="flex gap-2">
             <button
@@ -156,7 +161,6 @@ const Collections = () => {
           </p>
         </div>
 
-        {/* Horizontal carousel */}
         <div
           ref={scrollRef}
           className="flex gap-5 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-4 -mx-4 px-4 md:mx-0 md:px-0 cursor-grab active:cursor-grabbing select-none"
@@ -166,12 +170,15 @@ const Collections = () => {
           onPointerCancel={onPointerUp}
           style={{ WebkitOverflowScrolling: "touch" }}
         >
-          {collections.map((collection, index) => {
-            const featured = getFeatured(collection.slug as Exclude<Collection, "todos">);
+          {collections.map((collection) => {
+            const cardProducts = getCardProducts(collection);
+            const featured = cardProducts[0];
+            const productCount = collection.showAll ? realProducts.length : cardProducts.length;
+
             return (
               <Link
-                key={collection.title}
-                to={`/catalogo?categoria=${collection.slug}`}
+                key={collection.slug}
+                to={collection.slug === "todos" ? "/catalogo" : `/catalogo?categoria=${collection.slug}`}
                 aria-label={`Ver colección ${collection.title}`}
                 className="group flex-none w-[280px] md:w-[320px] snap-start"
                 onClick={e => isDragging && e.preventDefault()}
@@ -185,7 +192,6 @@ const Collections = () => {
                     className="p-6 pb-5 min-h-[320px] md:min-h-[360px] flex flex-col justify-between relative"
                     style={{ background: collection.bgGradient }}
                   >
-                    {/* Stitched inner border */}
                     <div className="absolute inset-[4px] pointer-events-none" style={{
                       border: "1.5px dashed hsl(20 32% 20% / 0.1)",
                       borderRadius: "2px"
@@ -201,11 +207,14 @@ const Collections = () => {
                       </p>
                     </div>
 
-                    {/* Featured product preview */}
                     {featured && (
                       <div className="mt-4 bg-background/40 backdrop-blur-sm p-3 border border-border/20 flex items-center gap-3 transition-all group-hover:bg-background/60" style={{ borderRadius: "3px" }}>
-                        <div className="w-10 h-10 bg-background/60 flex items-center justify-center flex-shrink-0" style={{ borderRadius: "2px" }}>
-                          <span className="text-xs text-primary font-display">★</span>
+                        <div className="w-10 h-10 bg-background/60 flex items-center justify-center flex-shrink-0 overflow-hidden" style={{ borderRadius: "2px" }}>
+                          {featured.image !== "/placeholder.svg" ? (
+                            <img src={featured.image} alt={featured.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-xs text-primary font-display">★</span>
+                          )}
                         </div>
                         <div className="min-w-0">
                           <p className="text-xs font-medium text-foreground truncate">{featured.name}</p>
@@ -216,7 +225,7 @@ const Collections = () => {
 
                     <div className="mt-4 flex items-center justify-between">
                       <span className="text-xs text-foreground/40 font-body tracking-wide">
-                        {collection.productCount} productos
+                        {productCount} {productCount === 1 ? "producto" : "productos"}
                       </span>
                       <div className="w-8 h-8 border border-foreground/15 rounded-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
                         <span className="text-foreground/50 text-sm">→</span>
@@ -229,7 +238,6 @@ const Collections = () => {
           })}
         </div>
 
-        {/* Dot indicators */}
         <div className="flex justify-center gap-2 mt-6">
           {collections.map((_, i) => (
             <button
