@@ -65,7 +65,7 @@ export const products: Product[] = [
   {
     id: "pijama-mama-bebe",
     slug: "pijama-mama-bebe",
-    name: "Pijama Mamá + Bebé",
+    name: "Pijama Mamá & Hijos",
     price: 1290,
     collection: "mama-bebe",
     image: pijamaRosa0,
@@ -85,7 +85,7 @@ export const products: Product[] = [
   {
     id: "pijama-doodle-mama-bebe",
     slug: "pijama-doodle-mama-bebe",
-    name: "Pijama Doodle Mamá + Hija",
+    name: "Pijama Mamá & Hija – Doodle",
     price: 1390,
     collection: "mama-hija",
     image: pijamaBlanca1,
@@ -105,7 +105,7 @@ export const products: Product[] = [
   {
     id: "pijama-dinosaurio-papa-nina",
     slug: "pijama-dinosaurio-papa-nina",
-    name: "Pijama Dinosaurio Papá + Niña",
+    name: "Pijama Papá & Hija – Dinosaurio",
     price: 1490,
     collection: "papa-hija",
     image: pijamadinosaurio1,
