@@ -14,6 +14,8 @@ const TextureSection = ({ image }: TextureSectionProps) => {
             src={image || texturaTela}
             alt="Close-up de textura de tela ultra suave"
             className="w-full h-full object-cover rounded-lg"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         {/* Copy */}

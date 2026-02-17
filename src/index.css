@@ -620,6 +620,19 @@
 .hero-slide-2 { animation-delay: 5s; }
 .hero-slide-3 { animation-delay: 7.5s; }
 
+/* Hero focal points – mobile first */
+.hero-img-0 { object-position: 50% 25%; }
+.hero-img-1 { object-position: 50% 30%; }
+.hero-img-2 { object-position: 50% 30%; }
+.hero-img-3 { object-position: 50% 35%; }
+
+@media (min-width: 1024px) {
+  .hero-img-0 { object-position: 52% 15%; }
+  .hero-img-1 { object-position: 50% 25%; }
+  .hero-img-2 { object-position: 50% 25%; }
+  .hero-img-3 { object-position: 50% 30%; }
+}
+
 /* Fade in */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(10px); }
