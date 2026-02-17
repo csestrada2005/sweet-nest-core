@@ -8,10 +8,10 @@ import hero4 from "@/assets/hero-4.jpg";
 import hero5 from "@/assets/hero-5.jpg";
 
 const heroSlides = [
-  { src: heroImage, alt: "Familia usando pijamas Papachoa", pos: "52% 60%" },
-  { src: hero3, alt: "Pijamas Papachoa estilo 3", pos: "50% 80%" },
-  { src: hero4, alt: "Pijamas Papachoa estilo 4", pos: "50% 80%" },
-  { src: hero5, alt: "Pijamas Papachoa estilo 5", pos: "50% 90%" },
+  { src: heroImage, alt: "Familia usando pijamas Papachoa", posMobile: "50% 25%", posDesktop: "52% 15%" },
+  { src: hero3, alt: "Pijamas Papachoa estilo 3", posMobile: "50% 30%", posDesktop: "50% 25%" },
+  { src: hero4, alt: "Pijamas Papachoa estilo 4", posMobile: "50% 30%", posDesktop: "50% 25%" },
+  { src: hero5, alt: "Pijamas Papachoa estilo 5", posMobile: "50% 35%", posDesktop: "50% 30%" },
 ];
 
 /* Floating thread particles */
@@ -72,9 +72,7 @@ const Hero = () => {
   return (
     <section className="relative min-h-[100svh] overflow-hidden flex flex-col">
       {/* Preload */}
-      {heroSlides.map((slide, i) => (
-        <link key={i} rel="preload" as="image" href={slide.src} />
-      ))}
+      <link rel="preload" as="image" href={heroSlides[0].src} />
 
       {/* FULL-WIDTH IMAGE BACKGROUND */}
       <div className="absolute inset-0">
@@ -83,10 +81,11 @@ const Hero = () => {
             key={i}
             src={slide.src}
             alt={slide.alt}
-            className={`absolute inset-0 w-full h-full object-cover hero-slide hero-slide-${i}`}
-            style={{ objectPosition: slide.pos, willChange: "opacity" }}
+            className={`absolute inset-0 w-full h-full object-cover hero-slide hero-slide-${i} hero-img-${i}`}
+            style={{ willChange: "opacity" }}
             fetchPriority={i === 0 ? "high" : undefined}
-            loading="eager"
+            loading={i === 0 ? "eager" : "lazy"}
+            decoding={i === 0 ? undefined : "async"}
             draggable={false}
           />
         ))}
