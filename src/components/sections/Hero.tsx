@@ -11,8 +11,6 @@ import letterH from "@/assets/letters/H.png";
 import letterO from "@/assets/letters/O.png";
 import letterA3 from "@/assets/letters/A3.png";
 
-// PAPACHOA = P A P A C H O A
-// Scatter: moderate offsets, rotations -18° to +18°, always near center
 const LETTERS = [
   { src: letterP1, alt: "Letra P", scatterX: -90, scatterY: -50, scatterRot: -14 },
   { src: letterA1, alt: "Letra A", scatterX: 60, scatterY: 40, scatterRot: 10 },
@@ -25,20 +23,19 @@ const LETTERS = [
 ];
 
 const Hero = () => {
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+  const [visible, setVisible] = useState(true);
 
   const onScroll = useCallback(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const rect = section.getBoundingClientRect();
-    const sectionH = section.offsetHeight;
-    const viewH = window.innerHeight;
-    const scrollable = sectionH - viewH;
+    const el = sectionRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const scrollable = el.offsetHeight - window.innerHeight;
     if (scrollable <= 0) return;
-    const scrolled = -rect.top;
-    const raw = scrolled / scrollable;
+    const raw = -rect.top / scrollable;
     setProgress(Math.max(0, Math.min(1, raw)));
+    setVisible(rect.bottom > 0 && rect.top < window.innerHeight);
   }, []);
 
   useEffect(() => {
@@ -47,61 +44,51 @@ const Hero = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, [onScroll]);
 
-  // easeInOutCubic
   const ease = (t: number) =>
     t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-  // Letters assemble from 0% to 45% of scroll
-  const assembleRaw = Math.min(progress / 0.45, 1);
-  const t = ease(assembleRaw);
-
-  // Subtitle + CTA fade in between 55% and 75%
-  const subtitleProgress = Math.max(0, Math.min(1, (progress - 0.55) / 0.2));
-  const ctaProgress = Math.max(0, Math.min(1, (progress - 0.65) / 0.15));
+  const t = ease(Math.min(progress / 0.4, 1));
+  const subP = Math.max(0, Math.min(1, (progress - 0.5) / 0.2));
+  const ctaP = Math.max(0, Math.min(1, (progress - 0.6) / 0.15));
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative overflow-hidden"
-      style={{ minHeight: "240vh" }}
-    >
-      {/* Subtle background pattern */}
+    <div ref={sectionRef} style={{ height: "240vh", position: "relative" }}>
       <div
-        className="absolute inset-0 opacity-[0.04]"
         style={{
-          backgroundImage: `url(${printPapachoa})`,
-          backgroundSize: "400px",
-          backgroundRepeat: "repeat",
-        }}
-      />
-
-      {/* Sticky container */}
-      <div
-        className="sticky top-0 w-full flex flex-col justify-center items-center"
-        style={{
-          height: "100vh",
-          background: "transparent",
-          boxShadow: "none",
-          border: "none",
+          position: "fixed",
+          inset: 0,
+          zIndex: 40,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "hsl(15 20% 96%)",
+          pointerEvents: "none",
+          opacity: visible ? 1 : 0,
+          transition: "opacity 0.3s ease",
         }}
       >
-        {/* Letter composition — NO background, NO card */}
+        <div
+          className="absolute inset-0 opacity-[0.04] pointer-events-none"
+          style={{
+            backgroundImage: `url(${printPapachoa})`,
+            backgroundSize: "400px",
+            backgroundRepeat: "repeat",
+          }}
+        />
+
         <div
           className="relative flex items-center justify-center"
           style={{
             width: "min(88vw, 900px)",
             height: "clamp(70px, 14vw, 160px)",
             padding: "0 6vw",
-            background: "transparent",
-            boxShadow: "none",
-            border: "none",
           }}
         >
           {LETTERS.map((letter, i) => {
             const offsetX = letter.scatterX * (1 - t);
             const offsetY = letter.scatterY * (1 - t);
             const rot = letter.scatterRot * (1 - t);
-
             return (
               <img
                 key={i}
@@ -115,9 +102,8 @@ const Hero = () => {
                   objectFit: "contain",
                   display: "block",
                   background: "transparent",
-                  imageRendering: "auto",
+                  mixBlendMode: "multiply",
                   transform: `translate(${offsetX}px, ${offsetY}px) rotate(${rot}deg)`,
-                  transition: "none",
                   willChange: "transform",
                   marginLeft: i === 0 ? 0 : "clamp(-14px, -1.8vw, -6px)",
                 }}
@@ -127,12 +113,11 @@ const Hero = () => {
           })}
         </div>
 
-        {/* Subtitle fades in after assembly */}
         <p
           className="text-lg md:text-xl text-muted-foreground font-light mt-8 mb-10 max-w-md mx-auto text-center leading-relaxed"
           style={{
-            opacity: subtitleProgress,
-            transform: `translateY(${(1 - subtitleProgress) * 20}px)`,
+            opacity: subP,
+            transform: `translateY(${(1 - subP) * 20}px)`,
           }}
         >
           Suaves, cálidos y con magia de hogar.
@@ -140,11 +125,11 @@ const Hero = () => {
           Hechos en México con amor.
         </p>
 
-        {/* CTA */}
         <div
           style={{
-            opacity: ctaProgress,
-            transform: `translateY(${(1 - ctaProgress) * 20}px)`,
+            opacity: ctaP,
+            transform: `translateY(${(1 - ctaP) * 20}px)`,
+            pointerEvents: ctaP > 0.5 ? "auto" : "none",
           }}
         >
           <Link to="/catalogo" className="btn-artisan inline-flex text-base px-10 py-4">
@@ -153,7 +138,7 @@ const Hero = () => {
           </Link>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
