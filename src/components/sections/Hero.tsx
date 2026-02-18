@@ -21,33 +21,25 @@ import pajaroNaranja from "@/assets/brand/pajaro-naranja-sf.png";
 const BIRDS = [
   {
     src: pajaroAmarillo, alt: "Pájaro amarillo",
-    // Final: upper-left of wordmark
-    finalTop: 22, finalLeft: 8,
-    // Start: off-screen top-left
+    finalTop: 18, finalLeft: 6,
     startX: -25, startY: -30,
     dur: "6.8s",
   },
   {
     src: pajaroNaranja, alt: "Pájaro naranja",
-    // Final: upper-center-right
-    finalTop: 18, finalLeft: 55,
-    // Start: off-screen top
+    finalTop: 12, finalLeft: 48,
     startX: 0, startY: -35,
     dur: "7.6s",
   },
   {
     src: pajaroAzulClaro, alt: "Pájaro azul claro",
-    // Final: right-middle
-    finalTop: 40, finalLeft: 85,
-    // Start: off-screen right
+    finalTop: 38, finalLeft: 88,
     startX: 30, startY: 10,
     dur: "8.4s",
   },
   {
     src: pajaroAzul, alt: "Pájaro azul",
-    // Final: upper-right
-    finalTop: 16, finalLeft: 87,
-    // Start: off-screen top-right
+    finalTop: 14, finalLeft: 85,
     startX: 30, startY: -30,
     dur: "9.2s",
   },
@@ -209,7 +201,7 @@ const Hero = () => {
                   draggable={false}
                   className="select-none pointer-events-none"
                   style={{
-                    width: "clamp(70px, 10vw, 150px)",
+                    width: "clamp(90px, 12vw, 160px)",
                     height: "auto",
                     display: "block",
                     objectFit: "contain",
