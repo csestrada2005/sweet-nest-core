@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import heroKids from "@/assets/hero-kids.png";
+import heroImage from "@/assets/hero-mama-hija.png";
 import printPapachoa from "@/assets/brand/print-papachoa.png";
 
 /* ─── Brand colors ─── */
@@ -80,7 +80,7 @@ const HeroPapacho = () => {
         }}
       >
         <img
-          src={heroKids}
+          src={heroImage}
           alt="Niños felices en pijamas Papachoa"
           className="object-cover object-top select-none max-h-[50vh] w-auto rounded-sm"
           style={{
