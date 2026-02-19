@@ -19,19 +19,26 @@ const Index = () => {
   usePrefetchRoutes();
   return (
     <div className="min-h-screen bg-background overflow-x-clip">
-      <Header transparent />
+      <Header />
       <main>
         <HeroPapacho />
         <BrandMarquee />
-        <Emotion />
-        <Collections />
+        {/* anchor ids for header nav */}
+        <div id="filosofia">
+          <Emotion />
+        </div>
+        <div id="colecciones">
+          <Collections />
+        </div>
         <Suspense fallback={null}>
           <ApatachoSelector />
           <StoriesThread />
           <Softness />
           <Testimonials />
           <MadeInMexico />
-          <Newsletter />
+          <div id="contacto">
+            <Newsletter />
+          </div>
         </Suspense>
       </main>
       <Footer />

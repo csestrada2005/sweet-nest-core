@@ -1,124 +1,230 @@
 import { useState, useCallback, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, Search, ShoppingBag } from "lucide-react";
+import { ShoppingBag, Search } from "lucide-react";
 import SearchModal from "@/components/SearchModal";
 import MiniCart from "@/components/MiniCart";
-import FallingBlobMenu from "@/components/FallingBlobMenu";
-import GlassBlobButton from "@/components/ui/GlassBlobButton";
 import { useCart } from "@/context/CartContext";
 import logo from "@/assets/logo-papachoa.webp";
+
+/* ─────────────────────────────────────────
+   Elena-style Header for Papachoa
+   – transparent → white on scroll
+   – logo left · anchor nav center · lang + cart right
+   – padding compresses 300 ms on scroll
+   ───────────────────────────────────────── */
+
+const NAV_LINKS = [
+  { label: "Filosofía",   href: "/#filosofia" },
+  { label: "Colecciones", href: "/#colecciones" },
+  { label: "Catálogo",    href: "/catalogo" },
+  { label: "Contacto",    href: "/contacto" },
+];
 
 interface HeaderProps {
   transparent?: boolean;
 }
 
 const Header = ({ transparent = false }: HeaderProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled,      setScrolled]      = useState(false);
+  const [isSearchOpen,  setIsSearchOpen]  = useState(false);
+  const [isCartOpen,    setIsCartOpen]    = useState(false);
   const { itemCount } = useCart();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const location  = useLocation();
+  const navigate  = useNavigate();
 
+  /* scroll listener */
   useEffect(() => {
-    if (!transparent) return;
-    const onScroll = () => setScrolled(window.scrollY > 60);
+    const onScroll = () => setScrolled(window.scrollY > 48);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
-  }, [transparent]);
+  }, []);
 
-  const handleLogoClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (location.pathname === "/") {
+  /* logo click → smooth scroll home */
+  const handleLogoClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (location.pathname === "/") {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        e.preventDefault();
+        navigate("/");
+        requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "smooth" }));
+      }
+    },
+    [location.pathname, navigate]
+  );
+
+  /* anchor nav: smooth scroll + offset for sticky header */
+  const handleAnchorClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      if (!href.startsWith("/#")) return;
       e.preventDefault();
-      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    } else {
-      e.preventDefault();
-      navigate("/");
-      requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
-    }
-  }, [location.pathname, navigate]);
+      const id = href.replace("/#", "");
+      if (location.pathname !== "/") {
+        navigate("/");
+        setTimeout(() => {
+          document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+        }, 350);
+      } else {
+        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+      }
+    },
+    [location.pathname, navigate]
+  );
 
   const isTransparent = transparent && !scrolled;
 
   return (
     <>
-      <header className="w-full fixed top-0 left-0 right-0 z-50">
-        {/* Top banner */}
+      <header
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        style={{
+          background: isTransparent
+            ? "transparent"
+            : "rgba(255,255,255,0.94)",
+          backdropFilter: isTransparent ? "none" : "blur(14px)",
+          borderBottom: isTransparent
+            ? "1px solid transparent"
+            : "1px solid hsl(var(--border) / 0.25)",
+          /* fade in on mount */
+          animation: "header-fadein 0.22s ease-out forwards",
+        }}
+      >
         <div
-          className="overflow-hidden py-1.5 transition-colors duration-500"
-          style={{
-            background: isTransparent ? "hsl(220 15% 18% / 0.6)" : "hsl(220 15% 18%)",
-            backdropFilter: isTransparent ? "blur(8px)" : undefined,
-          }}
+          className="container flex items-center justify-between transition-all duration-300"
+          style={{ paddingTop: scrolled ? "12px" : "20px", paddingBottom: scrolled ? "12px" : "20px" }}
         >
-          <div className="animate-marquee whitespace-nowrap flex">
-            {[...Array(2)].map((_, i) => (
-              <div key={i} className="flex items-center gap-8 px-4">
-                <span className="text-xs font-medium text-white/60 tracking-wide">Enviamos a toda la República</span>
-                <span className="text-white/30 text-[0.9em] px-3 leading-none">•</span>
-                <span className="text-xs font-medium text-white/60 tracking-wide">Textiles ultra suaves</span>
-                <span className="text-white/30 text-[0.9em] px-3 leading-none">•</span>
-                <span className="text-xs font-medium text-white/60 tracking-wide">Hecho en México</span>
-                <span className="text-white/30 text-[0.9em] px-3 leading-none">•</span>
-                <span className="text-xs font-medium text-white/60 tracking-wide">El regalo perfecto</span>
-                <span className="text-white/30 text-[0.9em] px-3 leading-none">•</span>
-              </div>
-            ))}
-          </div>
-        </div>
+          {/* ── Logo ── */}
+          <Link
+            to="/"
+            onClick={handleLogoClick}
+            className="flex-shrink-0 flex items-center"
+            aria-label="Papachoa México — inicio"
+          >
+            <img
+              src={logo}
+              alt="Papachoa México"
+              className="w-auto transition-all duration-300"
+              style={{
+                height: scrolled ? "28px" : "34px",
+                filter: isTransparent ? "brightness(0)" : "none",
+              }}
+              loading="eager"
+              fetchPriority="high"
+            />
+          </Link>
 
-        {/* Main header */}
-        <div
-          className="transition-all duration-500"
-          style={{
-            background: isTransparent ? "transparent" : "hsl(var(--background) / 0.95)",
-            backdropFilter: isTransparent ? undefined : "blur(12px)",
-            borderBottom: isTransparent ? "1px solid transparent" : "1px solid hsl(var(--border) / 0.3)",
-          }}
-        >
-          <div className="container grid grid-cols-[1fr_auto_1fr] items-center py-2.5 min-h-[56px] md:min-h-[60px]">
-            <div className="flex items-center justify-start">
-              <GlassBlobButton tint="blush" onClick={() => setIsOpen(true)} aria-label="Menú">
-                <Menu className="h-[20px] w-[20px] text-foreground" strokeWidth={2} />
-              </GlassBlobButton>
-            </div>
-
-            <Link to="/" onClick={handleLogoClick} className="justify-self-center flex items-center">
-              <img
-                src={logo}
-                alt="Papachoa México"
-                className={`h-9 md:h-10 w-auto transition-all duration-500 ${isTransparent ? "brightness-[2] drop-shadow-md" : ""}`}
-                loading="eager"
-                fetchPriority="high"
-              />
-            </Link>
-
-            <div className="flex items-center justify-end gap-1.5">
-              <GlassBlobButton tint="sky" onClick={() => setIsSearchOpen(true)} aria-label="Buscar">
-                <Search className="h-[20px] w-[20px] md:h-[18px] md:w-[18px] text-foreground" strokeWidth={2} />
-              </GlassBlobButton>
-              <GlassBlobButton
-                tint="sage"
-                onClick={() => setIsCartOpen(true)}
-                aria-label="Carrito"
-                badge={itemCount > 0 ? (
-                  <span className="bg-primary text-primary-foreground text-[10px] font-bold min-w-[18px] min-h-[18px] rounded-full flex items-center justify-center px-1">
-                    {itemCount > 9 ? "9+" : itemCount}
+          {/* ── Nav links (desktop) ── */}
+          <nav
+            className="hidden md:flex items-center"
+            aria-label="Navegación principal"
+          >
+            {NAV_LINKS.map((link, i) => (
+              <span key={link.href} className="flex items-center">
+                <Link
+                  to={link.href}
+                  onClick={(e) => handleAnchorClick(e, link.href)}
+                  className="text-sm font-medium transition-all duration-200 relative group"
+                  style={{
+                    color: isTransparent
+                      ? "hsl(var(--foreground))"
+                      : "hsl(var(--foreground))",
+                    letterSpacing: "0.03em",
+                    paddingBottom: "2px",
+                  }}
+                >
+                  <span className="relative">
+                    {link.label}
+                    {/* underline sweep — Elena style */}
+                    <span
+                      className="absolute bottom-0 left-0 w-full h-px bg-foreground origin-right"
+                      style={{
+                        transform: "scaleX(0)",
+                        transition: "transform 0.3s ease",
+                      }}
+                    />
                   </span>
-                ) : undefined}
+                </Link>
+                {/* comma separator — Elena style */}
+                {i < NAV_LINKS.length - 1 && (
+                  <span
+                    className="mx-2.5 text-muted-foreground/40 text-sm select-none"
+                    aria-hidden="true"
+                  >
+                    ,
+                  </span>
+                )}
+              </span>
+            ))}
+          </nav>
+
+          {/* ── Right side: lang + icons ── */}
+          <div className="flex items-center gap-4">
+            {/* Language selector — Elena style */}
+            <div
+              className="hidden md:flex items-center gap-1 text-xs tracking-wider"
+              aria-label="Idioma"
+            >
+              <span
+                className="font-semibold text-foreground cursor-default"
+                style={{ letterSpacing: "0.1em" }}
               >
-                <ShoppingBag className="h-[20px] w-[20px] md:h-[18px] md:w-[18px] text-foreground" strokeWidth={2} />
-              </GlassBlobButton>
+                ES
+              </span>
+              <span className="text-muted-foreground/30">▾</span>
+              <span
+                className="text-muted-foreground/35 cursor-not-allowed"
+                title="Próximamente en inglés"
+                style={{ letterSpacing: "0.1em" }}
+              >
+                EN
+              </span>
             </div>
+
+            {/* Search */}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              aria-label="Buscar"
+              className="flex items-center justify-center w-8 h-8 text-foreground/70 hover:text-foreground transition-colors duration-200"
+            >
+              <Search className="w-[17px] h-[17px]" strokeWidth={1.8} />
+            </button>
+
+            {/* Cart */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              aria-label={`Carrito${itemCount > 0 ? ` (${itemCount})` : ""}`}
+              className="relative flex items-center justify-center w-8 h-8 text-foreground/70 hover:text-foreground transition-colors duration-200"
+            >
+              <ShoppingBag className="w-[17px] h-[17px]" strokeWidth={1.8} />
+              {itemCount > 0 && (
+                <span className="absolute -top-0.5 -right-1 bg-primary text-primary-foreground text-[9px] font-bold min-w-[15px] h-[15px] rounded-full flex items-center justify-center px-0.5 leading-none">
+                  {itemCount > 9 ? "9+" : itemCount}
+                </span>
+              )}
+            </button>
           </div>
         </div>
       </header>
 
+      {/* Spacer so content isn't hidden under fixed header */}
+      <div style={{ height: "74px" }} aria-hidden="true" />
+
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       <MiniCart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-      <FallingBlobMenu isOpen={isOpen} onClose={() => setIsOpen(false)} />
+
+      <style>{`
+        @keyframes header-fadein {
+          from { opacity: 0; }
+          to   { opacity: 1; }
+        }
+        /* Underline sweep on hover — must target the inner span */
+        header nav a:hover > span > span {
+          transform: scaleX(1) !important;
+          transform-origin: left !important;
+        }
+      `}</style>
     </>
   );
 };
