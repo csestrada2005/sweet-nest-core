@@ -1,141 +1,173 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import heroBird from "@/assets/hero-bird-editorial.png";
-import printPapachoa from "@/assets/brand/print-papachoa.png";
 
-import letterP1 from "@/assets/letters/P1.png";
-import letterA1 from "@/assets/letters/A1.png";
-import letterP2 from "@/assets/letters/P2.png";
-import letterA2 from "@/assets/letters/A2.png";
-import letterC from "@/assets/letters/C.png";
-import letterH from "@/assets/letters/H.png";
-import letterO from "@/assets/letters/O.png";
-import letterA3 from "@/assets/letters/A3.png";
+/* ─────────────────────────────────────────
+   HeroPapacho — Elena Borisova clone
+   ─ large spaced title, letter-by-letter stagger
+   ─ bird illustration with delayed fade-in
+   ─ dual CTA, scroll hint
+   ───────────────────────────────────────── */
 
-// P A P A C H O A — visual order
-const LETTERS = [
-  { src: letterP1, alt: "P" },
-  { src: letterA1, alt: "A" },
-  { src: letterP2, alt: "P" },
-  { src: letterA3, alt: "A" },
-  { src: letterC,  alt: "C" },
-  { src: letterH,  alt: "H" },
-  { src: letterO,  alt: "O" },
-  { src: letterA2, alt: "A" },
-];
+/** Split text into word groups keeping spaces as real entries */
+function splitWords(text: string) {
+  return text.split(" ").filter(Boolean);
+}
 
-const LETTER_DELAY_BASE = 300; // ms after mount before first letter
-const LETTER_STAGGER    = 60;  // ms between each letter
-const SUBTITLE_DELAY    = LETTER_DELAY_BASE + LETTERS.length * LETTER_STAGGER + 120;
-const CTA_DELAY         = SUBTITLE_DELAY + 160;
+const TITLE_WORDS = splitWords("APAPACHO PARA DORMIR");
+
+/* Timings */
+const BIRD_DELAY      = 80;   // ms — illustration appears early
+const EYEBROW_DELAY   = 200;  // ms — small label
+const WORD_BASE       = 340;  // ms — first word starts
+const WORD_STAGGER    = 90;   // ms between words
+const LAST_WORD_END   = WORD_BASE + TITLE_WORDS.length * WORD_STAGGER + 400;
+const SUBTITLE_DELAY  = LAST_WORD_END;
+const CTA_DELAY       = SUBTITLE_DELAY + 160;
+const HINT_DELAY      = CTA_DELAY + 300;
+
+/* ── Letter stagger within each word ── */
+const LetterWord = ({
+  word,
+  wordDelay,
+  ready,
+}: {
+  word: string;
+  wordDelay: number;
+  ready: boolean;
+}) => (
+  <span className="inline-flex" aria-hidden="true">
+    {word.split("").map((char, ci) => {
+      const delay = wordDelay + ci * 38;
+      return (
+        <span
+          key={ci}
+          style={{
+            display: "inline-block",
+            opacity: ready ? 1 : 0,
+            transform: ready ? "translateY(0)" : "translateY(10px)",
+            transition: ready
+              ? `opacity 420ms cubic-bezier(.22,1,.36,1) ${delay}ms,
+                 transform 420ms cubic-bezier(.22,1,.36,1) ${delay}ms`
+              : "none",
+          }}
+        >
+          {char}
+        </span>
+      );
+    })}
+  </span>
+);
 
 const HeroPapacho = () => {
   const [ready, setReady] = useState(false);
 
-  // Single tick after mount to trigger CSS transitions
   useEffect(() => {
-    const id = requestAnimationFrame(() => setReady(true));
-    return () => cancelAnimationFrame(id);
+    const raf = requestAnimationFrame(() =>
+      setTimeout(() => setReady(true), 40)
+    );
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   return (
     <section
-      className="relative min-h-screen flex flex-col items-center justify-between overflow-hidden"
-      style={{ background: "#ffffff" }}
+      className="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden"
+      style={{ background: "#fff" }}
+      aria-label="Hero Papachoa"
     >
-      {/* Subtle paper texture */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.025]"
-        style={{
-          backgroundImage: `url(${printPapachoa})`,
-          backgroundSize: "380px",
-          backgroundRepeat: "repeat",
-        }}
-      />
-
       {/* ── Bird illustration ── */}
       <div
-        className="relative z-10 flex flex-col items-center"
+        className="pointer-events-none select-none"
         style={{
-          paddingTop: "clamp(5rem, 10vh, 8rem)",
-          flex: "0 0 auto",
+          opacity: ready ? 1 : 0,
+          transform: ready ? "translateY(0) scale(1)" : "translateY(12px) scale(0.96)",
+          transition: ready
+            ? `opacity 1000ms cubic-bezier(.22,1,.36,1) ${BIRD_DELAY}ms,
+               transform 1000ms cubic-bezier(.22,1,.36,1) ${BIRD_DELAY}ms`
+            : "none",
+          marginBottom: "clamp(0.5rem, 2vw, 1.5rem)",
         }}
       >
-          <img
-            src={heroBird}
-            alt="Pájaro Papachoa en su nido"
-            className="select-none pointer-events-none"
-            style={{
-              width: "clamp(220px, 38vw, 480px)",
-              height: "auto",
-              display: "block",
-              opacity: ready ? 1 : 0,
-              transform: ready ? "scale(1) translateY(0)" : "scale(0.93) translateY(16px)",
-              transition: "opacity 1.2s cubic-bezier(.22,1,.36,1) 80ms, transform 1.2s cubic-bezier(.22,1,.36,1) 80ms",
-              willChange: "opacity, transform",
-            }}
-            loading="eager"
-            decoding="async"
-          />
+        <img
+          src={heroBird}
+          alt="Pájaro Papachoa en su nido"
+          draggable={false}
+          style={{
+            width: "clamp(160px, 28vw, 380px)",
+            height: "auto",
+            display: "block",
+          }}
+          loading="eager"
+          decoding="async"
+        />
       </div>
 
-      {/* ── PAPACHOA wordmark — letter stagger ── */}
+      {/* ── Text block ── */}
       <div
-        className="relative z-10 flex flex-col items-center"
+        className="flex flex-col items-center text-center"
         style={{
-          flex: "0 0 auto",
-          marginTop: "clamp(-2rem, -4vw, -3rem)", // overlap bird slightly
+          padding: "0 clamp(1.25rem, 5vw, 4rem)",
+          maxWidth: "1100px",
+          width: "100%",
         }}
       >
-        {/* Letter row */}
-        <div
+        {/* Eyebrow — small italic label */}
+        <p
+          className="font-display text-primary/80"
           style={{
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "center",
-            gap: "clamp(6px, 1.4vw, 18px)",
-            isolation: "isolate",
+            fontSize: "clamp(1.1rem, 2.2vw, 1.5rem)",
+            letterSpacing: "0.01em",
+            marginBottom: "clamp(0.6rem, 1.5vw, 1rem)",
+            opacity: ready ? 1 : 0,
+            transform: ready ? "translateY(0)" : "translateY(8px)",
+            transition: ready
+              ? `opacity 600ms ease ${EYEBROW_DELAY}ms, transform 600ms ease ${EYEBROW_DELAY}ms`
+              : "none",
           }}
-          aria-label="Papachoa"
-          role="heading"
-          aria-level={1}
         >
-          {LETTERS.map((letter, i) => {
-            const delay = LETTER_DELAY_BASE + i * LETTER_STAGGER;
+          Pijamas que abrazan
+        </p>
+
+        {/* Main title — APAPACHO PARA DORMIR — letter-by-letter */}
+        <h1
+          className="font-bold text-foreground leading-none"
+          style={{
+            fontSize: "clamp(2.6rem, 9.5vw, 9rem)",
+            letterSpacing: "clamp(0.12em, 1.8vw, 0.28em)",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: "0 clamp(0.25em, 2vw, 0.6em)",
+            lineHeight: 1.05,
+            marginBottom: "clamp(1.25rem, 3vw, 2.25rem)",
+          }}
+          aria-label="Apapacho para dormir"
+        >
+          {TITLE_WORDS.map((word, wi) => {
+            const wordDelay = WORD_BASE + wi * WORD_STAGGER;
             return (
-              <div key={i} aria-hidden="true" style={{ lineHeight: 0 }}>
-                <img
-                  src={letter.src}
-                  alt={letter.alt}
-                  draggable={false}
-                  className="select-none pointer-events-none"
-                  style={{
-                    height: "clamp(56px, 9.5vw, 116px)",
-                    width: "auto",
-                    objectFit: "contain",
-                    display: "block",
-                    opacity: ready ? 1 : 0,
-                    transform: ready ? "translateY(0)" : "translateY(24px)",
-                    transition: ready
-                      ? `opacity 0.72s cubic-bezier(.22,1,.36,1) ${delay}ms, transform 0.72s cubic-bezier(.22,1,.36,1) ${delay}ms`
-                      : "none",
-                    willChange: "opacity, transform",
-                  }}
-                  loading="eager"
-                />
-              </div>
+              <LetterWord
+                key={wi}
+                word={word}
+                wordDelay={wordDelay}
+                ready={ready}
+              />
             );
           })}
-        </div>
+        </h1>
 
         {/* Subtitle */}
         <p
-          className="text-base md:text-lg text-muted-foreground font-light mt-7 mb-0 max-w-sm md:max-w-md mx-auto text-center leading-relaxed tracking-wide"
+          className="font-light text-muted-foreground leading-relaxed"
           style={{
+            fontSize: "clamp(0.95rem, 1.6vw, 1.15rem)",
+            maxWidth: "480px",
+            letterSpacing: "0.025em",
+            marginBottom: "clamp(1.75rem, 4vw, 3rem)",
             opacity: ready ? 1 : 0,
-            transform: ready ? "translateY(0)" : "translateY(18px)",
+            transform: ready ? "translateY(0)" : "translateY(10px)",
             transition: ready
-              ? `opacity 0.8s cubic-bezier(.22,1,.36,1) ${SUBTITLE_DELAY}ms, transform 0.8s cubic-bezier(.22,1,.36,1) ${SUBTITLE_DELAY}ms`
+              ? `opacity 700ms ease ${SUBTITLE_DELAY}ms, transform 700ms ease ${SUBTITLE_DELAY}ms`
               : "none",
           }}
         >
@@ -144,70 +176,86 @@ const HeroPapacho = () => {
           Hechos en México con amor.
         </p>
 
-        {/* CTA */}
+        {/* CTAs — minimal, Elena style */}
         <div
+          className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
           style={{
             opacity: ready ? 1 : 0,
-            transform: ready ? "translateY(0)" : "translateY(14px)",
+            transform: ready ? "translateY(0)" : "translateY(8px)",
             transition: ready
-              ? `opacity 0.7s ease ${CTA_DELAY}ms, transform 0.7s ease ${CTA_DELAY}ms`
+              ? `opacity 600ms ease ${CTA_DELAY}ms, transform 600ms ease ${CTA_DELAY}ms`
               : "none",
-            marginTop: "clamp(1.5rem, 3vw, 2rem)",
           }}
         >
+          {/* Primary */}
           <Link
             to="/catalogo"
-            className="btn-artisan inline-flex text-sm md:text-base px-8 md:px-10 py-3.5 md:py-4"
+            className="inline-flex items-center gap-2 font-medium transition-all duration-200 border-b-2 border-foreground pb-0.5 hover:gap-3"
+            style={{
+              fontSize: "clamp(0.85rem, 1.3vw, 1rem)",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "hsl(var(--foreground))",
+              borderColor: "hsl(var(--foreground))",
+            }}
           >
-            Ver colección
-            <span className="text-lg md:text-xl">→</span>
+            Ver catálogo
+            <span aria-hidden="true" style={{ fontSize: "1.1em" }}>→</span>
+          </Link>
+
+          {/* Separator */}
+          <span className="text-muted-foreground/30 hidden md:inline" aria-hidden="true">
+            ·
+          </span>
+
+          {/* Secondary */}
+          <Link
+            to="/#filosofia"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById("filosofia")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="inline-flex items-center gap-2 font-light transition-all duration-200 text-muted-foreground hover:text-foreground"
+            style={{
+              fontSize: "clamp(0.85rem, 1.3vw, 1rem)",
+              letterSpacing: "0.05em",
+            }}
+          >
+            Conocer filosofía
           </Link>
         </div>
       </div>
 
-      {/* ── Bottom breathing room ── */}
+      {/* ── Scroll hint ── */}
       <div
-        className="relative z-10 w-full"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        aria-hidden="true"
         style={{
-          flex: "0 0 auto",
-          paddingBottom: "clamp(3rem, 6vh, 5rem)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-end",
+          opacity: ready ? 0.3 : 0,
+          transition: ready ? `opacity 800ms ease ${HINT_DELAY}ms` : "none",
         }}
       >
-        {/* Scroll hint */}
+        <span
+          className="text-muted-foreground font-light"
+          style={{ fontSize: "0.65rem", letterSpacing: "0.22em", textTransform: "uppercase" }}
+        >
+          scroll
+        </span>
         <div
           style={{
-            opacity: ready ? 0.35 : 0,
-            transition: ready ? `opacity 1s ease ${CTA_DELAY + 400}ms` : "none",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "6px",
+            width: "1px",
+            height: "40px",
+            background: "hsl(var(--muted-foreground))",
+            animation: "scroll-hint-pulse 2.2s ease-in-out infinite",
+            transformOrigin: "top",
           }}
-          aria-hidden="true"
-        >
-          <span
-            className="text-xs tracking-[0.22em] uppercase text-muted-foreground font-light"
-          >
-            scroll
-          </span>
-          <div
-            style={{
-              width: "1px",
-              height: "36px",
-              background: "hsl(var(--muted-foreground))",
-              animation: "scroll-line 2s ease-in-out infinite",
-            }}
-          />
-        </div>
+        />
       </div>
 
       <style>{`
-        @keyframes scroll-line {
-          0%, 100% { transform: scaleY(1); opacity: 0.35; }
-          50%       { transform: scaleY(0.4); opacity: 0.12; }
+        @keyframes scroll-hint-pulse {
+          0%, 100% { transform: scaleY(1);   opacity: 0.4; }
+          55%       { transform: scaleY(0.3); opacity: 0.08; }
         }
       `}</style>
     </section>
