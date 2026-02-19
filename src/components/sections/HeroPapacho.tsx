@@ -31,10 +31,10 @@ const WORDS: WordData[] = (() => {
       const c = Math.cos(i * 31.7 + 3.9);
       return {
         char,
-        tx: s * 10 + c * 5,          // ~ -15vw to 15vw
-        ty: (c * 25 + s * 15),        // ~ -30vh to 45vh
-        tz: -(Math.abs(Math.sin(i * 23.1)) * 35 + 2), // ~ -40vw to -2vw
-        rot: s * 12 + c * 6,          // ~ -18deg to 18deg
+        tx: s * 4 + c * 2,            // ~ -6vw to 6vw
+        ty: (c * 8 + s * 5) + 15,     // biased below image, ~ +2vh to +28vh
+        tz: -(Math.abs(Math.sin(i * 23.1)) * 15 + 1), // ~ -16vw to -1vw
+        rot: s * 6 + c * 3,           // ~ -9deg to 9deg
       };
     }),
   }));
