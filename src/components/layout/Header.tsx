@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ShoppingBag, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { products } from "@/data/products";
 import MiniCart from "@/components/MiniCart";
 import { useCart } from "@/context/CartContext";
@@ -135,12 +135,28 @@ const InlineSearch = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
+/* ── Polka Dots SVG pattern for pill buttons ── */
+const PillDots = () => (
+  <svg className="pill-dots" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle cx="80%" cy="20%" r="3" fill="hsl(43,90%,72%)" opacity="0.7"/>
+    <circle cx="15%" cy="30%" r="2.5" fill="hsl(340,60%,75%)" opacity="0.6"/>
+    <circle cx="70%" cy="75%" r="3.5" fill="hsl(196,55%,72%)" opacity="0.65"/>
+    <circle cx="30%" cy="70%" r="2" fill="hsl(20,75%,70%)" opacity="0.55"/>
+    <circle cx="88%" cy="58%" r="2" fill="hsl(196,55%,72%)" opacity="0.5"/>
+    <circle cx="50%" cy="85%" r="2.5" fill="hsl(43,90%,72%)" opacity="0.6"/>
+    <circle cx="8%"  cy="65%" r="3" fill="hsl(340,60%,78%)" opacity="0.5"/>
+    <circle cx="55%" cy="15%" r="2" fill="hsl(20,75%,70%)" opacity="0.55"/>
+    <circle cx="40%" cy="45%" r="1.5" fill="hsl(43,90%,72%)" opacity="0.4"/>
+    <circle cx="92%" cy="38%" r="1.8" fill="hsl(340,60%,75%)" opacity="0.45"/>
+  </svg>
+);
+
 /* ── Cart Badge ── */
 const CartBadge = ({ count }: { count: number }) => (
   <span
     key={count}
-    className="absolute -top-1 -right-1.5 min-w-[16px] h-[16px] rounded-full flex items-center justify-center px-0.5 leading-none text-[9px] font-bold bg-primary text-primary-foreground"
-    style={{ animation: "stamp-pop 0.28s cubic-bezier(0.34,1.56,0.64,1) forwards" }}
+    className="absolute -top-1.5 -right-1.5 min-w-[17px] h-[17px] rounded-full flex items-center justify-center px-0.5 leading-none text-[9px] font-bold bg-primary text-primary-foreground z-20"
+    style={{ animation: "stamp-pop 0.32s cubic-bezier(0.34,1.56,0.64,1) forwards" }}
     aria-hidden="true"
   >
     {count > 9 ? "9+" : count}
@@ -270,31 +286,60 @@ const Header = ({ transparent = false }: HeaderProps) => {
           </nav>
 
           {/* ── Right: Search + Cart ── */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2.5">
 
-            {/* Search button */}
+            {/* Search pill button */}
             <button
               onClick={() => setSearchOpen((v) => !v)}
               aria-label="Buscar productos"
               aria-expanded={searchOpen}
-              className="search-btn relative flex items-center justify-center w-9 h-9 rounded-full text-foreground/60 hover:text-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-1"
+              className="pill-btn search-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-1"
             >
-              {searchOpen
-                ? <X className="w-[16px] h-[16px]" strokeWidth={1.6} />
-                : <Search className="w-[16px] h-[16px]" strokeWidth={1.6} />
-              }
-              {/* brush stroke underline on hover */}
-              <span className="search-brush" aria-hidden="true" />
+              <PillDots />
+              {/* Sunburst */}
+              <span className="pill-sunburst search-sunburst" aria-hidden="true" />
+              {/* Icon */}
+              <span className="pill-icon-wrap">
+                {searchOpen
+                  ? <X className="w-[18px] h-[18px] text-[hsl(196,60%,52%)]" strokeWidth={2} />
+                  : (
+                    <svg viewBox="0 0 22 22" className="w-[20px] h-[20px]" fill="none" aria-hidden="true">
+                      <circle cx="9.5" cy="9.5" r="6.5" stroke="hsl(196,60%,52%)" strokeWidth="2.2" />
+                      {/* Smile inside lens */}
+                      <path d="M7.2 10.5 Q9.5 12.5 11.8 10.5" stroke="hsl(43,90%,58%)" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+                      <line x1="14.2" y1="14.2" x2="18.5" y2="18.5" stroke="hsl(196,60%,52%)" strokeWidth="2.2" strokeLinecap="round"/>
+                    </svg>
+                  )
+                }
+              </span>
             </button>
 
-            {/* Cart button */}
+            {/* Cart pill button */}
             <button
+              key={`cart-${badgeKey}`}
               onClick={() => setIsCartOpen(true)}
               aria-label={`Tu carrito${itemCount > 0 ? ` — ${itemCount} ${itemCount === 1 ? "producto" : "productos"}` : " (vacío)"}`}
-              className="cart-btn relative flex items-center justify-center w-9 h-9 rounded-full text-foreground/60 hover:text-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-1"
+              className="pill-btn cart-pill focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-1"
+              style={badgeKey > 0 ? { animation: "pill-bounce 0.42s cubic-bezier(0.34,1.56,0.64,1)" } : undefined}
             >
-              <ShoppingBag className="w-[17px] h-[17px]" strokeWidth={1.6} />
-              {itemCount > 0 && <CartBadge key={badgeKey} count={itemCount} />}
+              <PillDots />
+              {/* Sunburst */}
+              <span className="pill-sunburst cart-sunburst" aria-hidden="true" />
+              {/* Icon */}
+              <span className="pill-icon-wrap">
+                <svg viewBox="0 0 22 22" className="w-[20px] h-[20px]" fill="none" aria-hidden="true">
+                  {/* Bag body */}
+                  <path d="M4 8h14l-1.5 9.5a1.5 1.5 0 01-1.5 1.3H7a1.5 1.5 0 01-1.5-1.3L4 8z" stroke="hsl(340,55%,60%)" strokeWidth="2" fill="none"/>
+                  {/* Bag handle */}
+                  <path d="M8 8V6.5a3 3 0 016 0V8" stroke="hsl(340,55%,60%)" strokeWidth="2" strokeLinecap="round"/>
+                  {/* Smile inside bag */}
+                  <path d="M9 13.5 Q11 15.5 13 13.5" stroke="hsl(340,55%,60%)" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+                  {/* Tag */}
+                  <rect x="12.5" y="7" width="5" height="3.5" rx="0.8" fill="hsl(43,90%,65%)" opacity="0.9"/>
+                  <line x1="14.5" y1="7" x2="14.5" y2="6" stroke="hsl(20,75%,65%)" strokeWidth="1" strokeLinecap="round"/>
+                </svg>
+                {itemCount > 0 && <CartBadge key={badgeKey} count={itemCount} />}
+              </span>
             </button>
           </div>
 
@@ -317,81 +362,145 @@ const Header = ({ transparent = false }: HeaderProps) => {
         }
         @keyframes search-drop {
           from { opacity: 0; transform: translateY(-6px) scaleY(0.96); }
-          to   { opacity: 1; transform: translateY(0)   scaleY(1); }
+          to   { opacity: 1; transform: translateY(0) scaleY(1); }
         }
         @keyframes stamp-pop {
-          0%   { transform: scale(0.4) rotate(-8deg); opacity: 0; }
-          60%  { transform: scale(1.12) rotate(2deg); opacity: 1; }
+          0%   { transform: scale(0) rotate(-12deg); opacity: 0; }
+          65%  { transform: scale(1.2) rotate(4deg); opacity: 1; }
           100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
-        @keyframes shimmer-pass {
-          0%   { left: -60%; opacity: 0; }
-          20%  { opacity: 0.7; }
-          100% { left: 130%; opacity: 0; }
+        @keyframes pill-bounce {
+          0%   { transform: scale(1); }
+          30%  { transform: scale(0.9) translateY(2px); }
+          65%  { transform: scale(1.06) translateY(-3px); }
+          100% { transform: scale(1) translateY(0); }
+        }
+        @keyframes confetti-burst {
+          0%   { transform: scale(0.6); opacity: 0; }
+          50%  { transform: scale(1.12); opacity: 1; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes sunburst-pop {
+          0%   { opacity: 0; transform: scale(0.6) rotate(0deg); }
+          60%  { opacity: 1; transform: scale(1.1) rotate(15deg); }
+          100% { opacity: 0; transform: scale(1) rotate(25deg); }
         }
 
-        /* Nav underline sweep */
+        /* ── Nav underline sweep ── */
         header nav a:hover > span > span {
           transform: scaleX(1) !important;
           transform-origin: left !important;
         }
 
-        /* Search button hover — brush stroke */
-        .search-btn .search-brush {
-          position: absolute;
-          bottom: 3px;
-          left: 50%;
-          transform: translateX(-50%) scaleX(0);
-          width: 18px;
-          height: 2px;
-          border-radius: 2px;
-          background: hsl(var(--primary) / 0.7);
-          transform-origin: center;
-          transition: transform 0.25s cubic-bezier(0.22,1,0.36,1), opacity 0.2s;
-          opacity: 0;
+        /* ── Pill button base ── */
+        .pill-btn {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 52px;
+          height: 36px;
+          border-radius: 20px;
+          overflow: hidden;
+          cursor: pointer;
+          border: none;
+          /* 3D depth: top highlight + bottom shadow */
+          background: linear-gradient(170deg, #fffdf9 0%, #f9f4ef 100%);
+          box-shadow:
+            0 1px 0 0 rgba(255,255,255,0.9) inset,
+            0 -1px 0 0 rgba(0,0,0,0.04) inset,
+            0 4px 0 0 rgba(0,0,0,0.10),
+            0 6px 12px -2px rgba(0,0,0,0.08),
+            0 1px 3px rgba(0,0,0,0.06);
+          transition: transform 0.15s ease, box-shadow 0.15s ease;
+          user-select: none;
         }
-        .search-btn:hover .search-brush,
-        .search-btn:focus-visible .search-brush {
-          transform: translateX(-50%) scaleX(1);
-          opacity: 1;
+        .pill-btn:hover {
+          transform: translateY(-1px);
+          box-shadow:
+            0 1px 0 0 rgba(255,255,255,0.9) inset,
+            0 -1px 0 0 rgba(0,0,0,0.04) inset,
+            0 6px 0 0 rgba(0,0,0,0.10),
+            0 10px 18px -4px rgba(0,0,0,0.10),
+            0 2px 4px rgba(0,0,0,0.06);
+        }
+        .pill-btn:active {
+          transform: translateY(3px) scale(0.97);
+          box-shadow:
+            0 1px 0 0 rgba(255,255,255,0.9) inset,
+            0 -1px 0 0 rgba(0,0,0,0.04) inset,
+            0 1px 0 0 rgba(0,0,0,0.10),
+            0 2px 6px -1px rgba(0,0,0,0.08);
         }
 
-        /* Search shimmer (one pass on hover, via animation) */
-        .search-btn::after {
-          content: '';
-          position: absolute;
-          top: 0; bottom: 0;
-          width: 30%;
-          background: linear-gradient(90deg, transparent, hsl(var(--primary-foreground) / 0.18), transparent);
-          pointer-events: none;
-          opacity: 0;
-          border-radius: 50%;
-        }
-        .search-btn:hover::after {
-          animation: shimmer-pass 0.45s ease-out 0.05s 1 forwards;
-        }
-
-        /* Cart hover glow */
-        .cart-btn::before {
-          content: '';
+        /* Polka dots SVG (fills pill background) */
+        .pill-dots {
           position: absolute;
           inset: 0;
-          border-radius: 50%;
-          background: hsl(var(--primary) / 0.06);
-          transform: scale(0.7);
-          opacity: 0;
-          transition: transform 0.25s ease, opacity 0.25s ease;
+          width: 100%;
+          height: 100%;
           pointer-events: none;
         }
-        .cart-btn:hover::before {
-          transform: scale(1.1);
+
+        /* Icon wrapper */
+        .pill-icon-wrap {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: transform 0.2s cubic-bezier(0.22,1,0.36,1);
+        }
+        .pill-btn:hover .pill-icon-wrap {
+          transform: scale(1.08);
+        }
+        .pill-btn:active .pill-icon-wrap {
+          transform: scale(0.93);
+        }
+
+        /* Sunburst burst on hover */
+        .pill-sunburst {
+          position: absolute;
+          inset: -4px;
+          border-radius: 24px;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.2s;
+          z-index: 5;
+        }
+        .search-sunburst {
+          background: radial-gradient(ellipse at 30% 50%, hsl(196,60%,85%,0.35) 0%, transparent 65%);
+        }
+        .cart-sunburst {
+          background: radial-gradient(ellipse at 50% 40%, hsl(340,60%,85%,0.35) 0%, transparent 65%);
+        }
+        .pill-btn:hover .pill-sunburst {
           opacity: 1;
         }
-        .cart-btn svg {
-          transition: transform 0.25s cubic-bezier(0.22,1,0.36,1);
+
+        /* Extra sparkle rays on cart hover */
+        .cart-pill::after {
+          content: '';
+          position: absolute;
+          top: 4px;
+          right: 8px;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: hsl(43,90%,65%);
+          transform: scale(0);
+          transition: transform 0.2s ease 0.05s, opacity 0.2s;
+          opacity: 0;
+          z-index: 6;
         }
-        .cart-btn:hover svg {
-          transform: scale(1.07);
+        .cart-pill:hover::after {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+
+        /* New item pop: animate the whole cart pill */
+        .cart-pill.item-added {
+          animation: pill-bounce 0.42s cubic-bezier(0.34,1.56,0.64,1);
         }
       `}</style>
     </>
