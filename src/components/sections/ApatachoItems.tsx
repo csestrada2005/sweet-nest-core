@@ -1,11 +1,11 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import pajaroNaranja from "@/assets/brand/pajaro-naranja.png";
 import SectionReveal from "@/components/ui/SectionReveal";
 
 /* ─────────────────────────────────────────
-   #apapacho — Carrusel horizontal con expand al hover
-   Cada card muestra solo icono + título, se abre al hover
+   #apapacho — Carrusel horizontal infinito con auto-scroll
+   Cards expandibles al hover, auto-play con pausa al interactuar
    ───────────────────────────────────────── */
 
 const items = [
@@ -47,14 +47,28 @@ const items = [
   },
 ];
 
-const ApaCard = ({ item }: { item: typeof items[0] }) => {
+// Triplicamos items para scroll infinito sin saltos
+const INFINITE_ITEMS = [...items, ...items, ...items];
+const CARD_COUNT = items.length;
+
+const ApaCard = ({
+  item,
+  isActive,
+}: {
+  item: typeof items[0];
+  isActive: boolean;
+}) => {
   const [hovered, setHovered] = useState(false);
+  const open = hovered || isActive;
+
   return (
     <Link
       to={item.href}
       className="block flex-shrink-0"
       style={{
-        width: hovered ? "clamp(240px, 32vw, 380px)" : "clamp(140px, 18vw, 200px)",
+        width: open
+          ? "clamp(220px, 28vw, 360px)"
+          : "clamp(130px, 17vw, 195px)",
         transition: "width 0.5s cubic-bezier(.22,1,.36,1)",
       }}
       onMouseEnter={() => setHovered(true)}
@@ -62,11 +76,11 @@ const ApaCard = ({ item }: { item: typeof items[0] }) => {
       aria-label={`Explorar: ${item.label}`}
     >
       <div
-        className="relative overflow-hidden h-full"
+        className="relative overflow-hidden"
         style={{
           background: item.bg,
-          padding: "clamp(1.5rem, 3vw, 2.5rem)",
-          minHeight: "clamp(260px, 38vw, 440px)",
+          padding: "clamp(1.4rem, 3vw, 2.4rem)",
+          minHeight: "clamp(240px, 36vw, 420px)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
@@ -77,9 +91,9 @@ const ApaCard = ({ item }: { item: typeof items[0] }) => {
         <span
           className="block font-bold leading-none select-none"
           style={{
-            fontSize: "clamp(3rem, 6vw, 5rem)",
+            fontSize: "clamp(2.8rem, 5.5vw, 5rem)",
             color: item.accent,
-            opacity: hovered ? 0.35 : 0.12,
+            opacity: open ? 0.32 : 0.12,
             letterSpacing: "-0.03em",
             transition: "opacity 0.4s ease",
           }}
@@ -91,48 +105,55 @@ const ApaCard = ({ item }: { item: typeof items[0] }) => {
         {/* Icono */}
         <span
           style={{
-            fontSize: "clamp(2rem, 4vw, 3rem)",
+            fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)",
             display: "block",
             transition: "transform 0.4s cubic-bezier(.22,1,.36,1)",
-            transform: hovered ? "scale(1.15)" : "scale(1)",
+            transform: open ? "scale(1.15)" : "scale(1)",
           }}
           aria-hidden="true"
         >
           {item.icon}
         </span>
 
-        {/* Título siempre visible */}
+        {/* Título + descripción */}
         <div>
           <h3
             className="font-bold text-foreground"
             style={{
-              fontSize: "clamp(1.1rem, 2vw, 1.5rem)",
+              fontSize: "clamp(1rem, 1.8vw, 1.4rem)",
               letterSpacing: "0.04em",
-              marginBottom: hovered ? "0.75rem" : "0",
+              marginBottom: open ? "0.7rem" : "0",
               transition: "margin 0.4s ease",
             }}
           >
             {item.label}
           </h3>
 
-          {/* Descripción — se revela al hover */}
           <div
             style={{
-              maxHeight: hovered ? "120px" : "0px",
+              maxHeight: open ? "120px" : "0px",
               overflow: "hidden",
-              opacity: hovered ? 1 : 0,
-              transition: "max-height 0.5s cubic-bezier(.22,1,.36,1), opacity 0.4s ease",
+              opacity: open ? 1 : 0,
+              transition:
+                "max-height 0.5s cubic-bezier(.22,1,.36,1), opacity 0.35s ease",
             }}
           >
             <p
               className="text-muted-foreground font-light leading-relaxed"
-              style={{ fontSize: "clamp(0.87rem, 1.3vw, 0.97rem)", paddingTop: "0.25rem" }}
+              style={{
+                fontSize: "clamp(0.84rem, 1.2vw, 0.95rem)",
+                paddingTop: "0.2rem",
+              }}
             >
               {item.description}
             </p>
             <p
               className="mt-3 inline-flex items-center gap-1 border-b border-foreground/30 pb-0.5"
-              style={{ fontSize: "0.7rem", letterSpacing: "0.13em", textTransform: "uppercase" }}
+              style={{
+                fontSize: "0.68rem",
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+              }}
             >
               Ver más →
             </p>
@@ -148,13 +169,92 @@ const ApatachoItems = () => {
   const isDragging = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
+  const userInteracting = useRef(false);
+  const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
+  // Ancho estimado de una card en px (se calcula dinámicamente)
+  const getCardWidth = useCallback(() => {
+    if (!trackRef.current) return 180;
+    const first = trackRef.current.querySelector<HTMLElement>("[data-card]");
+    return first ? first.offsetWidth + 12 : 180; // gap-3 = 12px
+  }, []);
+
+  // Scroll infinito: cuando llega al 2do bloque se teleporta al 1er bloque (mismo visual)
+  const loopScroll = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const cardW = getCardWidth();
+    const blockWidth = cardW * CARD_COUNT;
+    // Si llega al bloque 3, vuelve al bloque 1 sin animación
+    if (el.scrollLeft >= blockWidth * 2) {
+      el.scrollLeft -= blockWidth;
+    }
+    // Si por drag llega al inicio (bloque 0), salta al bloque 1
+    if (el.scrollLeft < blockWidth * 0.5 && el.scrollLeft < 10) {
+      el.scrollLeft += blockWidth;
+    }
+  }, [getCardWidth]);
+
+  // Auto-scroll suave
+  const autoScroll = useCallback(() => {
+    const el = trackRef.current;
+    if (!el || userInteracting.current) {
+      rafRef.current = requestAnimationFrame(autoScroll);
+      return;
+    }
+    el.scrollLeft += 0.6; // velocidad: px por frame (~36px/s a 60fps)
+    loopScroll();
+
+    // Actualiza card activa
+    const cardW = getCardWidth();
+    const blockWidth = cardW * CARD_COUNT;
+    const normalized = el.scrollLeft % blockWidth;
+    const idx = Math.round(normalized / cardW) % CARD_COUNT;
+    setActiveIndex(idx);
+
+    rafRef.current = requestAnimationFrame(autoScroll);
+  }, [loopScroll, getCardWidth]);
+
+  // Init: posiciona en el bloque del medio para poder ir en ambas direcciones
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const init = () => {
+      const cardW = getCardWidth();
+      el.scrollLeft = cardW * CARD_COUNT; // bloque 2 (medio)
+    };
+    // Esperar un frame para que el DOM mida bien
+    const raf = requestAnimationFrame(init);
+    return () => cancelAnimationFrame(raf);
+  }, [getCardWidth]);
+
+  // Arrancar auto-scroll
+  useEffect(() => {
+    rafRef.current = requestAnimationFrame(autoScroll);
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [autoScroll]);
+
+  // Pausa al interactuar, reanuda después de 2s
+  const pauseAuto = () => {
+    userInteracting.current = true;
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => {
+      userInteracting.current = false;
+    }, 2000);
+  };
+
+  // Drag handlers
   const onMouseDown = (e: React.MouseEvent) => {
     if (!trackRef.current) return;
     isDragging.current = true;
     startX.current = e.pageX - trackRef.current.offsetLeft;
     scrollLeft.current = trackRef.current.scrollLeft;
     trackRef.current.style.cursor = "grabbing";
+    pauseAuto();
   };
   const onMouseUp = () => {
     isDragging.current = false;
@@ -164,7 +264,24 @@ const ApatachoItems = () => {
     if (!isDragging.current || !trackRef.current) return;
     e.preventDefault();
     const x = e.pageX - trackRef.current.offsetLeft;
-    trackRef.current.scrollLeft = scrollLeft.current - (x - startX.current) * 1.2;
+    trackRef.current.scrollLeft = scrollLeft.current - (x - startX.current) * 1.3;
+    loopScroll();
+  };
+
+  // Touch handlers
+  const touchStartX = useRef(0);
+  const touchScrollLeft = useRef(0);
+  const onTouchStart = (e: React.TouchEvent) => {
+    if (!trackRef.current) return;
+    touchStartX.current = e.touches[0].pageX;
+    touchScrollLeft.current = trackRef.current.scrollLeft;
+    pauseAuto();
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!trackRef.current) return;
+    const dx = touchStartX.current - e.touches[0].pageX;
+    trackRef.current.scrollLeft = touchScrollLeft.current + dx;
+    loopScroll();
   };
 
   return (
@@ -197,7 +314,9 @@ const ApatachoItems = () => {
                   letterSpacing: "clamp(0.03em, 0.5vw, 0.08em)",
                 }}
               >
-                ¿Qué apapacho<br />necesitas?
+                ¿Qué apapacho
+                <br />
+                necesitas?
               </h2>
             </SectionReveal>
           </div>
@@ -206,7 +325,11 @@ const ApatachoItems = () => {
               src={pajaroNaranja}
               alt=""
               aria-hidden="true"
-              style={{ width: "clamp(40px, 6vw, 72px)", height: "auto", opacity: 0.5 }}
+              style={{
+                width: "clamp(40px, 6vw, 72px)",
+                height: "auto",
+                opacity: 0.5,
+              }}
               loading="lazy"
             />
           </SectionReveal>
@@ -214,35 +337,75 @@ const ApatachoItems = () => {
         <SectionReveal delay={160}>
           <p
             className="text-muted-foreground font-light mt-4 italic"
-            style={{ fontSize: "clamp(0.83rem, 1.2vw, 0.96rem)", letterSpacing: "0.04em" }}
+            style={{
+              fontSize: "clamp(0.83rem, 1.2vw, 0.96rem)",
+              letterSpacing: "0.04em",
+            }}
           >
-            Pasa el cursor para descubrir
+            Pasa el cursor para descubrir · Arrastra para navegar
           </p>
         </SectionReveal>
       </div>
 
-      {/* Carrusel de cards expandibles */}
+      {/* Carrusel infinito */}
       <div
         ref={trackRef}
         className="flex gap-3 md:gap-4 overflow-x-auto pb-2 select-none"
         style={{
-          scrollSnapType: "x mandatory",
           paddingLeft: "max(2rem, calc((100vw - 1280px) / 2 + 2rem))",
           paddingRight: "max(2rem, calc((100vw - 1280px) / 2 + 2rem))",
           scrollbarWidth: "none",
           msOverflowStyle: "none",
           cursor: "grab",
           alignItems: "stretch",
+          /* Sin scroll-snap para que el auto-scroll sea suave */
         }}
         onMouseDown={onMouseDown}
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
         onMouseMove={onMouseMove}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onScroll={loopScroll}
       >
-        {items.map((item) => (
-          <div key={item.label} style={{ scrollSnapAlign: "start", display: "flex" }}>
-            <ApaCard item={item} />
+        {INFINITE_ITEMS.map((item, idx) => (
+          <div key={`${item.label}-${idx}`} data-card style={{ display: "flex" }}>
+            <ApaCard
+              item={item}
+              isActive={idx % CARD_COUNT === activeIndex}
+            />
           </div>
+        ))}
+      </div>
+
+      {/* Dots indicadores */}
+      <div className="container mt-8 flex gap-2">
+        {items.map((_, i) => (
+          <button
+            key={i}
+            aria-label={`Ir a ${items[i].label}`}
+            onClick={() => {
+              const el = trackRef.current;
+              if (!el) return;
+              const cardW = getCardWidth();
+              const blockWidth = cardW * CARD_COUNT;
+              el.scrollLeft = blockWidth + cardW * i;
+              pauseAuto();
+            }}
+            style={{
+              width: activeIndex === i ? "2rem" : "0.5rem",
+              height: "0.5rem",
+              borderRadius: "9999px",
+              background:
+                activeIndex === i
+                  ? "hsl(var(--primary))"
+                  : "hsl(var(--foreground) / 0.15)",
+              border: "none",
+              cursor: "pointer",
+              transition: "width 0.3s ease, background 0.3s ease",
+              padding: 0,
+            }}
+          />
         ))}
       </div>
     </section>
