@@ -4,9 +4,8 @@ import pajaroAzul from "@/assets/brand/pajaro-azul.png";
 import SectionReveal from "@/components/ui/SectionReveal";
 
 /* ─────────────────────────────────────────
-   #mexico — "Hecho en México con amor"
-   Elena "Terms" block: minimal editorial text,
-   3 commitments with bird icons
+   #mexico — 3 cols con alturas variables, offset,
+   fondos de color sutiles por columna
    ───────────────────────────────────────── */
 
 const commitments = [
@@ -14,95 +13,127 @@ const commitments = [
     bird: pajaroNaranja,
     title: "Comercio justo",
     body: "Cada prenda lleva el trabajo de artesanas locales que cobran lo que merecen.",
+    bg: "hsl(var(--papachoa-coral) / 0.06)",
+    topOffset: "0rem",
+    paddingTop: "2rem",
   },
   {
     bird: pajaroAmarillo,
     title: "Hecho a mano",
     body: "Sin líneas de ensamble masivo. Pieza por pieza, con atención en cada puntada.",
+    bg: "hsl(var(--papachoa-yellow) / 0.10)",
+    topOffset: "3rem",
+    paddingTop: "3rem",
   },
   {
     bird: pajaroAzul,
     title: "100% Mexicano",
     body: "Desde el diseño hasta el empaque. Orgullosamente hecho en México.",
+    bg: "hsl(var(--papachoa-blue) / 0.06)",
+    topOffset: "1.5rem",
+    paddingTop: "2.5rem",
   },
 ];
 
 const MexicoAmor = () => (
   <section
     id="mexico"
-    className="py-28 md:py-40 overflow-hidden"
-    style={{ background: "hsl(15 20% 97%)" }}
+    className="overflow-hidden"
+    style={{
+      background: "hsl(15 20% 97%)",
+      paddingTop: "clamp(5rem, 10vw, 9rem)",
+      paddingBottom: "clamp(5rem, 10vw, 9rem)",
+    }}
   >
     <div className="container">
 
-      {/* Main editorial block */}
-      <div className="max-w-2xl mb-20 md:mb-28">
-        <SectionReveal>
+      {/* Intro — título grande con número al margen */}
+      <div className="flex items-start gap-8 mb-20 md:mb-28">
+        <SectionReveal className="flex-1">
           <p
-            className="font-display text-primary mb-4"
-            style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.4rem)" }}
+            className="font-display text-primary mb-3"
+            style={{ fontSize: "clamp(1.05rem, 2vw, 1.3rem)" }}
           >
             Hecho en México con amor
           </p>
-        </SectionReveal>
-
-        <SectionReveal delay={80}>
           <h2
-            className="font-bold text-foreground mb-8"
+            className="font-bold text-foreground leading-none"
             style={{
-              fontSize: "clamp(2rem, 5.5vw, 4.5rem)",
-              letterSpacing: "clamp(0.04em, 0.7vw, 0.12em)",
-              lineHeight: 1.08,
+              fontSize: "clamp(2.2rem, 6.5vw, 5.5rem)",
+              letterSpacing: "clamp(0.02em, 0.4vw, 0.07em)",
             }}
           >
-            Cada prenda tiene nombre y apellido
+            Cada prenda tiene<br />nombre y apellido
           </h2>
         </SectionReveal>
 
-        <SectionReveal delay={160}>
+        <SectionReveal delay={100} className="hidden lg:block flex-shrink-0 text-right">
           <p
             className="text-muted-foreground font-light leading-relaxed"
-            style={{ fontSize: "clamp(0.97rem, 1.5vw, 1.08rem)" }}
+            style={{ fontSize: "clamp(0.93rem, 1.4vw, 1.02rem)", maxWidth: "280px" }}
           >
             Trabajamos con talleres locales bajo principios de comercio justo.
             Cada Papachoa lleva el cuidado de artesanas que ponen el corazón
-            en cada puntada — y saben que lo que hacen importa.
+            en cada puntada.
           </p>
         </SectionReveal>
       </div>
 
-      {/* 3 commitment blocks — Elena layout */}
-      <div className="grid md:grid-cols-3 gap-12 md:gap-16 max-w-4xl">
+      {/* Desktop text visible en mobile también */}
+      <SectionReveal delay={100} className="lg:hidden mb-14">
+        <p
+          className="text-muted-foreground font-light leading-relaxed"
+          style={{ fontSize: "clamp(0.95rem, 1.4vw, 1.05rem)" }}
+        >
+          Trabajamos con talleres locales bajo principios de comercio justo.
+          Cada Papachoa lleva el cuidado de artesanas que ponen el corazón en cada puntada.
+        </p>
+      </SectionReveal>
+
+      {/* 3 cols con alturas variables y color block de fondo */}
+      <div className="grid md:grid-cols-3 gap-4 md:gap-5 items-end">
         {commitments.map((c, i) => (
-          <SectionReveal key={c.title} delay={80 + i * 100} distance={16}>
-            {/* Bird icon — Elena's eye/pen/clock equivalents */}
-            <div className="mb-6">
+          <SectionReveal key={c.title} delay={100 + i * 100} distance={16}>
+            <div
+              style={{
+                background: c.bg,
+                padding: "clamp(1.5rem, 3.5vw, 3rem)",
+                marginTop: c.topOffset,
+                paddingTop: c.paddingTop,
+                minHeight: "clamp(220px, 30vw, 340px)",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              {/* Bird icon */}
               <img
                 src={c.bird}
                 alt=""
                 aria-hidden="true"
-                style={{ width: "clamp(44px, 7vw, 70px)", height: "auto", opacity: 0.75 }}
+                style={{ width: "clamp(40px, 6vw, 66px)", height: "auto", opacity: 0.7, marginBottom: "1.5rem" }}
                 loading="lazy"
               />
+
+              <div>
+                <h3
+                  className="font-bold text-foreground mb-3"
+                  style={{
+                    fontSize: "clamp(1rem, 1.8vw, 1.25rem)",
+                    letterSpacing: "0.07em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {c.title}
+                </h3>
+                <p
+                  className="text-muted-foreground font-light leading-relaxed"
+                  style={{ fontSize: "clamp(0.88rem, 1.3vw, 0.98rem)" }}
+                >
+                  {c.body}
+                </p>
+              </div>
             </div>
-
-            <h3
-              className="font-bold text-foreground mb-3"
-              style={{
-                fontSize: "clamp(1rem, 1.8vw, 1.2rem)",
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-              }}
-            >
-              {c.title}
-            </h3>
-
-            <p
-              className="text-muted-foreground font-light leading-relaxed"
-              style={{ fontSize: "clamp(0.9rem, 1.4vw, 1rem)" }}
-            >
-              {c.body}
-            </p>
           </SectionReveal>
         ))}
       </div>

@@ -1,50 +1,70 @@
 import familiaImg from "@/assets/pijama-rosa-0-familia-azul.jpg";
+import mama2 from "@/assets/pijama-rosa-2-ternura.jpg";
 import SectionReveal from "@/components/ui/SectionReveal";
 
 /* ─────────────────────────────────────────
-   #aboutpapachoa — "Hola. Somos Papachoa."
-   Elena pattern: large spaced title + editorial
-   2-col layout (text left, photo right)
+   #aboutpapachoa — Offset editorial layout
+   Título enorme izquierda, imagen desfasada derecha
    ───────────────────────────────────────── */
 
 const AboutPapachoa = () => (
   <section
     id="aboutpapachoa"
-    className="py-28 md:py-40 overflow-hidden"
-    style={{ background: "#fff" }}
+    className="overflow-hidden"
+    style={{ background: "#fff", paddingTop: "clamp(5rem, 10vw, 9rem)", paddingBottom: "clamp(4rem, 8vw, 7rem)" }}
   >
     <div className="container">
-      <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
-        {/* Left — text block */}
-        <div>
-          <SectionReveal>
-            <p
-              className="font-display text-primary mb-5"
-              style={{ fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)" }}
-            >
-              Hola
-            </p>
-          </SectionReveal>
+      {/* ROW 1: label izquierda + número decorativo derecha */}
+      <div className="flex items-start justify-between mb-4">
+        <SectionReveal>
+          <p
+            className="font-display text-primary"
+            style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.5rem)" }}
+          >
+            Hola
+          </p>
+        </SectionReveal>
+        <SectionReveal delay={60}>
+          <span
+            className="font-bold select-none leading-none"
+            style={{
+              fontSize: "clamp(6rem, 16vw, 14rem)",
+              color: "hsl(var(--papachoa-cream))",
+              letterSpacing: "-0.04em",
+              lineHeight: 0.85,
+              userSelect: "none",
+            }}
+            aria-hidden="true"
+          >01</span>
+        </SectionReveal>
+      </div>
 
-          <SectionReveal delay={80}>
-            <h2
-              className="font-bold text-foreground leading-tight mb-8"
-              style={{
-                fontSize: "clamp(2.2rem, 6vw, 5rem)",
-                letterSpacing: "clamp(0.04em, 0.8vw, 0.12em)",
-                lineHeight: 1.1,
-              }}
-            >
-              Somos{" "}
-              <span style={{ color: "hsl(var(--primary))" }}>Papachoa.</span>
-            </h2>
-          </SectionReveal>
+      {/* ROW 2: título enorme */}
+      <SectionReveal delay={80}>
+        <h2
+          className="font-bold text-foreground leading-none"
+          style={{
+            fontSize: "clamp(3rem, 10vw, 9rem)",
+            letterSpacing: "clamp(0.02em, 0.5vw, 0.08em)",
+            lineHeight: 0.92,
+            marginBottom: "clamp(3rem, 6vw, 5rem)",
+          }}
+        >
+          Somos{" "}
+          <span className="italic" style={{ color: "hsl(var(--primary))" }}>Papachoa.</span>
+        </h2>
+      </SectionReveal>
 
-          <SectionReveal delay={160}>
+      {/* ROW 3: texto izquierda (ancho limitado) + imagen derecha desfasada */}
+      <div className="relative grid lg:grid-cols-12 gap-0 items-start">
+
+        {/* Texto — cols 1-5 */}
+        <div className="lg:col-span-5 lg:pr-12" style={{ paddingTop: "clamp(0px, 4vw, 60px)" }}>
+          <SectionReveal delay={140}>
             <div
               className="space-y-5 text-muted-foreground font-light leading-relaxed"
-              style={{ fontSize: "clamp(0.97rem, 1.5vw, 1.1rem)", maxWidth: "480px" }}
+              style={{ fontSize: "clamp(0.97rem, 1.5vw, 1.1rem)", maxWidth: "400px" }}
             >
               <p>
                 Somos una marca mexicana que nació de una convicción simple:
@@ -62,31 +82,67 @@ const AboutPapachoa = () => (
               </p>
             </div>
           </SectionReveal>
+
+          {/* Cita editorial flotante debajo del texto */}
+          <SectionReveal delay={260}>
+            <p
+              className="font-display text-primary mt-10 leading-snug"
+              style={{ fontSize: "clamp(1.3rem, 3vw, 2rem)", maxWidth: "320px" }}
+            >
+              "El apapacho empieza con la pijama."
+            </p>
+          </SectionReveal>
         </div>
 
-        {/* Right — editorial photo */}
-        <SectionReveal delay={220} distance={22} className="lg:pt-10">
-          <div
-            className="overflow-hidden"
-            style={{ borderRadius: "0" /* Elena: sin border-radius en fotos */ }}
-          >
-            <img
-              src={familiaImg}
-              alt="Familia Papachoa en pijamas"
-              className="w-full"
+        {/* Imagen derecha — desfasada hacia arriba (negative mt en lg) */}
+        <div className="lg:col-span-7 lg:col-start-6" style={{ marginTop: "clamp(0rem, -3vw, -2rem)" }}>
+        <SectionReveal
+          delay={200}
+          distance={24}
+        >
+          <div className="relative">
+            {/* Imagen principal */}
+            <div className="overflow-hidden" style={{ borderRadius: 0 }}>
+              <img
+                src={familiaImg}
+                alt="Familia Papachoa en pijamas"
+                className="w-full"
+                style={{
+                  aspectRatio: "3/4",
+                  objectFit: "cover",
+                  objectPosition: "top center",
+                  display: "block",
+                }}
+                loading="lazy"
+                decoding="async"
+                width={600}
+                height={800}
+              />
+            </div>
+
+            {/* Mini imagen flotante — rompe monotonía */}
+            <div
+              className="absolute overflow-hidden shadow-xl"
               style={{
-                aspectRatio: "4/5",
-                objectFit: "cover",
-                objectPosition: "top center",
-                display: "block",
+                bottom: "-2rem",
+                left: "-2.5rem",
+                width: "clamp(100px, 22vw, 220px)",
+                aspectRatio: "1/1",
+                border: "4px solid white",
+                zIndex: 2,
               }}
-              loading="lazy"
-              decoding="async"
-              width={540}
-              height={675}
-            />
+            >
+              <img
+                src={mama2}
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
           </div>
         </SectionReveal>
+        </div>
 
       </div>
     </div>
