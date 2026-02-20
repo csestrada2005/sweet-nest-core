@@ -21,13 +21,13 @@ const AboutPapachoa = () => (
       loading="lazy"
     />
 
-    {/* Overlay: degradado sutil para legibilidad */}
+    {/* Overlay: degradado izquierda más sólido para legibilidad del texto */}
     <div
       className="absolute inset-0"
       style={{
         zIndex: 1,
         background:
-          "linear-gradient(110deg, rgba(10,8,6,0.38) 0%, rgba(10,8,6,0.18) 55%, rgba(10,8,6,0.08) 100%)",
+          "linear-gradient(105deg, rgba(8,6,4,0.60) 0%, rgba(8,6,4,0.38) 50%, rgba(8,6,4,0.10) 100%)",
       }}
     />
 
@@ -45,12 +45,12 @@ const AboutPapachoa = () => (
       <div
         className="w-full md:max-w-[54%] lg:max-w-[48%]"
         style={{
-          background: "rgba(255,255,255,0.11)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          border: "1px solid rgba(255,255,255,0.14)",
+        background: "rgba(10,8,6,0.42)",
+          backdropFilter: "blur(14px)",
+          WebkitBackdropFilter: "blur(14px)",
+          border: "1px solid rgba(255,255,255,0.12)",
           borderRadius: "20px",
-          boxShadow: "0 8px 40px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.08) inset",
+          boxShadow: "0 12px 50px rgba(0,0,0,0.30), 0 1px 0 rgba(255,255,255,0.06) inset",
           padding: "clamp(2rem, 5vw, 3.5rem)",
         }}
       >
@@ -111,8 +111,8 @@ const AboutPapachoa = () => (
             className="space-y-4 font-light leading-relaxed"
             style={{
               fontSize: "clamp(0.9rem, 1.4vw, 1.05rem)",
-              color: "rgba(255,255,255,0.88)",
-              textShadow: "0 1px 6px rgba(0,0,0,0.22)",
+              color: "rgba(255,255,255,0.95)",
+              textShadow: "0 1px 4px rgba(0,0,0,0.40)",
             }}
           >
             <p>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, forwardRef, type ReactNode } from "react";
 
 /* ─────────────────────────────────────────
    SectionReveal
@@ -20,15 +20,15 @@ interface SectionRevealProps {
   threshold?: number;
 }
 
-const SectionReveal = ({
+const SectionReveal = forwardRef<HTMLDivElement, SectionRevealProps>(({
   children,
   delay = 0,
   distance = 14,
   duration = 620,
   className,
   threshold = 0.12,
-}: SectionRevealProps) => {
-  const ref = useRef<HTMLDivElement>(null);
+}, _ref) => {
+  const innerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
   /* respect reduced-motion */
@@ -38,7 +38,7 @@ const SectionReveal = ({
 
   useEffect(() => {
     if (prefersReduced) { setVisible(true); return; }
-    const el = ref.current;
+    const el = innerRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
       ([entry]) => {
@@ -55,7 +55,7 @@ const SectionReveal = ({
 
   return (
     <div
-      ref={ref}
+      ref={innerRef}
       className={className}
       style={{
         opacity: visible ? 1 : 0,
@@ -69,6 +69,8 @@ const SectionReveal = ({
       {children}
     </div>
   );
-};
+});
+
+SectionReveal.displayName = "SectionReveal";
 
 export default SectionReveal;
