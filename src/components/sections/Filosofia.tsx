@@ -1,25 +1,26 @@
 import lifestyleImage from "@/assets/lifestyle-1.png";
+import lifestyle2 from "@/assets/lifestyle-2.png";
 import pajaroAzulClaro from "@/assets/brand/pajaro-azul-claro.png";
 import SectionReveal from "@/components/ui/SectionReveal";
 
 /* ─────────────────────────────────────────
-   #filosofia — "Nuestra filosofía"
-   Elena "A Few Words About My Qualifications" pattern:
-   Eye icon + title + star-bulleted list, 2-col with image
+   #filosofia — Offset editorial
+   Imagen izquierda alta con imagen secundaria flotante,
+   título + bullets derecha verticalmente desfasados
    ───────────────────────────────────────── */
 
 const StarBullet = ({ text }: { text: string }) => (
-  <li className="flex items-start gap-4">
+  <li className="flex items-start gap-4 py-4 border-b border-border/15">
     <span
-      className="flex-shrink-0 mt-0.5 text-primary"
-      style={{ fontSize: "1.1rem", lineHeight: 1.6 }}
+      className="flex-shrink-0 text-primary"
+      style={{ fontSize: "0.7rem", lineHeight: 2.2, letterSpacing: "0.1em" }}
       aria-hidden="true"
     >
       ★
     </span>
     <span
       className="text-foreground/75 font-light leading-relaxed"
-      style={{ fontSize: "clamp(0.95rem, 1.5vw, 1.05rem)" }}
+      style={{ fontSize: "clamp(0.93rem, 1.4vw, 1.02rem)" }}
     >
       {text}
     </span>
@@ -37,77 +38,106 @@ const bullets = [
 const Filosofia = () => (
   <section
     id="filosofia"
-    className="py-28 md:py-40 overflow-hidden"
-    style={{ background: "hsl(15 20% 97%)" }}
+    className="overflow-hidden"
+    style={{
+      background: "hsl(15 20% 97%)",
+      paddingTop: "clamp(5rem, 10vw, 9rem)",
+      paddingBottom: "clamp(5rem, 10vw, 9rem)",
+    }}
   >
     <div className="container">
+      <div className="grid lg:grid-cols-12 gap-8 lg:gap-0 items-start">
 
-      {/* Decorative bird — like Elena's Eye icon */}
-      <SectionReveal className="flex justify-start mb-14">
-        <img
-          src={pajaroAzulClaro}
-          alt=""
-          aria-hidden="true"
-          style={{ width: "clamp(60px, 9vw, 100px)", height: "auto", opacity: 0.55 }}
-          loading="lazy"
-        />
-      </SectionReveal>
+        {/* LEFT — imágenes apiladas / desfasadas (cols 1-5) */}
+        <div className="lg:col-span-5 relative" style={{ paddingBottom: "4rem" }}>
+          <SectionReveal delay={40} distance={20}>
+            {/* Imagen principal */}
+            <div className="overflow-hidden" style={{ borderRadius: 0, marginRight: "clamp(0px, 3vw, 40px)" }}>
+              <img
+                src={lifestyleImage}
+                alt="Bebé con cobijo Papachoa"
+                className="w-full"
+                style={{
+                  aspectRatio: "3/4",
+                  objectFit: "cover",
+                  objectPosition: "center",
+                  display: "block",
+                }}
+                loading="lazy"
+                decoding="async"
+                width={440}
+                height={586}
+              />
+            </div>
 
-      <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
+            {/* Imagen secundaria flotante hacia afuera derecha */}
+            <div
+              className="absolute overflow-hidden shadow-lg"
+              style={{
+                bottom: "0",
+                right: "-1rem",
+                width: "clamp(110px, 24vw, 230px)",
+                aspectRatio: "4/5",
+                border: "4px solid white",
+                zIndex: 2,
+              }}
+            >
+              <img
+                src={lifestyle2}
+                alt=""
+                aria-hidden="true"
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </SectionReveal>
+        </div>
 
-        {/* Left — title + bullets */}
-        <div>
-          <SectionReveal>
+        {/* RIGHT — label + título + bullets (cols 7-12) desfasados arriba */}
+        <div
+          className="lg:col-span-6 lg:col-start-7"
+          style={{ paddingTop: "clamp(0px, 6vw, 80px)" }}
+        >
+          {/* Pájaro decorativo */}
+          <SectionReveal className="mb-8">
+            <img
+              src={pajaroAzulClaro}
+              alt=""
+              aria-hidden="true"
+              style={{ width: "clamp(46px, 7vw, 76px)", height: "auto", opacity: 0.45 }}
+              loading="lazy"
+            />
+          </SectionReveal>
+
+          <SectionReveal delay={60}>
             <p
-              className="font-display text-primary mb-4"
-              style={{ fontSize: "clamp(1.1rem, 2.2vw, 1.4rem)" }}
+              className="font-display text-primary mb-3"
+              style={{ fontSize: "clamp(1.05rem, 2vw, 1.35rem)" }}
             >
               Un par de palabras
             </p>
           </SectionReveal>
 
-          <SectionReveal delay={80}>
+          <SectionReveal delay={120}>
             <h2
-              className="font-bold text-foreground mb-10"
+              className="font-bold text-foreground mb-10 leading-none"
               style={{
-                fontSize: "clamp(2rem, 5vw, 4rem)",
-                letterSpacing: "clamp(0.04em, 0.6vw, 0.1em)",
-                lineHeight: 1.1,
+                fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)",
+                letterSpacing: "clamp(0.03em, 0.5vw, 0.08em)",
               }}
             >
-              Nuestra filosofía
+              Nuestra<br />filosofía
             </h2>
           </SectionReveal>
 
-          <SectionReveal delay={160}>
-            <ul className="space-y-5">
+          <SectionReveal delay={200}>
+            <ul className="space-y-0">
               {bullets.map((b, i) => (
                 <StarBullet key={i} text={b} />
               ))}
             </ul>
           </SectionReveal>
         </div>
-
-        {/* Right — editorial image */}
-        <SectionReveal delay={240} distance={20} className="lg:pt-6">
-          <div className="overflow-hidden">
-            <img
-              src={lifestyleImage}
-              alt="Bebé con cobijo Papachoa"
-              className="w-full"
-              style={{
-                aspectRatio: "3/4",
-                objectFit: "cover",
-                objectPosition: "center",
-                display: "block",
-              }}
-              loading="lazy"
-              decoding="async"
-              width={480}
-              height={640}
-            />
-          </div>
-        </SectionReveal>
 
       </div>
     </div>
