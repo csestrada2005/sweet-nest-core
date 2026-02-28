@@ -1,5 +1,7 @@
 import { useRef, useEffect, useCallback, memo } from "react";
 import { Link } from "react-router-dom";
+import { Moon, Baby, Users, Gift } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import pajaroNaranja from "@/assets/brand/pajaro-naranja.png";
 import SectionReveal from "@/components/ui/SectionReveal";
 
@@ -14,36 +16,36 @@ const items = [
     label: "Calma",
     description: "Para que tu bebé duerma tranquilo toda la noche. Telas que respiran y abrazan sin apretar.",
     href: "/catalogo?categoria=mama-bebe",
-    icon: "🌙",
+    Icon: Moon,
     num: "01",
-    bg: "hsl(var(--papachoa-blue) / 0.06)",
+    gradient: "linear-gradient(180deg, #ffffff 0%, #e8f0fa 100%)",
     accent: "hsl(var(--papachoa-blue))",
   },
   {
     label: "Ternura",
     description: "El primer regalo que importa. Suavidad diseñada para piel recién nacida.",
     href: "/catalogo?categoria=mama-bebe",
-    icon: "🤱",
+    Icon: Baby,
     num: "02",
-    bg: "hsl(var(--papachoa-coral) / 0.07)",
+    gradient: "linear-gradient(180deg, #ffffff 0%, #fce8ef 100%)",
     accent: "hsl(var(--papachoa-coral))",
   },
   {
     label: "Conexión",
     description: "Vestirse iguales en familia. Esos momentos que el corazón archiva para siempre.",
     href: "/catalogo?categoria=mama-hija",
-    icon: "👨‍👩‍👧",
+    Icon: Users,
     num: "03",
-    bg: "hsl(var(--papachoa-magenta) / 0.07)",
+    gradient: "linear-gradient(180deg, #ffffff 0%, #e6f5ec 100%)",
     accent: "hsl(var(--papachoa-magenta))",
   },
   {
     label: "Regalar amor",
     description: "El regalo que emociona de verdad. Un Papachoa dice más que cualquier tarjeta.",
     href: "/catalogo",
-    icon: "🎁",
+    Icon: Gift,
     num: "04",
-    bg: "hsl(var(--papachoa-yellow) / 0.12)",
+    gradient: "linear-gradient(180deg, #ffffff 0%, #fdf5dc 100%)",
     accent: "hsl(var(--papachoa-yellow))",
   },
 ];
@@ -68,7 +70,7 @@ const ApaCard = memo(({ item }: { item: typeof items[0] }) => (
     <div
       className="relative overflow-hidden h-full"
       style={{
-        background: item.bg,
+        background: item.gradient,
         padding: "clamp(1.4rem, 3vw, 2.2rem)",
         minHeight: "clamp(240px, 36vw, 400px)",
         display: "flex",
@@ -90,14 +92,16 @@ const ApaCard = memo(({ item }: { item: typeof items[0] }) => (
         {item.num}
       </span>
 
-      {/* Icono */}
-      <span
-        className="block transition-transform duration-300 ease-out group-hover:scale-110"
-        style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)" }}
-        aria-hidden="true"
-      >
-        {item.icon}
-      </span>
+      {/* Icono SVG */}
+      <item.Icon
+        className="apa-icon-svg"
+        size={36}
+        strokeWidth={1.5}
+        style={{
+          color: item.accent,
+          transition: "color 300ms ease-out, transform 300ms ease-out",
+        }}
+      />
 
       {/* Texto — siempre visible, descripción aparece en hover */}
       <div>
@@ -147,6 +151,16 @@ const cardHoverCSS = `
 }
 .apa-card-inner:hover .apa-num {
   opacity: 0.28 !important;
+}
+.apa-card-inner {
+  transition: transform 300ms ease-out, box-shadow 300ms ease-out;
+}
+.apa-card-inner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px -8px rgba(0,0,0,0.12);
+}
+.apa-card-inner:hover .apa-icon-svg {
+  color: hsl(var(--papachoa-magenta)) !important;
 }
 `;
 
@@ -362,7 +376,7 @@ const ApatachoItems = () => {
               to={item.href}
               className="block mt-2"
               style={{
-                background: item.bg,
+                background: item.gradient,
                 padding: "clamp(1.2rem, 2.5vw, 2rem)",
                 minHeight: "clamp(220px, 34vw, 380px)",
                 display: "flex",
@@ -373,25 +387,23 @@ const ApatachoItems = () => {
               aria-label={`Explorar: ${item.label}`}
               draggable={false}
             >
-              {/* Icono */}
-              <span
-                className="block"
+              {/* Icono SVG */}
+              <item.Icon
+                className="apa-icon-svg"
+                size={36}
+                strokeWidth={1.5}
                 style={{
-                  fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
-                  transition: "transform 0.3s ease",
+                  color: item.accent,
+                  transition: "color 300ms ease-out",
                 }}
-                aria-hidden="true"
-              >
-                {item.icon}
-              </span>
+              />
 
-              {/* Título */}
               <div>
                 <h3
-                  className="apa-title font-bold text-foreground"
+                  className="apa-title font-display text-foreground"
                   style={{
-                    fontSize: "clamp(1rem, 1.8vw, 1.3rem)",
-                    letterSpacing: "0.04em",
+                    fontSize: "clamp(1.1rem, 2vw, 1.4rem)",
+                    fontStyle: "italic",
                     marginBottom: 0,
                     transition: "margin 0.3s ease",
                   }}
@@ -409,8 +421,8 @@ const ApatachoItems = () => {
                   }}
                 >
                   <p
-                    className="text-muted-foreground font-light leading-relaxed pt-1"
-                    style={{ fontSize: "clamp(0.84rem, 1.2vw, 0.92rem)" }}
+                    className="text-muted-foreground font-light pt-1"
+                    style={{ fontSize: "clamp(0.84rem, 1.2vw, 0.92rem)", lineHeight: 1.6 }}
                   >
                     {item.description}
                   </p>
