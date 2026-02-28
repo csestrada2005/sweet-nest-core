@@ -108,18 +108,25 @@ const Index = () => {
           <div id="productos">
             <ProductosDestacados />
           </div>
-          <ResenasSection />
-          <div id="coleccion-completa">
+
+          {/* Hidden sections — accessible via hamburger menu scroll */}
+          <div id="coleccion-completa" className="hidden">
             <ComplementaLook />
           </div>
-          <ApatachoItems />
-          <HistoriasHilo />
-          <Suavidad />
-          <MexicoAmor />
+          <div id="para-pintar" className="hidden">
+            <ResenasSection />
+          </div>
+          <div className="hidden">
+            <ApatachoItems />
+            <HistoriasHilo />
+            <Suavidad />
+            <MexicoAmor />
+          </div>
+
           <div id="contacto">
             <CTAWhatsApp />
+            <Newsletter />
           </div>
-          <Newsletter />
         </Suspense>
         </div>
       </main>
