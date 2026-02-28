@@ -9,8 +9,8 @@ import papaNinaImg from "@/assets/pijama-dinosaurio-1-papa-nina.jpg";
 const AboutPapachoa = () => (
   <section
     id="aboutpapachoa"
-    className="relative overflow-hidden"
-    style={{ minHeight: "100vh" }}
+    className="relative overflow-hidden z-10"
+    style={{ minHeight: "100vh", backgroundColor: "#FDF6F0" }}
   >
     {/* Fondo: imagen full-screen */}
     <img
