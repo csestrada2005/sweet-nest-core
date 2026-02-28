@@ -3,6 +3,9 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-mama-hija.png";
 import papachoaLogo from "@/assets/brand/papachoa-logo.png";
+import birdYellow from "@/assets/brand/pajaro-amarillo-sf.png";
+import birdBlue from "@/assets/brand/pajaro-azul-claro-sf.png";
+import birdOrange from "@/assets/brand/pajaro-naranja-sf.png";
 
 const TEXT = "Pensado por mamás para mamás";
 
@@ -64,12 +67,20 @@ const WORDS: WordData[] = (() => {
   }));
 })();
 
+const BIRDS = [
+  { src: birdYellow, alt: "Pajarito amarillo", style: { top: "8%", left: "6%", width: 100 }, delay: "0s" },
+  { src: birdBlue, alt: "Pajarito azul", style: { top: "18%", right: "5%", width: 110 }, delay: "1.2s" },
+  { src: birdOrange, alt: "Pajarito naranja", style: { bottom: "14%", left: "8%", width: 90 }, delay: "2.1s" },
+];
+
 const HeroPapacho = () => {
   const navigate = useNavigate();
   const sectionRef = useRef<HTMLDivElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
   const [lineVisible, setLineVisible] = useState(false);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [progress, setProgress] = useState(0);
+  const [exiting, setExiting] = useState(false);
 
   /* Expanding line on mount */
   useEffect(() => {
@@ -96,6 +107,18 @@ const HeroPapacho = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, [onScroll]);
 
+  /* IntersectionObserver — hero shrink on exit */
+  useEffect(() => {
+    const el = stickyRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setExiting(!entry.isIntersecting),
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   /* Mouse parallax */
   const onMouseMove = useCallback((e: MouseEvent) => {
     const nx = (e.clientX / window.innerWidth) * 2 - 1;
@@ -119,8 +142,10 @@ const HeroPapacho = () => {
   const logoTranslateY = (1 - logoOpacity) * 20;
 
   return (
-    <section ref={sectionRef} style={{ height: "350vh", position: "relative", zIndex: 1 }}>
+    <section ref={sectionRef} style={{ height: "350vh", position: "relative", zIndex: 0 }}>
       <div
+        ref={stickyRef}
+        className={exiting ? "hero-exiting" : ""}
         style={{
           position: "sticky",
           top: 0,
@@ -132,7 +157,8 @@ const HeroPapacho = () => {
           alignItems: "center",
           justifyContent: "center",
           background: "hsl(15 20% 96%)",
-          zIndex: 1,
+          zIndex: 0,
+          transition: "transform 0.6s ease-out, opacity 0.6s ease-out",
         }}
       >
         {/* Subtle grain texture via CSS — no image request */}
@@ -251,6 +277,23 @@ const HeroPapacho = () => {
             Ver catálogo
           </button>
         </div>
+
+        {/* Floating birds — desktop only */}
+        {BIRDS.map((bird, i) => (
+          <img
+            key={i}
+            src={bird.src}
+            alt={bird.alt}
+            className="absolute pointer-events-none select-none hidden md:block z-30"
+            style={{
+              ...bird.style,
+              animation: `floatBird 3.5s ease-in-out infinite`,
+              animationDelay: bird.delay,
+            }}
+            aria-hidden="true"
+            draggable={false}
+          />
+        ))}
       </div>
     </section>
   );
