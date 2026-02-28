@@ -32,7 +32,7 @@ const items = [
   },
   {
     label: "Conexión",
-    description: "Vestirse iguales en familia. Esos momentos que el corazón archiva para siempre.",
+    description: "Momentos que unen a toda la familia.",
     href: "/catalogo?categoria=mama-hija",
     Icon: Users,
     num: "03",

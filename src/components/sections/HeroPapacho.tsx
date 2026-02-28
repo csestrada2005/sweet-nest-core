@@ -234,7 +234,11 @@ const HeroPapacho = () => {
           </p>
           {/* CTA — fade-in with greater delay */}
           <button
-            onClick={() => navigate("/catalogo")}
+            onClick={() => {
+              const el = document.getElementById("colecciones");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+              else navigate("/catalogo");
+            }}
             className="mt-6 px-8 py-4 rounded-full font-semibold text-base tracking-wide shadow-lg transition-all duration-200 hover:scale-105 hover:brightness-110"
             style={{
               backgroundColor: "#ac3c72",
@@ -244,7 +248,7 @@ const HeroPapacho = () => {
               transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
             }}
           >
-            Descubre Papachoa
+            Ver catálogo
           </button>
         </div>
       </div>
