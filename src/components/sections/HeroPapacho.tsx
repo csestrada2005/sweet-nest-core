@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-mama-hija.png";
 import papachoaLogo from "@/assets/brand/papachoa-logo.png";
 
-const TEXT = "Pijamas que abrazan";
+const TEXT = "Pensado por mamás para mamás";
 
 /* Brand palette cycling per letter */
 const LETTER_COLORS = ["#ac3c72", "#f5ce3e", "#ff8d6b", "#416ba9"];
@@ -23,7 +23,6 @@ interface WordData {
 
 /* Manually craft scatter so letters cross over each other dramatically */
 const SCATTER_MAP: Record<number, { tx: number; ty: number; tz: number; rot: number }> = {
-  // P - push far right
   0:  { tx:   8, ty: 12, tz: -20, rot:  35 },
   1:  { tx:   4, ty: 18, tz: -10, rot: -25 },
   2:  { tx:  10, ty:  8, tz: -25, rot:  40 },
@@ -41,6 +40,16 @@ const SCATTER_MAP: Record<number, { tx: number; ty: number; tz: number; rot: num
   14: { tx:   7, ty: 22, tz: -26, rot:  40 },
   15: { tx: -15, ty:  8, tz: -15, rot: -25 },
   16: { tx:   0, ty: 18, tz: -20, rot:  35 },
+  17: { tx:  11, ty: 14, tz: -16, rot: -30 },
+  18: { tx:  -9, ty: 20, tz: -22, rot:  25 },
+  19: { tx:   6, ty: 10, tz: -18, rot: -35 },
+  20: { tx: -11, ty: 16, tz: -14, rot:  40 },
+  21: { tx:   8, ty: 22, tz: -20, rot: -20 },
+  22: { tx: -14, ty: 12, tz: -24, rot:  30 },
+  23: { tx:   3, ty: 18, tz: -16, rot: -25 },
+  24: { tx:  -6, ty: 14, tz: -20, rot:  35 },
+  25: { tx:  12, ty: 20, tz: -18, rot: -40 },
+  26: { tx:  -8, ty: 10, tz: -22, rot:  30 },
 };
 
 const WORDS: WordData[] = (() => {
@@ -167,7 +176,7 @@ const HeroPapacho = () => {
           }}
         >
           <h1
-            className="relative text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tight leading-none select-none text-center"
+            className="relative text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none select-none text-center"
             style={{ transformStyle: "preserve-3d", minHeight: "1em", minWidth: "10ch" }}
             aria-label={TEXT}
           >
@@ -221,7 +230,7 @@ const HeroPapacho = () => {
               transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
             }}
           >
-            pensado por mamás, para mamás
+            pijamas que abrazan
           </p>
           {/* CTA — fade-in with greater delay */}
           <button

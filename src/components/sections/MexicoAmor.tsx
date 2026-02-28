@@ -67,7 +67,7 @@ const MexicoAmor = () => (
           </h2>
         </SectionReveal>
 
-        <SectionReveal delay={100} className="hidden lg:block flex-shrink-0 text-right">
+        <SectionReveal delay={100} className="flex-shrink-0 text-left lg:text-right">
           <p
             className="text-muted-foreground font-light leading-relaxed"
             style={{ fontSize: "clamp(0.93rem, 1.4vw, 1.02rem)", maxWidth: "280px" }}
@@ -79,16 +79,6 @@ const MexicoAmor = () => (
         </SectionReveal>
       </div>
 
-      {/* Desktop text visible en mobile también */}
-      <SectionReveal delay={100} className="lg:hidden mb-14">
-        <p
-          className="text-muted-foreground font-light leading-relaxed"
-          style={{ fontSize: "clamp(0.95rem, 1.4vw, 1.05rem)" }}
-        >
-          Trabajamos con talleres locales bajo principios de comercio justo.
-          Cada Papachoa lleva el cuidado de artesanas que ponen el corazón en cada puntada.
-        </p>
-      </SectionReveal>
 
       {/* 3 cols con alturas variables y color block de fondo */}
       <div className="grid md:grid-cols-3 gap-4 md:gap-5 items-end">
