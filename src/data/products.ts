@@ -20,8 +20,7 @@ import pijamadinosaurio4 from "@/assets/pijama-dinosaurio-4-standing.jpg";
 
 export type Collection =
   | "todos"
-  | "hija"
-  | "hijo"
+  | "hijos"
   | "bebe"
   | "adulto"
   | "familia";
@@ -51,60 +50,77 @@ export interface Product {
 
 export const collections: { id: Collection; label: string; color: string }[] = [
   { id: "todos", label: "Todos", color: "bg-papachoa-cream" },
-  { id: "hija", label: "Hija", color: "bg-papachoa-blush" },
-  { id: "hijo", label: "Hijo", color: "bg-papachoa-sky" },
+  { id: "hijos", label: "Hijos", color: "bg-papachoa-blush" },
   { id: "bebe", label: "Bebé", color: "bg-papachoa-sage" },
   { id: "adulto", label: "Adulto", color: "bg-papachoa-peach" },
   { id: "familia", label: "Toda la Familia", color: "bg-papachoa-cream" },
 ];
 
 export const collectionDescriptions: Record<Exclude<Collection, "todos">, string> = {
-  hija: "Para las pequeñas de la casa",
-  hijo: "Para los pequeños aventureros",
+  hijos: "Para los pequeños de la casa",
   bebe: "Suavidad desde el primer abrazo",
   adulto: "Comodidad y estilo para ti",
   familia: "Diseñados para verse juntos",
 };
 
 /**
- * Categorizes a product based on its title and description into
- * one of: hija, hijo, bebe, adulto, familia
+ * Categorizes a product based on its title and description.
+ * Priority order matters — more specific matches first.
  */
 export function categorizeProduct(title: string, description: string = "", tags: string[] = []): Exclude<Collection, "todos"> {
   const t = title.toLowerCase();
   const d = description.toLowerCase();
   const allText = `${t} ${d} ${tags.join(" ").toLowerCase()}`;
 
-  // Family sets
-  if (allText.includes("familia") || allText.includes("family") || (allText.includes("mamá") && allText.includes("papá"))) {
-    return "familia";
-  }
-
-  // Baby
-  if (allText.includes("bebé") || allText.includes("bebe") || allText.includes("baby") || allText.includes("recién nacido") || allText.includes("0-3m") || allText.includes("3-6m")) {
-    return "bebe";
-  }
-
-  // Hijo (boy)
-  if (allText.includes("hijo") || allText.includes("niño") || allText.includes("boy")) {
-    return "hijo";
-  }
-
-  // Hija (girl)
-  if (allText.includes("hija") || allText.includes("niña") || allText.includes("girl")) {
-    return "hija";
-  }
-
-  // Adult
-  if (allText.includes("adulto") || allText.includes("adult") || allText.includes("turbante") || allText.includes("mamá") || allText.includes("papá")) {
+  // 1. Products explicitly labeled "adulto" in the TITLE go to adulto
+  if (t.includes("adulto")) {
     return "adulto";
   }
 
-  // Default to familia for matching/set products
-  if (allText.includes("matching") || allText.includes("set") || allText.includes("&")) {
+  // 2. Baby products
+  if (t.includes("bebé") || t.includes("bebe") || t.includes("baby") || t.includes("recién nacido")) {
+    return "bebe";
+  }
+
+  // 3. Kids (hijos) — hija, hijo, niña, niño in the TITLE
+  if (t.includes("hija") || t.includes("hijo") || t.includes("niña") || t.includes("niño") || t.includes("kids")) {
+    return "hijos";
+  }
+
+  // 4. Turbante → familia (unitalla, para niños y adultos)
+  if (t.includes("turbante")) {
     return "familia";
   }
 
+  // 5. Explicit family sets
+  if (t.includes("familia") || t.includes("family")) {
+    return "familia";
+  }
+
+  // 6. Adult-only products (mamá solo, papá solo — without kids mention)
+  if (t.includes("mamá") && !t.includes("&") && !t.includes("hija") && !t.includes("hijo") && !t.includes("bebe") && !t.includes("bebé")) {
+    return "adulto";
+  }
+  if (t.includes("papá") && !t.includes("&") && !t.includes("hija") && !t.includes("hijo")) {
+    return "adulto";
+  }
+
+  // 7. Sets with "&" (mamá & hija, papá & hijo, etc.) → familia
+  if (t.includes("&")) {
+    return "familia";
+  }
+
+  // 8. Check description for adult keywords
+  if (allText.includes("adulto") && !allText.includes("niño") && !allText.includes("niña") && !allText.includes("hija") && !allText.includes("hijo")) {
+    return "adulto";
+  }
+
+  // 9. Check description for kids
+  if (allText.includes("niño") || allText.includes("niña") || allText.includes("hija") || allText.includes("hijo")) {
+    return "hijos";
+  }
+
+  // Default: familia
   return "familia";
 }
 
@@ -134,7 +150,7 @@ export const products: Product[] = [
     slug: "pijama-doodle-mama-bebe",
     name: "Pijama Mamá & Hija – Doodle",
     price: 1390,
-    collection: "hija",
+    collection: "hijos",
     image: pijamaBlanca1,
     images: [pijamaBlanca1, pijamaBlanca3, pijamaBlanca2, pijamaBlanca5, pijamaBlanca4],
     shortDescription: "Dibujando momentos juntas. Pijama con print de doodles para mamá y su pequeña artista.",
@@ -154,7 +170,7 @@ export const products: Product[] = [
     slug: "pijama-dinosaurio-papa-nina",
     name: "Pijama Papá & Hija – Dinosaurio",
     price: 1490,
-    collection: "hija",
+    collection: "hijos",
     image: pijamadinosaurio1,
     images: [pijamadinosaurio1, pijamadinosaurio2, pijamadinosaurio3, pijamadinosaurio4],
     shortDescription: "Dinosaurios y diversión. Pijama para papá y su pequeña aventurera.",
