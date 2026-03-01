@@ -5,7 +5,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/catalog/ProductCard";
 import CollectionFilter from "@/components/catalog/CollectionFilter";
-import { products, collections, type Collection } from "@/data/products";
+import { collections, type Collection, type Product } from "@/data/products";
+import { storefrontApiRequest, STOREFRONT_QUERY, type ShopifyProduct } from "@/lib/shopify";
 
 const validSlugs = new Set(collections.map((c) => c.id));
 
@@ -19,6 +20,57 @@ const Catalogo = () => {
     paramCategoria && validSlugs.has(paramCategoria) ? paramCategoria : "todos";
 
   const [selectedCollection, setSelectedCollection] = useState<Collection>(initial);
+  const [shopifyProducts, setShopifyProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await storefrontApiRequest(STOREFRONT_QUERY, { first: 20 });
+
+        const mappedProducts: Product[] = response.data.products.edges.map(({ node }: { node: ShopifyProduct['node'] }) => {
+          // Buscamos si el producto tiene un tag que corresponda a nuestras colecciones
+          const hasMamaBebe = node.tags?.includes("mama-bebe");
+          const hasMamaHija = node.tags?.includes("mama-hija");
+          const hasPapaHija = node.tags?.includes("papa-hija");
+
+          let collectionAssigned: Product['collection'] = "mama-bebe"; // default fallback
+          if (hasMamaBebe) collectionAssigned = "mama-bebe";
+          else if (hasMamaHija) collectionAssigned = "mama-hija";
+          else if (hasPapaHija) collectionAssigned = "papa-hija";
+
+          return {
+            id: node.id,
+            slug: node.handle,
+            name: node.title,
+            price: parseFloat(node.priceRange.minVariantPrice.amount),
+            collection: collectionAssigned,
+            image: node.images.edges[0]?.node.url || "/placeholder.svg",
+            images: node.images.edges.map(img => img.node.url),
+            shortDescription: node.description.substring(0, 100) + '...',
+            longDescription: node.description,
+            tags: node.tags || [],
+            sizes: node.options.find(opt => opt.name === 'Size' || opt.name === 'Talla')?.values || ["CH", "M", "G"],
+            material: "Jersey de algodón peinado",
+            care: ["Lavar con agua fría"],
+            shippingSummary: "Envío a toda la República",
+            returnSummary: "30 días para cambios",
+            featured: true,
+            colorway: "Estándar",
+          };
+        });
+
+        setShopifyProducts(mappedProducts);
+      } catch (error) {
+        console.error("Error fetching Shopify products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     const cat = searchParams.get("categoria") as Collection | null;
@@ -63,10 +115,10 @@ const Catalogo = () => {
   }, [activeCardId]);
 
   const filteredProducts = useMemo(() => {
-    const realProducts = products.filter((p) => p.image !== "/placeholder.svg");
+    const realProducts = shopifyProducts.filter((p) => p.image !== "/placeholder.svg");
     if (selectedCollection === "todos" || selectedCollection === "matching") return realProducts;
     return realProducts.filter((p) => p.collection === selectedCollection);
-  }, [selectedCollection]);
+  }, [selectedCollection, shopifyProducts]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -106,24 +158,32 @@ const Catalogo = () => {
             />
           </div>
 
-          <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                isActive={activeCardId === product.id}
-                onActivate={() => setActiveCardId(product.id)}
-                onDeactivate={() => setActiveCardId((prev) => prev === product.id ? null : prev)}
-              />
-            ))}
-          </div>
-
-          {filteredProducts.length === 0 && (
+          {loading ? (
             <div className="text-center py-16">
-              <p className="text-muted-foreground font-light">
-                No hay productos en esta colección aún.
-              </p>
+              Cargando colección desde Shopify...
             </div>
+          ) : (
+            <>
+              <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    isActive={activeCardId === product.id}
+                    onActivate={() => setActiveCardId(product.id)}
+                    onDeactivate={() => setActiveCardId((prev) => prev === product.id ? null : prev)}
+                  />
+                ))}
+              </div>
+
+              {filteredProducts.length === 0 && (
+                <div className="text-center py-16">
+                  <p className="text-muted-foreground font-light">
+                    No hay productos en esta colección aún.
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
