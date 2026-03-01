@@ -46,23 +46,6 @@ const AboutPapachoa = () => {
         }}>
 
       <div className="w-full md:w-[58%] lg:w-[55%]">
-        {/* ROW 1: label + número */}
-        <div className="items-start justify-between mb-3 flex flex-col text-primary">
-          <SectionReveal>
-            <span
-                className="font-bold select-none text-primary text-2xl"
-                style={{
-                  fontSize: "clamp(1.2rem, 2vw, 1.6rem)",
-                  color: "#b0b0b0",
-                  opacity: 0.3,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase"
-                }}>
-              Hola
-            </span>
-          </SectionReveal>
-        </div>
-
         {/* Título */}
         <SectionReveal delay={80}>
           <h2
