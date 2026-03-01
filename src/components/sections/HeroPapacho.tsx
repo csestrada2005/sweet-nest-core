@@ -260,11 +260,7 @@ const HeroPapacho = () => {
           </p>
           {/* CTA — fade-in with greater delay */}
           <button
-            onClick={() => {
-              const el = document.getElementById("colecciones");
-              if (el) el.scrollIntoView({ behavior: "smooth" });
-              else navigate("/catalogo");
-            }}
+            onClick={() => navigate("/catalogo")}
             className="mt-6 px-8 py-4 rounded-full font-semibold text-base tracking-wide shadow-lg transition-all duration-200 hover:scale-105 hover:brightness-110"
             style={{
               backgroundColor: "#ac3c72",
