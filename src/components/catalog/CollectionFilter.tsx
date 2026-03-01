@@ -15,17 +15,11 @@ const chipColors: Record<Collection, { bg: string; bgActive: string; border: str
     border: "hsl(35 30% 84%)",
     borderActive: "hsl(35 38% 76%)",
   },
-  hija: {
+  hijos: {
     bg: "hsl(331 28% 92%)",
     bgActive: "hsl(331 38% 84%)",
     border: "hsl(331 22% 84%)",
     borderActive: "hsl(331 30% 76%)",
-  },
-  hijo: {
-    bg: "hsl(216 22% 90%)",
-    bgActive: "hsl(216 30% 80%)",
-    border: "hsl(216 18% 82%)",
-    borderActive: "hsl(216 26% 74%)",
   },
   bebe: {
     bg: "hsl(14 38% 90%)",

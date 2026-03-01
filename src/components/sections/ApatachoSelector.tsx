@@ -29,7 +29,7 @@ const options: ApatachoOption[] = [
     Icon: Baby,
     label: "Ternura",
     description: "Quiero apapachar a mi recién nacido con lo más suave",
-    collections: ["bebe", "hija"],
+    collections: ["bebe", "hijos"],
     color: "hsl(331 48% 45%)",
   },
   {
@@ -37,7 +37,7 @@ const options: ApatachoOption[] = [
     Icon: Users,
     label: "Conexión",
     description: "Busco momentos especiales en familia, vestidos igual",
-    collections: ["hija", "familia"],
+    collections: ["hijos", "familia"],
     color: "hsl(14 100% 71%)",
   },
   {
@@ -45,7 +45,7 @@ const options: ApatachoOption[] = [
     Icon: Gift,
     label: "Regalar amor",
     description: "Quiero dar un regalo que emocione de verdad",
-    collections: ["familia", "hija"],
+    collections: ["familia", "hijos"],
     color: "hsl(47 90% 50%)",
   },
 ];

@@ -25,9 +25,9 @@ const collections: {
     showAll: true,
   },
   {
-    title: "Hija",
-    description: "Para las pequeñas de la casa",
-    slug: "hija",
+    title: "Hijos",
+    description: "Para los pequeños de la casa",
+    slug: "hijos",
     pattern: printPuntosCoral,
     featuredProductId: "pijama-doodle-mama-bebe",
   },
