@@ -83,6 +83,7 @@ const HeroPapacho = () => {
   const [exiting, setExiting] = useState(false);
   const isTouchDevice = useRef(typeof window !== "undefined" && "ontouchstart" in window);
   const iosDevice = useRef(isIOS());
+  const [heroLoaded, setHeroLoaded] = useState(!iosDevice.current);
 
   // Cached scroll metrics for stable progress calculation (avoids getBoundingClientRect per frame)
   const metricsRef = useRef({ sectionTop: 0, scrollable: 0 });
@@ -116,20 +117,23 @@ const HeroPapacho = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  /* iOS intro autoplay: animate progress 0→1 with RAF + easing */
+  /* iOS intro autoplay: starts after hero image is loaded (prevents hidden-before-load state) */
   useEffect(() => {
     if (!iosDevice.current) return;
+
     let startTime: number | null = null;
-    let rafId: number;
+    let rafId = 0;
     let cancelled = false;
+    let startDelayId = 0;
+    let fallbackId = 0;
 
     const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
-    // Cancel intro if user starts scrolling
-    const cancelOnInteraction = () => { cancelled = true; cancelAnimationFrame(rafId); };
-    window.addEventListener("touchstart", cancelOnInteraction, { passive: true, once: true });
+    const startIntro = () => {
+      if (cancelled) return;
+      const initialScrollTop = document.scrollingElement?.scrollTop ?? window.scrollY;
+      if (initialScrollTop > 10) return;
 
-    const delay = setTimeout(() => {
       const step = (timestamp: number) => {
         if (cancelled) return;
         if (!startTime) startTime = timestamp;
@@ -138,16 +142,32 @@ const HeroPapacho = () => {
         setIntroProgress(easeOutCubic(t));
         if (t < 1) rafId = requestAnimationFrame(step);
       };
-      rafId = requestAnimationFrame(step);
-    }, 800);
+
+      startDelayId = window.setTimeout(() => {
+        if (!cancelled) rafId = requestAnimationFrame(step);
+      }, 240);
+    };
+
+    const cancelOnInteraction = () => {
+      cancelled = true;
+      window.clearTimeout(startDelayId);
+      window.clearTimeout(fallbackId);
+      cancelAnimationFrame(rafId);
+    };
+
+    window.addEventListener("touchstart", cancelOnInteraction, { passive: true, once: true });
+
+    if (heroLoaded) {
+      startIntro();
+    } else {
+      fallbackId = window.setTimeout(startIntro, 2200);
+    }
 
     return () => {
-      cancelled = true;
-      clearTimeout(delay);
-      cancelAnimationFrame(rafId);
+      cancelOnInteraction();
       window.removeEventListener("touchstart", cancelOnInteraction);
     };
-  }, []);
+  }, [heroLoaded]);
 
   /* Scroll progress — throttled with RAF, using cached metrics */
   const rafScroll = useRef<number | null>(null);
@@ -157,9 +177,13 @@ const HeroPapacho = () => {
       rafScroll.current = null;
       const { sectionTop, scrollable } = metricsRef.current;
       if (scrollable <= 0) return;
-      const raw = (window.scrollY - sectionTop) / scrollable;
-      const capped = Math.min(raw / 0.5, 1);
-      setProgress(Math.max(0, Math.min(1, capped)));
+
+      const stableScrollTop = document.scrollingElement?.scrollTop ?? window.scrollY;
+      const clampedScrollTop = Math.max(0, stableScrollTop);
+      const raw = (clampedScrollTop - sectionTop) / scrollable;
+      const nextProgress = Math.max(0, Math.min(1, Math.min(raw / 0.5, 1)));
+
+      setProgress((prev) => (Math.abs(prev - nextProgress) > 0.002 ? nextProgress : prev));
     });
   }, []);
 
@@ -198,11 +222,13 @@ const HeroPapacho = () => {
     return () => window.removeEventListener("mousemove", onMouseMove);
   }, [onMouseMove]);
 
-  // Effective progress: on iOS use max of scroll and intro autoplay
-  const effectiveProgress = iosDevice.current ? Math.max(progress, introProgress) : progress;
+  // Effective progress: on iOS use max of scroll and intro autoplay only after image is ready
+  const effectiveProgress = iosDevice.current
+    ? Math.max(progress, heroLoaded ? introProgress : 0)
+    : progress;
 
   const p = 1 - effectiveProgress;
-  const imgSlide = Math.min(effectiveProgress / 0.6, 1);
+  const imgSlide = iosDevice.current && !heroLoaded ? 0 : Math.min(effectiveProgress / 0.6, 1);
   const imgShift = iosDevice.current
     ? `translate(${mouse.x * -6}px, ${mouse.y * -6 + imgSlide * -1.2 * window.innerHeight}px)`
     : `translate3d(${mouse.x * -6}px, ${mouse.y * -6 + imgSlide * -120}vh, 0)`;
@@ -275,6 +301,8 @@ const HeroPapacho = () => {
             // @ts-expect-error fetchpriority is valid HTML but not yet in React types
             fetchpriority="high"
             draggable={false}
+            onLoad={() => setHeroLoaded(true)}
+            onError={() => setHeroLoaded(true)}
             width={800}
             height={900}
           />
