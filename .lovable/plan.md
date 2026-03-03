@@ -1,41 +1,88 @@
 
+Objetivo: dejar Desktop/Android intactos y corregir iOS con paridad visual del hero (como Android al terminar) + eliminar el “lag/jump hacia arriba”.
 
-## Diagnosis
+## Diagnóstico final (con base en código actual + screenshot)
+1) En iOS el hero no “arranca solo” porque se quitó `window.scrollTo` (correcto por performance), pero toda la animación sigue dependiendo del scroll (`progress`).
+2) El salto/lag hacia arriba persiste por combinación de:
+- lógica de scroll sensible en iOS (rubber-band/momentum),
+- cálculo por `getBoundingClientRect()` en cada frame (costoso),
+- efectos visuales extra del sticky al salir (`hero-exiting`) que pueden amplificar jitter.
 
-Two distinct iOS problems visible from the screenshots and description:
+## Solución propuesta (robusta, iOS-only, sin tocar Android/Desktop)
 
-### Problem 1: Image doesn't slide away on iOS
-On line 144-146, the iOS path uses `px` units for the image shift:
-```js
-// iOS: imgSlide * -120 = only 120 PIXELS up (barely moves)
-`translate(${mouse.x * -6}px, ${mouse.y * -6 + imgSlide * -120}px)`
-// Desktop: imgSlide * -120 = 120 VIEWPORT HEIGHT units up (fully exits)
-`translate3d(${mouse.x * -6}px, ${mouse.y * -6 + imgSlide * -120}vh, 0)`
-```
-The iOS image only moves 120px up instead of 120vh. That's why the hero image stays visible on iOS after the animation completes — it needs to move ~120% of the viewport height, not 120 pixels.
+### A) Hero iOS: autoplay visual SIN scroll programático
+Archivo: `src/components/sections/HeroPapacho.tsx`
 
-**Fix**: Calculate actual viewport height in pixels for iOS and use that instead of the hardcoded 120px.
+- Mantener Desktop/Android exactamente igual.
+- En iOS agregar `introProgress` (0→1) con RAF + easing al cargar (duración ~2.6–3.2s).
+- Calcular `effectiveProgress`:
+  - iOS: `max(scrollProgress, introProgress)`
+  - otros: `scrollProgress`
+- Resultado: al abrir en iOS, letras se ensamblan + imagen sube y desaparece (como Android), pero sin `window.scrollTo` (sin pelear con momentum nativo).
 
-### Problem 2: Scroll lag / bouncing upwards on iOS
-The `window.scrollTo()` auto-scroll loop (Index.tsx lines 26-82) fights with iOS Safari's native momentum scrolling. When the user touches the screen during or after the programmatic scroll, iOS's rubber-banding and momentum engine conflicts with the RAF-driven `scrollTo`, causing the page to snap backwards or stutter.
+### B) Scroll progress más estable (menos jank)
+Archivo: `src/components/sections/HeroPapacho.tsx`
 
-Additionally, the `translateY(calc(var(--vh) * -100))` transition (line 109) causes a massive layout reflow that iOS struggles with during active scrolling.
+- Reemplazar lectura continua de `getBoundingClientRect()` por métrica cacheada:
+  - medir `sectionTop` y `scrollable` en mount/resize/orientationchange,
+  - en scroll usar `window.scrollY` contra esas métricas.
+- Mantener throttling con RAF.
+- Esto reduce layout thrash y el lag visible al subir/bajar.
 
-**Fix (iOS only)**:
-- Skip the programmatic `window.scrollTo` auto-scroll on iOS — let the user scroll naturally
-- Skip the `translateY(-100vh)` hack on iOS — let the content flow naturally without the jump
-- Keep both behaviors intact for desktop/Android
+### C) Quitar efecto de salida conflictivo en iOS
+Archivo: `src/components/sections/HeroPapacho.tsx`
 
----
+- Desactivar `hero-exiting` únicamente en iOS (no aplicar scale/opacity al sticky en Safari móvil).
+- Desktop/Android conservan ese efecto.
 
-## Changes
+### D) Endurecer iOS contra “bounce up” del viewport
+Archivos: `src/main.tsx`, `src/index.css`
 
-### `src/components/sections/HeroPapacho.tsx`
-- Fix the iOS `imgShift` calculation: use `window.innerHeight` to convert the `-120vh` to actual pixels: `imgSlide * -1.2 * window.innerHeight` instead of `imgSlide * -120`
+- En `main.tsx`, al detectar iOS, añadir clase global: `html.classList.add("ios-device")`.
+- En `index.css`, solo para `.ios-device`:
+  - `overscroll-behavior-y: none;`
+  - preservar `overflow-x` limpio.
+- Esto ayuda a evitar el rebote agresivo hacia arriba en iOS Safari.
 
-### `src/pages/Index.tsx`
-- Import `isIOS` from platform
-- Guard the auto-scroll `useEffect`: skip the `window.scrollTo` loop on iOS (return early)
-- Guard the `translateY(-100vh)`: on iOS, always use `translateY(0)` — no layout shift hack
-- On iOS, set `heroComplete` immediately (or skip the listener) since there's no auto-scroll to wait for
+### E) Mantener lo ya correcto
+- Conservar fix actual de clipping de letras en iOS (2D px transform + `overflow: clip`).
+- Mantener en `Index.tsx`:
+  - iOS sin auto-scroll programático,
+  - iOS sin `translateY(-100vh)`,
+  - Desktop/Android sin cambios.
 
+## Cambios concretos por archivo
+
+1) `src/components/sections/HeroPapacho.tsx`
+- Nuevos estados/refs: `scrollProgress`, `introProgress`, métricas (`sectionTopRef`, `scrollableRef`), RAF intro.
+- Nuevo `effectiveProgress`.
+- Reescritura de `onScroll` para usar `window.scrollY` + métricas cacheadas.
+- Intro autoplay iOS (cancelable si el usuario ya interactúa).
+- `hero-exiting` deshabilitado en iOS.
+
+2) `src/main.tsx`
+- Importar `isIOS`.
+- Añadir clase `ios-device` en `<html>` al iniciar.
+
+3) `src/index.css`
+- Bloque iOS específico con `overscroll-behavior-y: none` (scoped por `.ios-device`).
+
+4) `src/pages/Index.tsx`
+- Validar que permanezca como está actualmente para iOS (sin revertir a auto-scroll/translate hack).
+
+## Criterios de aceptación (QA)
+1) iOS al cargar `/`:
+- la animación del hero sí inicia sola,
+- termina visualmente como Android (imagen se va, texto/logo/CTA llegan a estado final).
+2) iOS al hacer scroll hacia arriba/abajo repetidamente:
+- no hay tirones fuertes ni “salto hacia arriba” inesperado.
+3) Desktop/Android:
+- sin cambios de comportamiento respecto al estado actual.
+4) Letras en iOS:
+- no se recortan en ningún punto del hero.
+
+## Riesgo y mitigación
+- Riesgo: autoplay iOS demasiado rápido/lento.
+  - Mitigación: exponer duración en constante y ajustar fino en 1 iteración.
+- Riesgo: `overscroll-behavior` no uniforme en todas las versiones iOS.
+  - Mitigación: no depender solo de eso; la mejora principal viene de eliminar conflictos (no `scrollTo`) + cálculo de progreso estable.
