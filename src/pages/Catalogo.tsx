@@ -78,8 +78,6 @@ const Catalogo = () => {
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full opacity-8"
             style={{ background: "radial-gradient(circle, hsl(14 52% 46% / 0.12), transparent 70%)" }} />
-          <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full opacity-8"
-            style={{ background: "radial-gradient(circle, hsl(162 22% 42% / 0.1), transparent 70%)" }} />
         </div>
 
         <div className="container text-center relative z-10">
