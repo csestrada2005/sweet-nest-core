@@ -77,15 +77,29 @@ const HeroPapacho = () => {
   const navigate = useNavigate();
   const sectionRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
+  const heroImgRef = useRef<HTMLImageElement>(null);
   const [lineVisible, setLineVisible] = useState(false);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [progress, setProgress] = useState(0);
+  const [autoProgress, setAutoProgress] = useState(0);
   const [imageLoaded, setImageLoaded] = useState(false);
   /* Expanding line on mount */
   useEffect(() => {
     const timer = setTimeout(() => setLineVisible(true), 300);
     return () => clearTimeout(timer);
   }, []);
+
+  // Ensure cached image also unlocks animation
+  useEffect(() => {
+    if (heroImgRef.current?.complete) setImageLoaded(true);
+  }, []);
+
+  // Fallback for iOS/Safari cases where onLoad can be delayed or skipped
+  useEffect(() => {
+    if (imageLoaded) return;
+    const fallback = window.setTimeout(() => setImageLoaded(true), 1400);
+    return () => window.clearTimeout(fallback);
+  }, [imageLoaded]);
 
   /* Scroll progress — rAF-throttled for iOS perf */
   const rafRef = useRef(0);
@@ -110,6 +124,25 @@ const HeroPapacho = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, [onScroll]);
 
+  // Auto-trigger assembly once the hero image is ready
+  useEffect(() => {
+    if (!imageLoaded) return;
+    setAutoProgress(0);
+    const target = 0.42;
+    const duration = window.innerWidth < 768 ? 2800 : 2200;
+    const tickMs = 33;
+    const step = target / (duration / tickMs);
+
+    const interval = window.setInterval(() => {
+      setAutoProgress((prev) => {
+        const next = Math.min(target, prev + step);
+        if (next >= target) window.clearInterval(interval);
+        return next;
+      });
+    }, tickMs);
+
+    return () => window.clearInterval(interval);
+  }, [imageLoaded]);
 
   /* Mouse parallax */
   const onMouseMove = useCallback((e: MouseEvent) => {
@@ -123,15 +156,16 @@ const HeroPapacho = () => {
     return () => window.removeEventListener("mousemove", onMouseMove);
   }, [onMouseMove]);
 
-  const p = 1 - progress;
+  const effectiveProgress = Math.max(progress, autoProgress);
+  const p = 1 - effectiveProgress;
   // Image slides upward as user scrolls (no fade, just translate)
-  const imgSlide = Math.min(progress / 0.6, 1); // image exits by 60% scroll
+  const imgSlide = Math.min(effectiveProgress / 0.85, 1); // keep image visible longer on mobile
   const imgYPx = mouse.y * -6 + (imgSlide * -120 * window.innerHeight) / 100;
   const imgShift = `translate(${mouse.x * -6}px, ${imgYPx}px)`;
   const textShift = `translate3d(${mouse.x * 8}px, ${mouse.y * 8}px, 0)`;
 
   // Logo fade-in between 60%-90% scroll
-  const logoOpacity = Math.max(0, Math.min(1, (progress - 0.6) / 0.3));
+  const logoOpacity = Math.max(0, Math.min(1, (effectiveProgress - 0.6) / 0.3));
   const logoTranslateY = (1 - logoOpacity) * 20;
 
   return (
@@ -171,6 +205,7 @@ const HeroPapacho = () => {
           }}
         >
           <img
+            ref={heroImgRef}
             src={heroImage}
             alt="Familia feliz con pijamas Papachoa hechos en México"
             className="object-cover object-top select-none max-h-[90vh] w-auto"
@@ -182,6 +217,7 @@ const HeroPapacho = () => {
             width={800}
             height={900}
             onLoad={() => setImageLoaded(true)}
+            onError={() => setImageLoaded(true)}
           />
         </div>
 
