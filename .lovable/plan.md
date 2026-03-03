@@ -1,36 +1,41 @@
 
 
-## Add Papachoa Logo Below "Pijamas que abrazan"
+## Problem Analysis
 
-### Approach: Fade-in with subtle scale
+The HeroPapacho hero section has several iOS Safari-specific rendering issues causing cropped text and laggy animations:
 
-**Why fade-in over letter-by-letter?**
-The Papachoa logo is a hand-drawn, stylized image with unique letter shapes, colors, and the decorative sun/rays element. Recreating it as individual text characters would lose its artistic quality. A smooth fade-in with a slight upward slide creates an elegant reveal that complements the letter assembly without competing with it.
+1. **`transformStyle: "preserve-3d"` + `perspective`** — iOS Safari has well-documented bugs with 3D transform contexts containing many child elements. It clips content unexpectedly and creates excessive compositing layers.
 
-### How it works
+2. **`translate3d` using viewport units (`vw`/`vh`) in Z-axis** — The Z component of `translate3d` should use `px`, not `vw`. iOS handles this differently and can produce visual artifacts.
 
-1. Copy the uploaded logo image to `src/assets/brand/papachoa-logo.png`
-2. Place the logo below the assembled text in the sticky container
-3. As scroll progresses and letters converge (progress approaches 1), the logo fades in starting around 60% scroll progress and fully visible by 90%
-4. The logo starts slightly translated down and scales up to its final position, creating a gentle "bloom" entrance
+3. **`will-change-transform` on every letter span** (27+ elements) — iOS Safari has a hard limit on GPU-composited layers. Exceeding it causes the browser to fall back to software rendering, resulting in lag and visual glitches.
 
-### Visual timeline
+4. **`overflow: hidden` on the sticky container** combined with 3D transforms — iOS clips transformed children differently when the parent has `overflow: hidden` and 3D transforms are active.
 
-```text
-Scroll 0%       -> Letters scattered, image visible, logo invisible
-Scroll 0-60%    -> Letters assembling, image sliding up/out, logo still invisible
-Scroll 60-90%   -> Letters nearly assembled, logo fading in + sliding up
-Scroll 100%     -> Text fully assembled, logo fully visible below it
-```
+5. **Per-frame `setState` from scroll events** — iOS fires scroll events at a lower frequency, and re-rendering 27 letter transforms via React state on every scroll tick is expensive.
+
+## Plan
+
+### 1. Simplify transforms to 2D in HeroPapacho
+
+- Replace `translate3d(Xvw, Yvh, Zvw)` with `translate(Xpx, Ypx) rotate(deg)` — compute pixel values at render time using `window.innerWidth`/`window.innerHeight`.
+- Remove `transformStyle: "preserve-3d"` and `perspective` from the parent container.
+- Remove `will-change-transform` from individual letter `<span>`s; add a single `will-change: transform` on the parent `h1` only.
+
+### 2. Add iOS-safe rendering hints
+
+- Add `-webkit-backface-visibility: hidden` to the letter container to prevent iOS flicker.
+- Add `overflow: visible` to the sticky container (it already has `overflow: hidden` which clips transformed letters on iOS).
+
+### 3. Throttle scroll-driven updates
+
+- Use `requestAnimationFrame` to batch scroll updates instead of calling `setProgress` directly on every scroll event. This avoids React re-renders on every iOS scroll tick.
 
 ### Technical details
 
-- **File**: `src/components/sections/HeroPapacho.tsx`
-- Import the new logo image
-- Add a `div` below the `h1` containing the logo `img`
-- Compute `logoOpacity` and `logoTranslateY` from scroll progress:
-  - `logoOpacity = clamp((progress - 0.6) / 0.3, 0, 1)`
-  - `logoTranslateY = (1 - logoOpacity) * 20` px downward offset
-- Style with `opacity`, `transform`, and a smooth CSS transition
-- Logo sized to roughly 200-280px wide, centered below the text
+All changes are in `src/components/sections/HeroPapacho.tsx`:
+- Lines 198-206: Remove `perspective` and `preserve-3d`, add `backfaceVisibility: "hidden"`
+- Lines 217-222: Replace `translate3d(vw, vh, vw)` with `translate(px, px)`, remove `will-change-transform` class
+- Lines 92-101: Wrap scroll handler in rAF throttle
+- Line 154: Change `overflow: "hidden"` to `overflow: "clip"` (CSS `clip` respects paint boundaries without breaking transforms on iOS)
 
