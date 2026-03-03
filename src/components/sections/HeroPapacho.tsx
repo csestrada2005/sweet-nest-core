@@ -142,7 +142,7 @@ const HeroPapacho = () => {
   const p = 1 - progress;
   const imgSlide = Math.min(progress / 0.6, 1);
   const imgShift = iosDevice.current
-    ? `translate(${mouse.x * -6}px, ${mouse.y * -6 + imgSlide * -120}px)`
+    ? `translate(${mouse.x * -6}px, ${mouse.y * -6 + imgSlide * -1.2 * window.innerHeight}px)`
     : `translate3d(${mouse.x * -6}px, ${mouse.y * -6 + imgSlide * -120}vh, 0)`;
   const textShift = `translate3d(${mouse.x * 8}px, ${mouse.y * 8}px, 0)`;
 

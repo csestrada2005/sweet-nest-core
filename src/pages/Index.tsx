@@ -1,7 +1,8 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState, useRef } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import HeroPapacho from "@/components/sections/HeroPapacho";
+import { isIOS } from "@/lib/platform";
 
 import { usePrefetchRoutes } from "@/hooks/usePrefetch";
 import { useSeo } from "@/hooks/useSeo";
@@ -19,11 +20,14 @@ const Index = () => {
   usePrefetchRoutes();
   useSeo({ title: "Papachoa México — Pijamas que abrazan", description: "Pijamas ultra suaves hechos en México para mamá, papá e hijos. Telas certificadas, estampados únicos y amor en cada costura. Envíos a todo México.", path: "/" });
 
+  const iosDevice = useRef(isIOS());
   const [heroComplete, setHeroComplete] = useState(false);
   const autoScrollDone = React.useRef(false);
 
-  // Auto-scroll on all platforms
+  // Auto-scroll — skip on iOS to avoid momentum scroll conflicts
   useEffect(() => {
+    if (iosDevice.current) { autoScrollDone.current = true; return; }
+
     const targetY = Math.round(window.innerHeight * 2);
     const duration = 3200;
     let startTime: number | null = null;
@@ -106,7 +110,7 @@ const Index = () => {
           className="relative bg-white"
           style={{
             zIndex: 10,
-            transform: heroComplete ? `translateY(calc(var(--vh, 1vh) * -100))` : "translateY(0)",
+            transform: (!iosDevice.current && heroComplete) ? `translateY(calc(var(--vh, 1vh) * -100))` : "translateY(0)",
             transition: "transform 700ms ease-out",
           }}
         >
