@@ -528,12 +528,16 @@
 /* Thread particles (legacy) */
 .thread-particle { display: none; }
 
-/* iOS: prevent aggressive overscroll bounce */
+/* iOS: stabilize vertical scroll/rubber-band behavior */
 .ios-device {
   overscroll-behavior-y: none;
 }
 .ios-device body {
   overscroll-behavior-y: none;
+  touch-action: pan-y;
+}
+#hero {
+  overscroll-behavior-y: contain;
 }
 
 @media (prefers-reduced-motion: reduce) {
