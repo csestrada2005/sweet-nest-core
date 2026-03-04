@@ -21,7 +21,7 @@ const options: ApatachoOption[] = [
     Icon: Moon,
     label: "Calma",
     description: "Necesito que mi bebé duerma tranquilo toda la noche",
-    collections: ["bebe"],
+    collections: ["flores"],
     color: "hsl(216 44% 46%)",
   },
   {
@@ -29,7 +29,7 @@ const options: ApatachoOption[] = [
     Icon: Baby,
     label: "Ternura",
     description: "Quiero apapachar a mi recién nacido con lo más suave",
-    collections: ["bebe", "hijos"],
+    collections: ["flores", "changos"],
     color: "hsl(331 48% 45%)",
   },
   {
@@ -37,7 +37,7 @@ const options: ApatachoOption[] = [
     Icon: Users,
     label: "Conexión",
     description: "Busco momentos especiales en familia, vestidos igual",
-    collections: ["hijos", "familia"],
+    collections: ["para-pintar", "hongos"],
     color: "hsl(14 100% 71%)",
   },
   {
@@ -45,7 +45,7 @@ const options: ApatachoOption[] = [
     Icon: Gift,
     label: "Regalar amor",
     description: "Quiero dar un regalo que emocione de verdad",
-    collections: ["familia", "hijos"],
+    collections: ["otros", "changos"],
     color: "hsl(47 90% 50%)",
   },
 ];
