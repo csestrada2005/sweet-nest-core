@@ -4,6 +4,8 @@ import Footer from "@/components/layout/Footer";
 import HeroPapacho from "@/components/sections/HeroPapacho";
 import { isIOS } from "@/lib/platform";
 
+const isTouchDevice = typeof window !== "undefined" && "ontouchstart" in window;
+
 import { usePrefetchRoutes } from "@/hooks/usePrefetch";
 import { useSeo } from "@/hooks/useSeo";
 
@@ -132,7 +134,7 @@ const Index = () => {
           className="relative bg-white"
           style={{
             zIndex: 10,
-            transform: (!iosDevice.current && heroComplete) ? `translateY(calc(var(--vh, 1vh) * -100))` : "translateY(0)",
+            transform: (!isTouchDevice && !iosDevice.current && heroComplete) ? `translateY(calc(var(--vh, 1vh) * -100))` : "translateY(0)",
             transition: "transform 700ms ease-out",
           }}
         >
