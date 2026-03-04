@@ -3,15 +3,23 @@ import App from "./App.tsx";
 import "./index.css";
 import { isIOS } from "./lib/platform";
 
-// Fix iOS 100vh: set --vh to window.innerHeight so sticky sections use real viewport height
+// --vh fix: use svh on iOS 15.4+ (handles browser chrome natively),
+// otherwise compute from window.innerHeight.
+const iosDevice = isIOS();
 const setVH = () => {
-  document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
+    if (iosDevice && CSS.supports("height", "1svh")) {
+          document.documentElement.style.setProperty("--vh", "1svh");
+    } else {
+          document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
+    }
 };
 setVH();
 window.addEventListener("resize", setVH, { passive: true });
+// iOS does not reliably fire "resize" on orientationchange
+window.addEventListener("orientationchange", () => { setTimeout(setVH, 300); }, false);
 
 // Add ios-device class for CSS-level iOS fixes
-if (isIOS()) {
+if (iosDevice) {
   document.documentElement.classList.add("ios-device");
 }
 
