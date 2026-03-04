@@ -57,11 +57,11 @@ const WORDS: WordData[] = (() => {
     const words = TEXT.split(" ");
     let globalIdx = 0;
     return words.map((word) => ({
-          letters: word.split("").map((char) => {
-                  const i = globalIdx++;
-                  const scatter = SCATTER_MAP[i] ?? { tx: 0, ty: 15, tz: -15, rot: 20 };
-                  return { char, ...scatter };
-          }),
+        letters: word.split("").map((char) => {
+            const i = globalIdx++;
+            const scatter = SCATTER_MAP[i] ?? { tx: 0, ty: 15, tz: -15, rot: 20 };
+            return { char, ...scatter };
+        }),
     }));
 })();
 
@@ -69,7 +69,7 @@ const BIRDS = [
   { src: birdYellow, alt: "Pajarito amarillo", style: { top: "8%", left: "6%", width: 100 }, delay: "0s" },
   { src: birdBlue, alt: "Pajarito azul", style: { top: "18%", right: "5%", width: 110 }, delay: "1.2s" },
   { src: birdOrange, alt: "Pajarito naranja", style: { bottom: "14%", left: "8%", width: 90 }, delay: "2.1s" },
-  ];
+];
 
 const IOS_INTRO_DURATION = 3000;
 const HERO_ANIMATION_START_DELAY = 1000;
@@ -92,79 +92,79 @@ const HeroPachacoDesktop = () => {
     const introDetachedRef = useRef(false);
 
     const measureMetrics = useCallback(() => {
-          const el = sectionRef.current;
-          if (!el) return;
-          const rect = el.getBoundingClientRect();
-          metricsRef.current = {
-                  sectionTop: rect.top + window.scrollY,
-                  scrollable: el.offsetHeight - window.innerHeight,
-          };
+        const el = sectionRef.current;
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        metricsRef.current = {
+            sectionTop: rect.top + window.scrollY,
+            scrollable: el.offsetHeight - window.innerHeight,
+        };
     }, []);
 
     useEffect(() => {
-          measureMetrics();
-          window.addEventListener("resize", measureMetrics, { passive: true });
-          window.addEventListener("orientationchange", measureMetrics);
-          return () => {
-                  window.removeEventListener("resize", measureMetrics);
-                  window.removeEventListener("orientationchange", measureMetrics);
-          };
+        measureMetrics();
+        window.addEventListener("resize", measureMetrics, { passive: true });
+        window.addEventListener("orientationchange", measureMetrics);
+        return () => {
+            window.removeEventListener("resize", measureMetrics);
+            window.removeEventListener("orientationchange", measureMetrics);
+        };
     }, [measureMetrics]);
 
     useEffect(() => {
-          if (!heroLoaded) return;
-          const id = window.setTimeout(() => setAnimationReady(true), HERO_ANIMATION_START_DELAY);
-          return () => window.clearTimeout(id);
+        if (!heroLoaded) return;
+        const id = window.setTimeout(() => setAnimationReady(true), HERO_ANIMATION_START_DELAY);
+        return () => window.clearTimeout(id);
     }, [heroLoaded]);
 
     const rafScroll = useRef<number | null>(null);
     const onScroll = useCallback(() => {
-          if (rafScroll.current) return;
-          rafScroll.current = requestAnimationFrame(() => {
-                  rafScroll.current = null;
-                  const { sectionTop, scrollable } = metricsRef.current;
-                  if (scrollable <= 0) return;
-                  const stableScrollTop = document.scrollingElement?.scrollTop ?? window.scrollY;
-                  const clampedScrollTop = Math.max(0, stableScrollTop);
-                  const raw = (clampedScrollTop - sectionTop) / scrollable;
-                  const normalized = isTouchDevice.current
-                    ? Math.min(raw / 0.42, 1)
-                            : Math.min(raw / 0.5, 1);
-                  const nextProgress = Math.max(0, Math.min(1, normalized));
-                  setProgress((prev) => (Math.abs(prev - nextProgress) > 0.002 ? nextProgress : prev));
-          });
+        if (rafScroll.current) return;
+        rafScroll.current = requestAnimationFrame(() => {
+            rafScroll.current = null;
+            const { sectionTop, scrollable } = metricsRef.current;
+            if (scrollable <= 0) return;
+            const stableScrollTop = document.scrollingElement?.scrollTop ?? window.scrollY;
+            const clampedScrollTop = Math.max(0, stableScrollTop);
+            const raw = (clampedScrollTop - sectionTop) / scrollable;
+            const normalized = isTouchDevice.current
+              ? Math.min(raw / 0.42, 1)
+              : Math.min(raw / 0.5, 1);
+            const nextProgress = Math.max(0, Math.min(1, normalized));
+            setProgress((prev) => (Math.abs(prev - nextProgress) > 0.002 ? nextProgress : prev));
+        });
     }, []);
 
     useEffect(() => {
-          window.addEventListener("scroll", onScroll, { passive: true });
-          onScroll();
-          return () => {
-                  window.removeEventListener("scroll", onScroll);
-                  if (rafScroll.current) cancelAnimationFrame(rafScroll.current);
-          };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+        return () => {
+            window.removeEventListener("scroll", onScroll);
+            if (rafScroll.current) cancelAnimationFrame(rafScroll.current);
+        };
     }, [onScroll]);
 
     useEffect(() => {
-          const el = stickyRef.current;
-          if (!el) return;
-          const obs = new IntersectionObserver(
-                  ([entry]) => setExiting(!entry.isIntersecting),
+        const el = stickyRef.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(
+            ([entry]) => setExiting(!entry.isIntersecting),
             { threshold: 0.15 }
-                );
-          obs.observe(el);
-          return () => obs.disconnect();
+        );
+        obs.observe(el);
+        return () => obs.disconnect();
     }, []);
 
     const onMouseMove = useCallback((e: MouseEvent) => {
-          const nx = (e.clientX / window.innerWidth) * 2 - 1;
-          const ny = (e.clientY / window.innerHeight) * 2 - 1;
-          setMouse({ x: nx, y: ny });
+        const nx = (e.clientX / window.innerWidth) * 2 - 1;
+        const ny = (e.clientY / window.innerHeight) * 2 - 1;
+        setMouse({ x: nx, y: ny });
     }, []);
 
     useEffect(() => {
-          if (isTouchDevice.current) return;
-          window.addEventListener("mousemove", onMouseMove, { passive: true });
-          return () => window.removeEventListener("mousemove", onMouseMove);
+        if (isTouchDevice.current) return;
+        window.addEventListener("mousemove", onMouseMove, { passive: true });
+        return () => window.removeEventListener("mousemove", onMouseMove);
     }, [onMouseMove]);
 
     const effectiveProgress = !animationReady ? 0 : progress;
@@ -176,205 +176,204 @@ const HeroPachacoDesktop = () => {
     const logoTranslateY = (1 - logoOpacity) * 20;
 
     const getLetterTransform = (l: LetterScatter) => {
-          return `translate3d(${l.tx * p}vw, ${l.ty * p}vh, ${l.tz * p}vw) rotateZ(${l.rot * p}deg)`;
+        return `translate3d(${l.tx * p}vw, ${l.ty * p}vh, ${l.tz * p}vw) rotateZ(${l.rot * p}deg)`;
     };
 
     return (
-          <section
-                  ref={sectionRef}
-                  style={{
-                            height: `calc(var(--vh, 1vh) * ${isTouchDevice.current ? HERO_SCROLL_HEIGHT_TOUCH : HERO_SCROLL_HEIGHT_DESKTOP})`,
-                            position: "relative",
-                            zIndex: 0,
-                  }}
-                >
+        <section
+            ref={sectionRef}
+            style={{
+                height: `calc(var(--vh, 1vh) * ${isTouchDevice.current ? HERO_SCROLL_HEIGHT_TOUCH : HERO_SCROLL_HEIGHT_DESKTOP})`,
+                position: "relative",
+                zIndex: 0,
+            }}
+        >
+            <div
+                ref={stickyRef}
+                className={exiting ? "hero-exiting" : ""}
+                style={{
+                    position: "sticky",
+                    top: 0,
+                    height: "calc(var(--vh, 1vh) * 100)",
+                    width: "100%",
+                    overflow: "visible",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    background: "hsl(15 20% 96%)",
+                    zIndex: 0,
+                    transition: "transform 0.6s ease-out, opacity 0.6s ease-out",
+                }}
+            >
+                {/* Background layer */}
+                <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
+                    <div style={{ position: "absolute", inset: 0, background: "hsl(15 20% 96%)" }} />
+                    <div
+                        className="absolute inset-0 pointer-events-none opacity-[0.025]"
+                        style={{
+                            backgroundImage:
+                                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+                            backgroundSize: "150px",
+                        }}
+                    />
+                </div>
+
+                {/* Image with parallax */}
                 <div
-                          ref={stickyRef}
-                          className={exiting ? "hero-exiting" : ""}
-                          style={{
-                                      position: "sticky",
-                                      top: 0,
-                                      height: "calc(var(--vh, 1vh) * 100)",
-                                      width: "100%",
-                                      overflow: "visible",
-                                      display: "flex",
-                                      flexDirection: "column",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      background: "hsl(15 20% 96%)",
-                                      zIndex: 0,
-                                      transition: "transform 0.6s ease-out, opacity 0.6s ease-out",
-                          }}
-                        >
-                  {/* Background layer */}
-                        <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
-                                  <div style={{ position: "absolute", inset: 0, background: "hsl(15 20% 96%)" }} />
-                                  <div
-                                                className="absolute inset-0 pointer-events-none opacity-[0.025]"
-                                                style={{
-                                                                backgroundImage:
-                                                                                  "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-                                                                backgroundSize: "150px",
-                                                }}
-                                              />
-                        </div>div>
-                
-                  {/* Image with parallax */}
-                        <div
-                                    className="absolute z-10 flex flex-col items-center"
-                                    style={{
-                                                  transform: imgShift,
-                                                  transition: "transform 0.15s ease-out",
-                                    }}
-                                  >
-                                  <img
-                                                id="hero-main-image"
-                                                src={heroImage}
-                                                alt="Familia feliz con pijamas Papachoa hechos en México"
-                                                className="object-cover object-top select-none w-auto"
-                                                style={{
-                                                                filter: "drop-shadow(0 12px 40px rgba(0,0,0,0.15))",
-                                                                imageRendering: "auto",
-                                                                objectFit: "cover",
-                                                                maxHeight: "calc(var(--vh, 1vh) * 90)",
-                                                }}
-                                                loading="eager"
-                                                // @ts-expect-error fetchpriority is valid HTML but not yet in React types
-                                                fetchpriority="high"
-                                                draggable={false}
-                                                onLoad={() => setHeroLoaded(true)}
-                                                onError={() => setHeroLoaded(true)}
-                                                width={800}
-                                                height={900}
-                                              />
-                        </div>div>
-                
-                  {/* Scattered → assembled typography */}
-                        <div
-                                    className="absolute z-20 inset-0 flex flex-col items-center justify-center"
-                                    style={{
-                                                  perspective: isTouchDevice.current ? "none" : "1000px",
-                                                  transform: isTouchDevice.current ? "none" : textShift,
-                                                  transition: isTouchDevice.current ? "none" : "transform 0.15s ease-out",
-                                    }}
-                                  >
-                                  <h1
-                                                className="relative text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none select-none text-center"
-                                                style={{
-                                                                transformStyle: isTouchDevice.current ? "flat" : "preserve-3d",
-                                                                minHeight: "1em",
-                                                                minWidth: "10ch",
-                                                }}
-                                                aria-label={TEXT}
-                                              >
-                                    {WORDS.map((word, wi) => (
-                                                              <span key={wi} className="inline-block">
-                                                                              <span className="inline-block whitespace-nowrap">
-                                                                                {word.letters.map((l, li) => (
-                                                                                    <span
-                                                                                                            key={li}
-                                                                                                            aria-hidden="true"
-                                                                                                            className="inline-block will-change-transform"
-                                                                                                            style={{
-                                                                                                                                      color: LETTER_COLORS[(wi * 10 + li) % LETTER_COLORS.length],
-                                                                                                                                      transform: getLetterTransform(l),
-                                                                                                                                      transition: "transform 0.05s linear",
-                                                                                                              }}
-                                                                                                          >
-                                                                                      {l.char}
-                                                                                      </span>span>
-                                                                                  ))}
-                                                                              </span>span>
-                                                                {wi < WORDS.length - 1 && (
-                                                                                  <span className="inline-block w-[0.3em]">{"\u00A0"}</span>span>
-                                                                              )}
-                                                              </span>span>
-                                                            ))}
-                                  </h1>h1>
-                        
-                                  <div
-                                                className="flex justify-center mt-4"
-                                                style={{
-                                                                opacity: logoOpacity,
-                                                                transform: `translateY(${logoTranslateY}px)`,
-                                                                transition: "opacity 0.2s linear, transform 0.2s ease-out",
-                                                }}
-                                              >
-                                              <img
-                                                              src={papachoaLogo}
-                                                              alt="Papachoa"
-                                                              className="w-48 select-none"
-                                                              draggable={false}
-                                                            />
-                                  </div>div>
-                        
-                                  <p
-                                                className="mt-4 text-xl md:text-2xl font-bold text-center select-none font-display"
-                                                style={{
-                                                                color: "#000000",
-                                                                opacity: Math.max(0, Math.min(1, (logoOpacity - 0.5) * 2)),
-                                                                transform: `translateY(${(1 - Math.max(0, Math.min(1, (logoOpacity - 0.5) * 2))) * 16}px)`,
-                                                                transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
-                                                }}
-                                              >
-                                              pijamas que abrazan
-                                  </p>p>
-                        
-                                  <button
-                                                onClick={() => navigate("/catalogo")}
-                                                className="mt-6 px-8 py-4 rounded-full font-semibold text-base tracking-wide shadow-lg transition-all duration-200 hover:scale-105 hover:brightness-110"
-                                                style={{
-                                                                backgroundColor: "#ac3c72",
-                                                                color: "#ffffff",
-                                                                opacity: Math.max(0, Math.min(1, (logoOpacity - 0.7) * 3.33)),
-                                                                transform: `translateY(${(1 - Math.max(0, Math.min(1, (logoOpacity - 0.7) * 3.33))) * 16}px)`,
-                                                                transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
-                                                }}
-                                              >
-                                              Ver catálogo
-                                  </button>button>
-                        </div>div>
-                
-                  {/* Floating birds — desktop only */}
-                  {BIRDS.map((bird, i) => (
-                                    <img
-                                                  key={i}
-                                                  src={bird.src}
-                                                  alt={bird.alt}
-                                                  className="absolute pointer-events-none select-none hidden md:block z-30"
-                                                  style={{
-                                                                  ...bird.style,
-                                                                  animation: `floatBird 3.5s ease-in-out infinite`,
-                                                                  animationDelay: bird.delay,
-                                                                  mixBlendMode: "multiply",
-                                                                  background: "transparent",
-                                                  }}
-                                                  aria-hidden="true"
-                                                  draggable={false}
-                                                />
-                                  ))}
-                </div>div>
-          </section>section>
-        );
+                    className="absolute z-10 flex flex-col items-center"
+                    style={{
+                        transform: imgShift,
+                        transition: "transform 0.15s ease-out",
+                    }}
+                >
+                    <img
+                        id="hero-main-image"
+                        src={heroImage}
+                        alt="Familia feliz con pijamas Papachoa hechos en México"
+                        className="object-cover object-top select-none w-auto"
+                        style={{
+                            filter: "drop-shadow(0 12px 40px rgba(0,0,0,0.15))",
+                            imageRendering: "auto",
+                            objectFit: "cover",
+                            maxHeight: "calc(var(--vh, 1vh) * 90)",
+                        }}
+                        loading="eager"
+                        // @ts-expect-error fetchpriority is valid HTML but not yet in React types
+                        fetchpriority="high"
+                        draggable={false}
+                        onLoad={() => setHeroLoaded(true)}
+                        onError={() => setHeroLoaded(true)}
+                        width={800}
+                        height={900}
+                    />
+                </div>
+
+                {/* Scattered → assembled typography */}
+                <div
+                    className="absolute z-20 inset-0 flex flex-col items-center justify-center"
+                    style={{
+                        perspective: isTouchDevice.current ? "none" : "1000px",
+                        transform: isTouchDevice.current ? "none" : textShift,
+                        transition: isTouchDevice.current ? "none" : "transform 0.15s ease-out",
+                    }}
+                >
+                    <h1
+                        className="relative text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-none select-none text-center"
+                        style={{
+                            transformStyle: isTouchDevice.current ? "flat" : "preserve-3d",
+                            minHeight: "1em",
+                            minWidth: "10ch",
+                        }}
+                        aria-label={TEXT}
+                    >
+                        {WORDS.map((word, wi) => (
+                            <span key={wi} className="inline-block">
+                                <span className="inline-block whitespace-nowrap">
+                                    {word.letters.map((l, li) => (
+                                        <span
+                                            key={li}
+                                            aria-hidden="true"
+                                            className="inline-block will-change-transform"
+                                            style={{
+                                                color: LETTER_COLORS[(wi * 10 + li) % LETTER_COLORS.length],
+                                                transform: getLetterTransform(l),
+                                                transition: "transform 0.05s linear",
+                                            }}
+                                        >
+                                            {l.char}
+                                        </span>
+                                    ))}
+                                </span>
+                                {wi < WORDS.length - 1 && (
+                                    <span className="inline-block w-[0.3em]">{"\u00A0"}</span>
+                                )}
+                            </span>
+                        ))}
+                    </h1>
+
+                    <div
+                        className="flex justify-center mt-4"
+                        style={{
+                            opacity: logoOpacity,
+                            transform: `translateY(${logoTranslateY}px)`,
+                            transition: "opacity 0.2s linear, transform 0.2s ease-out",
+                        }}
+                    >
+                        <img
+                            src={papachoaLogo}
+                            alt="Papachoa"
+                            className="w-48 select-none"
+                            draggable={false}
+                        />
+                    </div>
+
+                    <p
+                        className="mt-4 text-xl md:text-2xl font-bold text-center select-none font-display"
+                        style={{
+                            color: "#000000",
+                            opacity: Math.max(0, Math.min(1, (logoOpacity - 0.5) * 2)),
+                            transform: `translateY(${(1 - Math.max(0, Math.min(1, (logoOpacity - 0.5) * 2))) * 16}px)`,
+                            transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
+                        }}
+                    >
+                        pijamas que abrazan
+                    </p>
+
+                    <button
+                        onClick={() => navigate("/catalogo")}
+                        className="mt-6 px-8 py-4 rounded-full font-semibold text-base tracking-wide shadow-lg transition-all duration-200 hover:scale-105 hover:brightness-110"
+                        style={{
+                            backgroundColor: "#ac3c72",
+                            color: "#ffffff",
+                            opacity: Math.max(0, Math.min(1, (logoOpacity - 0.7) * 3.33)),
+                            transform: `translateY(${(1 - Math.max(0, Math.min(1, (logoOpacity - 0.7) * 3.33))) * 16}px)`,
+                            transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
+                        }}
+                    >
+                        Ver catálogo
+                    </button>
+                </div>
+
+                {/* Floating birds — desktop only */}
+                {BIRDS.map((bird, i) => (
+                    <img
+                        key={i}
+                        src={bird.src}
+                        alt={bird.alt}
+                        className="absolute pointer-events-none select-none hidden md:block z-30"
+                        style={{
+                            ...bird.style,
+                            animation: `floatBird 3.5s ease-in-out infinite`,
+                            animationDelay: bird.delay,
+                            mixBlendMode: "multiply",
+                            background: "transparent",
+                        }}
+                        aria-hidden="true"
+                        draggable={false}
+                    />
+                ))}
+            </div>
+        </section>
+    );
 };
 
 /**
  * HeroPapacho — public entry point.
-  *
-   * Routes to HeroIOS on Apple mobile/tablet devices,
-    * and to the full scroll-driven desktop hero everywhere else.
-     * This keeps all iOS-specific code isolated and prevents
-      * any regression on Chrome/Android/desktop.
-       */
+ *
+ * Routes to HeroIOS on Apple mobile/tablet devices,
+ * and to the full scroll-driven desktop hero everywhere else.
+ * This keeps all iOS-specific code isolated and prevents
+ * any regression on Chrome/Android/desktop.
+ */
 const HeroPapacho = () => {
-    // isIOS() is called once at module level in a ref — safe from SSR and rerenders
     const iosDevice = useRef(isIOS());
-  
+
     if (iosDevice.current) {
-          return <HeroIOS />;
+        return <HeroIOS />;
     }
-  
+
     return <HeroPachacoDesktop />;
 };
 
-export default HeroPapacho;</section>
+export default HeroPapacho;
