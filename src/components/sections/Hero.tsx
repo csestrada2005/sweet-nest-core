@@ -157,6 +157,10 @@ const Hero = () => {
                   src={bird.src}
                   alt={bird.alt}
                   draggable={false}
+                  loading="eager"
+                  decoding="async"
+                  width={160}
+                  height={160}
                   className="select-none pointer-events-none"
                   style={{
                     width: "clamp(90px, 12vw, 160px)",

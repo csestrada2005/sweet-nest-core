@@ -87,6 +87,9 @@ const Filosofia = () => (
                 aria-hidden="true"
                 className="w-full h-full object-cover"
                 loading="lazy"
+                decoding="async"
+                width={230}
+                height={288}
               />
             </div>
           </SectionReveal>
@@ -105,6 +108,9 @@ const Filosofia = () => (
               aria-hidden="true"
               style={{ width: "clamp(46px, 7vw, 76px)", height: "auto", opacity: 0.45 }}
               loading="lazy"
+              decoding="async"
+              width={76}
+              height={76}
             />
           </SectionReveal>
 

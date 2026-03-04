@@ -36,6 +36,9 @@ const ProductosDestacados = () => {
                     alt={p.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
+                    decoding="async"
+                    width={400}
+                    height={400}
                   />
                   <span className="absolute top-3 left-3 text-xs font-bold text-primary-foreground px-3 py-1 rounded-full bg-primary">
                     Más vendido

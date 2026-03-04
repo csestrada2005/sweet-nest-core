@@ -103,6 +103,9 @@ const MexicoAmor = () => (
                 aria-hidden="true"
                 style={{ width: "clamp(40px, 6vw, 66px)", height: "auto", opacity: 0.7, marginBottom: "1.5rem" }}
                 loading="lazy"
+                decoding="async"
+                width={66}
+                height={66}
               />
 
               <div>

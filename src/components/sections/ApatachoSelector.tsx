@@ -66,6 +66,9 @@ const ApatachoSelector = () => {
         aria-hidden="true"
         className="absolute bottom-12 left-8 w-16 md:w-24 opacity-[0.08] animate-drift-slow pointer-events-none"
         loading="lazy"
+        decoding="async"
+        width={96}
+        height={96}
       />
 
       <div className="container relative z-10">
