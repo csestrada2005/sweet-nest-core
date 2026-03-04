@@ -54,6 +54,9 @@ const HistoriasHilo = () => (
         alt=""
         style={{ width: "clamp(60px, 10vw, 120px)", height: "auto", opacity: 0.12 }}
         loading="lazy"
+        decoding="async"
+        width={120}
+        height={120}
       />
     </div>
 
@@ -131,6 +134,8 @@ const HistoriasHilo = () => (
                     className="w-full h-full object-cover"
                     loading="lazy"
                     decoding="async"
+                    width={400}
+                    height={500}
                   />
                 </div>
               </div>
@@ -166,6 +171,9 @@ const HistoriasHilo = () => (
                     alt={story.imgAlt}
                     className="w-full h-full object-cover"
                     loading="lazy"
+                    decoding="async"
+                    width={400}
+                    height={225}
                   />
                 </div>
               </div>

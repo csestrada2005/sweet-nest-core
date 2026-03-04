@@ -314,6 +314,9 @@ const ApatachoItems = () => {
               aria-hidden="true"
               style={{ width: "clamp(40px, 6vw, 72px)", height: "auto", opacity: 0.5 }}
               loading="lazy"
+              decoding="async"
+              width={72}
+              height={72}
             />
           </SectionReveal>
         </div>

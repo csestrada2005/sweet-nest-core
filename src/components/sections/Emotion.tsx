@@ -26,6 +26,9 @@ const Emotion = () => (
             aria-hidden="true"
             className="absolute -top-6 -right-6 w-16 md:w-20 opacity-20 animate-float-gentle pointer-events-none"
             loading="lazy"
+            decoding="async"
+            width={80}
+            height={80}
           />
           <img
             src={pajaroAmarillo}
@@ -33,6 +36,9 @@ const Emotion = () => (
             aria-hidden="true"
             className="absolute -bottom-4 -left-4 w-12 md:w-16 opacity-15 animate-drift-slow pointer-events-none"
             loading="lazy"
+            decoding="async"
+            width={64}
+            height={64}
           />
         </div>
 
@@ -54,7 +60,7 @@ const Emotion = () => (
           <ul className="space-y-4">
             {["Textiles ultra suaves", "Diseñados para compartir en familia", "Cada prenda lleva el nombre de un pájaro"].map((item) => (
               <li key={item} className="flex items-start gap-3">
-                <img src={pajaroAmarillo} alt="" aria-hidden="true" className="w-5 h-5 mt-0.5 flex-shrink-0 opacity-70" />
+                <img src={pajaroAmarillo} alt="" aria-hidden="true" className="w-5 h-5 mt-0.5 flex-shrink-0 opacity-70" loading="lazy" decoding="async" width={20} height={20} />
                 <span className="text-foreground font-light">{item}</span>
               </li>
             ))}

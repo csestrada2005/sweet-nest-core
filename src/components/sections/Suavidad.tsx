@@ -88,6 +88,9 @@ const Suavidad = () => (
               aria-hidden="true"
               className="w-full h-full object-cover"
               loading="lazy"
+              decoding="async"
+              width={140}
+              height={140}
             />
           </div>
         </SectionReveal>

@@ -62,6 +62,9 @@ const Softness = () => (
             aria-hidden="true"
             className="absolute -bottom-4 -right-4 w-14 md:w-20 opacity-15 animate-float-gentle pointer-events-none"
             loading="lazy"
+            decoding="async"
+            width={80}
+            height={80}
           />
           <div className="absolute -bottom-3 left-4 md:bottom-10 md:-left-4 bg-card rounded-xl shadow-lg p-4 border border-border/30">
             <p className="font-display text-xl text-foreground">

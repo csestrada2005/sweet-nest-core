@@ -27,6 +27,9 @@ const StoriesThread = () => (
       aria-hidden="true"
       className="absolute top-12 right-8 w-20 md:w-28 opacity-[0.08] animate-drift pointer-events-none"
       loading="lazy"
+      decoding="async"
+      width={112}
+      height={112}
     />
 
     <div className="container relative z-10">

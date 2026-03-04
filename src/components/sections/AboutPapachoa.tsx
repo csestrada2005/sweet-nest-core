@@ -96,7 +96,10 @@ const AboutPapachoa = () => {
               boxShadow: "0 8px 32px rgba(0,0,0,0.10)",
               maxHeight: "75vh"
             }}
-            loading="lazy" />
+            loading="lazy"
+            decoding="async"
+            width={600}
+            height={800} />
       </div>
     </div>
   </section>);

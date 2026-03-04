@@ -189,7 +189,7 @@ const Collections = () => {
                       <div className="mt-4 bg-background/60 backdrop-blur-sm p-3 rounded-xl border border-border/20 flex items-center gap-3 transition-all group-hover:bg-background/80 relative z-10">
                         <div className="w-10 h-10 bg-background/60 flex items-center justify-center flex-shrink-0 overflow-hidden rounded-lg">
                           {featured.image !== "/placeholder.svg" ? (
-                            <img src={featured.image} alt={featured.name} className="w-full h-full object-cover" loading="lazy" />
+                            <img src={featured.image} alt={featured.name} className="w-full h-full object-cover" loading="lazy" decoding="async" width={40} height={40} />
                           ) : (
                             <span className="text-xs text-primary font-display">★</span>
                           )}

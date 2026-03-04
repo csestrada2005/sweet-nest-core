@@ -48,6 +48,10 @@ const MobileHero = () => {
           alt="Papachoa"
           className="w-56 sm:w-64 select-none"
           draggable={false}
+          loading="eager"
+          decoding="async"
+          width={256}
+          height={107}
           style={{
             opacity: 0,
             animation: "heroFadeUp 0.8s ease-out 0.3s both",
@@ -364,7 +368,7 @@ const DesktopHero = () => {
               transition: "opacity 0.2s linear, transform 0.2s ease-out",
             }}
           >
-            <img src={papachoaLogo} alt="Papachoa" className="w-48 select-none" draggable={false} />
+            <img src={papachoaLogo} alt="Papachoa" className="w-48 select-none" draggable={false} decoding="async" width={192} height={80} />
           </div>
           <p
             className="mt-4 text-xl md:text-2xl font-bold text-center select-none font-display"
@@ -408,6 +412,10 @@ const DesktopHero = () => {
             }}
             aria-hidden="true"
             draggable={false}
+            loading="eager"
+            decoding="async"
+            width={bird.style.width ?? 100}
+            height={bird.style.width ?? 100}
           />
         ))}
       </div>
