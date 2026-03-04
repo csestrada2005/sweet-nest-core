@@ -20,10 +20,11 @@ import pijamadinosaurio4 from "@/assets/pijama-dinosaurio-4-standing.jpg";
 
 export type Collection =
   | "todos"
-  | "hijos"
-  | "bebe"
-  | "adulto"
-  | "familia";
+  | "flores"
+  | "changos"
+  | "para-pintar"
+  | "hongos"
+  | "otros";
 
 export interface Product {
   id: string;
@@ -51,88 +52,52 @@ export interface Product {
 
 export const collections: { id: Collection; label: string; color: string }[] = [
   { id: "todos", label: "Todos", color: "bg-papachoa-cream" },
-  { id: "hijos", label: "Hijos", color: "bg-papachoa-blush" },
-  { id: "bebe", label: "Bebé", color: "bg-papachoa-sage" },
-  { id: "adulto", label: "Adulto", color: "bg-papachoa-peach" },
-  { id: "familia", label: "Toda la Familia", color: "bg-papachoa-cream" },
+  { id: "flores", label: "Flores", color: "bg-papachoa-blush" },
+  { id: "changos", label: "Changos", color: "bg-papachoa-sage" },
+  { id: "para-pintar", label: "Para Pintar", color: "bg-papachoa-peach" },
+  { id: "hongos", label: "Hongos", color: "bg-papachoa-cream" },
+  { id: "otros", label: "Otros", color: "bg-papachoa-cream" },
 ];
 
 export const collectionDescriptions: Record<Exclude<Collection, "todos">, string> = {
-  hijos: "Para los pequeños de la casa",
-  bebe: "Suavidad desde el primer abrazo",
-  adulto: "Comodidad y estilo para ti",
-  familia: "Diseñados para verse juntos",
+  flores: "Estampados florales llenos de color",
+  changos: "Divertidos prints de changos",
+  "para-pintar": "Diseños listos para colorear",
+  hongos: "Estampados de hongos mágicos",
+  otros: "Más diseños únicos",
 };
 
 /**
  * Categorizes a product based on its title and description.
- * Priority order matters — more specific matches first.
+ * Matches keywords in title first, then description/tags.
  */
 export function categorizeProduct(title: string, description: string = "", tags: string[] = []): Exclude<Collection, "todos"> {
   const t = title.toLowerCase();
   const d = description.toLowerCase();
   const allText = `${t} ${d} ${tags.join(" ").toLowerCase()}`;
 
-  // 1. Specific baby products by name
-  if (t.includes("nido") || t.includes("colecho") || t.includes("sleeping") || t.includes("cascarón") || t.includes("cascaron")) {
-    return "bebe";
+  // Flores
+  if (allText.includes("flor") || allText.includes("flores") || allText.includes("flower")) {
+    return "flores";
   }
 
-  // 2. Specific kids products by name
-  if (t.includes("saco patita") || t.includes("saco") && t.includes("patita")) {
-    return "hijos";
+  // Changos
+  if (allText.includes("chango") || allText.includes("changos") || allText.includes("mono") || allText.includes("monos") || allText.includes("monkey")) {
+    return "changos";
   }
 
-  // 3. Products explicitly labeled "adulto" in the TITLE go to adulto
-  if (t.includes("adulto")) {
-    return "adulto";
+  // Para Pintar / Doodle / Colorear
+  if (allText.includes("pintar") || allText.includes("colorear") || allText.includes("doodle") || allText.includes("dibujo") || allText.includes("dibujar") || allText.includes("paint") || allText.includes("color")) {
+    return "para-pintar";
   }
 
-  // 4. Baby products
-  if (t.includes("bebé") || t.includes("bebe") || t.includes("baby") || t.includes("recién nacido")) {
-    return "bebe";
+  // Hongos
+  if (allText.includes("hongo") || allText.includes("hongos") || allText.includes("mushroom") || allText.includes("seta") || allText.includes("setas")) {
+    return "hongos";
   }
 
-  // 5. Kids (hijos) — hija, hijo, niña, niño in the TITLE
-  if (t.includes("hija") || t.includes("hijo") || t.includes("niña") || t.includes("niño") || t.includes("kids")) {
-    return "hijos";
-  }
-
-  // 4. Turbante → familia (unitalla, para niños y adultos)
-  if (t.includes("turbante")) {
-    return "familia";
-  }
-
-  // 5. Explicit family sets
-  if (t.includes("familia") || t.includes("family")) {
-    return "familia";
-  }
-
-  // 6. Adult-only products (mamá solo, papá solo — without kids mention)
-  if (t.includes("mamá") && !t.includes("&") && !t.includes("hija") && !t.includes("hijo") && !t.includes("bebe") && !t.includes("bebé")) {
-    return "adulto";
-  }
-  if (t.includes("papá") && !t.includes("&") && !t.includes("hija") && !t.includes("hijo")) {
-    return "adulto";
-  }
-
-  // 7. Sets with "&" (mamá & hija, papá & hijo, etc.) → familia
-  if (t.includes("&")) {
-    return "familia";
-  }
-
-  // 8. Check description for adult keywords
-  if (allText.includes("adulto") && !allText.includes("niño") && !allText.includes("niña") && !allText.includes("hija") && !allText.includes("hijo")) {
-    return "adulto";
-  }
-
-  // 9. Check description for kids
-  if (allText.includes("niño") || allText.includes("niña") || allText.includes("hija") || allText.includes("hijo")) {
-    return "hijos";
-  }
-
-  // Default: familia
-  return "familia";
+  // Default
+  return "otros";
 }
 
 export const products: Product[] = [
@@ -141,7 +106,7 @@ export const products: Product[] = [
     slug: "pijama-mama-bebe",
     name: "Pijama Mamá & Hijos",
     price: 1290,
-    collection: "familia",
+    collection: "flores",
     image: pijamaRosa0,
     images: [pijamaRosa0, pijamaRosa1, pijamaRosa2, pijamaRosa3, pijamaRosa4, pijamaRosa5, pijamaRosa6, pijamaRosa7, pijamaRosa8, pijamaRosa9],
     shortDescription: "Combina con tu bebé en suavidad y estilo. Momentos que se quedan.",
@@ -161,7 +126,7 @@ export const products: Product[] = [
     slug: "pijama-doodle-mama-bebe",
     name: "Pijama Mamá & Hija – Doodle",
     price: 1390,
-    collection: "hijos",
+    collection: "para-pintar",
     image: pijamaBlanca1,
     images: [pijamaBlanca1, pijamaBlanca3, pijamaBlanca2, pijamaBlanca5, pijamaBlanca4],
     shortDescription: "Dibujando momentos juntas. Pijama con print de doodles para mamá y su pequeña artista.",
@@ -181,7 +146,7 @@ export const products: Product[] = [
     slug: "pijama-dinosaurio-papa-nina",
     name: "Pijama Papá & Hija – Dinosaurio",
     price: 1490,
-    collection: "hijos",
+    collection: "otros",
     image: pijamadinosaurio1,
     images: [pijamadinosaurio1, pijamadinosaurio2, pijamadinosaurio3, pijamadinosaurio4],
     shortDescription: "Dinosaurios y diversión. Pijama para papá y su pequeña aventurera.",
