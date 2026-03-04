@@ -127,6 +127,7 @@ const Index = () => {
             zIndex: 10,
             transform: (!isMobile && heroComplete) ? `translateY(calc(var(--vh, 1vh) * -100))` : "translateY(0)",
             transition: !isMobile ? "transform 700ms ease-out" : "none",
+            marginBottom: (!isMobile && heroComplete) ? `calc(var(--vh, 1vh) * -100)` : undefined,
           }}
         >
         <Suspense fallback={null}>
