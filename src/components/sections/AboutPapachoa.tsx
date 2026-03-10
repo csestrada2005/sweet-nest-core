@@ -89,7 +89,7 @@ const AboutPapachoa = () => {
       {/* Imagen lifestyle — solo desktop */}
       <div className="hidden md:block md:w-[42%] lg:w-[45%]">
         <img
-            src={lifestyleImg}
+
             alt="Mamá e hija abrazándose en pijama rosa Papachoa"
             className="w-full rounded-2xl object-cover"
             style={{
@@ -99,7 +99,7 @@ const AboutPapachoa = () => {
             loading="lazy"
             decoding="async"
             width={600}
-            height={800} />
+            height={800} src="/lovable-uploads/2b0a3fe4-6f42-4780-9bc5-cfd5420af6ef.webp" />
       </div>
     </div>
   </section>);
