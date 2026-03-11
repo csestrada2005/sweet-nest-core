@@ -9,18 +9,18 @@ import printPajaritos from "@/assets/brand/print-pajaritos.png";
 
 const footerLinks = {
   tienda: [
-    { label: "Catálogo", href: "/catalogo" },
-    { label: "Nuestra Historia", href: "/nuestra-historia" },
-  ],
+  { label: "Catálogo", href: "/catalogo" },
+  { label: "Nuestra Historia", href: "/nuestra-historia" }],
+
   empresa: [
-    { label: "Contacto", href: "/contacto" },
-    { label: "Preguntas frecuentes", href: "/faq" },
-  ],
+  { label: "Contacto", href: "/contacto" },
+  { label: "Preguntas frecuentes", href: "/faq" }],
+
   legal: [
-    { label: "Términos y condiciones", href: "/terminos" },
-    { label: "Política de devolución", href: "/devoluciones" },
-    { label: "Privacidad", href: "/privacidad" },
-  ],
+  { label: "Términos y condiciones", href: "/terminos" },
+  { label: "Política de devolución", href: "/devoluciones" },
+  { label: "Privacidad", href: "/privacidad" }]
+
 };
 
 const paymentMethods = ["Visa", "Mastercard", "AMEX", "OXXO", "SPEI"];
@@ -39,7 +39,7 @@ const Footer = () => {
         requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }));
       }
     },
-    [location.pathname, navigate],
+    [location.pathname, navigate]
   );
 
   return (
@@ -47,15 +47,15 @@ const Footer = () => {
       {/* Pajaritos pattern */}
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{ backgroundImage: `url(${printPajaritos})`, backgroundSize: "250px", backgroundRepeat: "repeat", opacity: 0.06 }}
-      />
+        style={{ backgroundImage: `url(${printPajaritos})`, backgroundSize: "250px", backgroundRepeat: "repeat", opacity: 0.06 }} />
+      
 
       <div className="container py-16 md:py-20 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
           <div className="col-span-2 md:col-span-1">
              <img src={logo} alt="Papachoa México" className="h-10 w-auto mb-6 opacity-80" loading="lazy" decoding="async" width={120} height={40} />
             <p className="text-sm mb-6 max-w-xs leading-relaxed text-muted-foreground">
-              Pijamas y cobijos ultra suaves pensados por mamás, para mamás.
+              Pijamas y apapachos pensados por mamás, para mamás.
             </p>
             <div className="flex gap-3">
                <button type="button" onClick={(e) => openExternal(brand.socials.instagramUrl, e)} aria-label="Síguenos en Instagram" className="w-10 h-10 flex items-center justify-center rounded-full border border-foreground/15 text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all cursor-pointer">
@@ -68,29 +68,29 @@ const Footer = () => {
           </div>
 
           {[
-            { title: "Tienda", links: footerLinks.tienda },
-            { title: "Empresa", links: footerLinks.empresa },
-            { title: "Legal", links: footerLinks.legal },
-          ].map(({ title, links }) => (
-            <div key={title}>
+          { title: "Tienda", links: footerLinks.tienda },
+          { title: "Empresa", links: footerLinks.empresa },
+          { title: "Legal", links: footerLinks.legal }].
+          map(({ title, links }) =>
+          <div key={title}>
               <h4 className="text-sm font-bold mb-5 text-foreground/80 tracking-wide uppercase">{title}</h4>
               <ul className="space-y-3">
-                {links.map((link) => (
-                  <li key={link.label}>
+                {links.map((link) =>
+              <li key={link.label}>
                     <Link
-                      to={link.href}
-                      onClick={(e) => handleFooterLink(e, link.href)}
-                      onMouseEnter={() => prefetchRoute(link.href)}
-                      onTouchStart={() => prefetchRoute(link.href)}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
+                  to={link.href}
+                  onClick={(e) => handleFooterLink(e, link.href)}
+                  onMouseEnter={() => prefetchRoute(link.href)}
+                  onTouchStart={() => prefetchRoute(link.href)}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  
                       {link.label}
                     </Link>
                   </li>
-                ))}
+              )}
               </ul>
             </div>
-          ))}
+          )}
         </div>
 
         <div className="h-px bg-foreground/10 mb-8" />
@@ -100,17 +100,17 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} Papachoa México
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2 order-1 md:order-2">
-            {paymentMethods.map((method) => (
-              <span key={method} className="text-xs px-3 py-1.5 text-muted-foreground border border-foreground/10 rounded-full">
+            {paymentMethods.map((method) =>
+            <span key={method} className="text-xs px-3 py-1.5 text-muted-foreground border border-foreground/10 rounded-full">
                 {method}
               </span>
-            ))}
+            )}
           </div>
           <p className="text-sm font-bold text-muted-foreground order-3">MXN $</p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>);
+
 };
 
 export default Footer;
