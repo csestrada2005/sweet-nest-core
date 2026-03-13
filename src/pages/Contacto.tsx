@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Send, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { brand } from "@/data/brand";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contacto = () => {
   useSeo({
@@ -29,13 +30,30 @@ const Contacto = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    toast({
-      title: "¡Mensaje enviado! 💌",
-      description: "Te responderemos pronto. Gracias por escribirnos.",
-    });
-    setFormData({ name: "", email: "", message: "" });
-    setIsSubmitting(false);
+    try {
+      const { error } = await supabase.functions.invoke("send-contact-email", {
+        body: {
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          message: formData.message.trim(),
+        },
+      });
+      if (error) throw error;
+      toast({
+        title: "¡Mensaje enviado! 💌",
+        description: "Te responderemos pronto. Gracias por escribirnos.",
+      });
+      setFormData({ name: "", email: "", message: "" });
+    } catch (err) {
+      console.error("Contact form error:", err);
+      toast({
+        title: "Error al enviar",
+        description: "Hubo un problema. Intenta de nuevo o escríbenos por WhatsApp.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
