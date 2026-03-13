@@ -14,15 +14,15 @@ const stories = [
 {
   num: "01",
   title: "Descanso",
-  body: "Para que tu bebé y niño duerman envueltos en suavidad. Cada pijama está pensada para acompañar sus noches, sus siestas y esos momentos donde solo necesitan sentirse seguros y cómodos.",
+  body: "Queremos que nada te estorbe para soñar.",
   accentColor: "hsl(var(--papachoa-coral))",
   img: "/lovable-uploads/7eff337a-94cb-41c0-a256-b38b543e0a25.webp",
   imgAlt: "Mamá e hija jugando en pijama"
 },
 {
   num: "02",
-  title: "Ternura",
-  body: "Cada puntada es un gesto de ternura. Telas seleccionadas para pieles sensibles, cortes que abrazan sin apretar y detalles hechos con el cariño de quien entiende lo que significa cuidar a los que más amas.",
+  title: "Cuidado",
+  body: "Telas seleccionadas para pieles sensibles, cortes que no aprietan, sin etiquetas.",
   accentColor: "hsl(var(--papachoa-yellow))",
   img: pijamadinosaurio3,
   imgAlt: "Papá jugando con su hija en pijama de dinosaurios"
@@ -30,7 +30,7 @@ const stories = [
 {
   num: "03",
   title: "Regala Amor",
-  body: "Regala apapachos. Más que una pijama, es un abrazo que se queda. Regala momentos de conexión, noches de cuentos y mañanas de risas. Regala algo que se siente, que se disfruta y que se recuerda.",
+  body: "Más que una pijama, es un abrazo que se queda.",
   accentColor: "hsl(var(--papachoa-blue))",
   img: "/lovable-uploads/a789a8e3-1b2f-482f-a04a-c6325aa702b5.webp",
   imgAlt: "Abrazo familiar antes de dormir"
@@ -86,18 +86,6 @@ const NuestraHistoria = () => {
           <div className="container max-w-3xl mx-auto">
             <div className="space-y-10 text-center">
               <SectionReveal>
-                <div>
-                  <h2 className="font-display text-2xl md:text-3xl text-foreground mb-4">
-                    Creamos productos diferentes
-                  </h2>
-                  <p className="text-muted-foreground font-light leading-relaxed text-lg">
-                    Diferentes a los que encuentras en cualquier tienda. Nuestras pijamas tienen un propósito:{" "}
-                    <span className="text-primary font-semibold">dar apapachos</span>. Que se sientan cómodos, libres, suaves, seguros. Que disfruten telas de la más alta calidad, cortes pensados para moverse y descansar, y prendas que duren mucho tiempo.
-                  </p>
-                </div>
-              </SectionReveal>
-
-              <SectionReveal delay={100}>
                 <div>
                   <h2 className="font-display text-2xl md:text-3xl text-foreground mb-4">
                     Queremos que compres algo más que una pijama
