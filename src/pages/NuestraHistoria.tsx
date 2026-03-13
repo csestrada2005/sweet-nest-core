@@ -88,18 +88,6 @@ const NuestraHistoria = () => {
               <SectionReveal>
                 <div>
                   <h2 className="font-display text-2xl md:text-3xl text-foreground mb-4">
-                    Creamos productos diferentes
-                  </h2>
-                  <p className="text-muted-foreground font-light leading-relaxed text-lg">
-                    Diferentes a los que encuentras en cualquier tienda. Nuestras pijamas tienen un propósito:{" "}
-                    <span className="text-primary font-semibold">dar apapachos</span>. Que se sientan cómodos, libres, suaves, seguros. Que disfruten telas de la más alta calidad, cortes pensados para moverse y descansar, y prendas que duren mucho tiempo.
-                  </p>
-                </div>
-              </SectionReveal>
-
-              <SectionReveal delay={100}>
-                <div>
-                  <h2 className="font-display text-2xl md:text-3xl text-foreground mb-4">
                     Queremos que compres algo más que una pijama
                   </h2>
                   <p className="text-muted-foreground font-light leading-relaxed text-lg">
