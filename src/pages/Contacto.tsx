@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Send, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { brand } from "@/data/brand";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contacto = () => {
   useSeo({
