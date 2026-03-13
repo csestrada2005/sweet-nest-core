@@ -14,7 +14,7 @@ const stories = [
 {
   num: "01",
   title: "Descanso",
-  body: "Para que tu bebé y niño duerman envueltos en suavidad. Cada pijama está pensada para acompañar sus noches, sus siestas y esos momentos donde solo necesitan sentirse seguros y cómodos.",
+  body: "Queremos que nada te estorbe para soñar.",
   accentColor: "hsl(var(--papachoa-coral))",
   img: "/lovable-uploads/7eff337a-94cb-41c0-a256-b38b543e0a25.webp",
   imgAlt: "Mamá e hija jugando en pijama"
